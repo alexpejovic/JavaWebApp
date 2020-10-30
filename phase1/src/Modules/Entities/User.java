@@ -7,7 +7,7 @@ public abstract class User implements Identifiable{
     private String username;
     private String password;
     private String userId;
-    private ArrayList<User> friendList;
+    private ArrayList<String> friendList;
 
     User(String username, String password, String userId) {
         this.username = username;
@@ -34,11 +34,11 @@ public abstract class User implements Identifiable{
         this.userId = ID;
     }
 
-    public ArrayList<User> getFriendList() {
+    public ArrayList<String> getFriendList() {
         /*
         Returns a shallow copy of this.friendList
          */
-        ArrayList<User> copy = new ArrayList<>();
+        ArrayList<String> copy = new ArrayList<>();
 
         for (int i = 0; i < this.friendList.size(); i++) {
             copy.set(i, this.friendList.get(i));
@@ -47,18 +47,18 @@ public abstract class User implements Identifiable{
         return copy;
     }
 
-    public void addToFriendList(User user) {
+    public void addToFriendList(String userID) {
         /*
-        Precondition: Integer <userId> is not already an element of <this.friendList>
+        Precondition: String <userId> is not already an element of <this.friendList>
          */
-        this.friendList.add(user);
+        this.friendList.add(userID);
     }
 
-    public void removeFromFriendList(User user) {
+    public void removeFromFriendList(String userID) {
         /*
-        Precondition: Integer <userId> is an element of <this.friendList>
+        Precondition: String <userId> is an element of <this.friendList>
          */
-        this.friendList.remove(user);
+        this.friendList.remove(userID);
     }
 
 }
