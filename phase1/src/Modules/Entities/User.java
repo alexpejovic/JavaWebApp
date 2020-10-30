@@ -2,18 +2,18 @@ package Modules.Entities;
 
 import java.util.ArrayList;
 
-public abstract class User {
+public abstract class User implements Identifiable{
 
     private String username;
     private String password;
-    private Integer userId;
-    private ArrayList<Integer> friendList;
+    private String userId;
+    private ArrayList<String> friendList;
 
-    public User(String username, String password, Integer userId) {
+    public User(String username, String password, String userId) {
         this.username = username;
         this.password = password;
         this.userId = userId;
-        this.friendList = new ArrayList<Integer>();
+        this.friendList = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -24,15 +24,21 @@ public abstract class User {
         return this.password;
     }
 
-    public Integer getUserId() {
+    @Override
+    public String getID() {
         return this.userId;
     }
 
-    public ArrayList<Integer> getFriendList() {
+    @Override
+    public void setID(String ID) {
+        this.userId = ID;
+    }
+
+    public ArrayList<String> getFriendList() {
         /*
         Returns a shallow copy of this.friendList
          */
-        ArrayList<Integer> copy = new ArrayList<Integer>();
+        ArrayList<String> copy = new ArrayList<>();
 
         for (int i = 0; i < this.friendList.size(); i++) {
             copy.set(i, this.friendList.get(i));
@@ -41,14 +47,14 @@ public abstract class User {
         return copy;
     }
 
-    public void addToFriendList(Integer userId) {
+    public void addToFriendList(String userId) {
         /*
         Precondition: Integer <userId> is not already an element of <this.friendList>
          */
         this.friendList.add(userId);
     }
 
-    public void removeFromFriendList(Integer userId) {
+    public void removeFromFriendList(String userId) {
         /*
         Precondition: Integer <userId> is an element of <this.friendList>
          */
