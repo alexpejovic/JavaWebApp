@@ -1,20 +1,19 @@
 package Modules.Entities;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public abstract class User {
 
     private String username;
     private String password;
-    private UUID userId;
-    private ArrayList<UUID> friendList;
+    private Integer userId;
+    private ArrayList<Integer> friendList;
 
-    public User(String username, String password) {
+    public User(String username, String password, Integer userId) {
         this.username = username;
         this.password = password;
-        this.userId = UUID.randomUUID();
-        this.friendList = new ArrayList<UUID>();
+        this.userId = userId;
+        this.friendList = new ArrayList<Integer>();
     }
 
     public String getUsername() {
@@ -25,15 +24,15 @@ public abstract class User {
         return this.password;
     }
 
-    public UUID getUserId() {
+    public Integer getUserId() {
         return this.userId;
     }
 
-    public ArrayList<UUID> getFriendList() {
+    public ArrayList<Integer> getFriendList() {
         /*
         Returns a shallow copy of this.friendList
          */
-        ArrayList<UUID> copy = new ArrayList<UUID>();
+        ArrayList<Integer> copy = new ArrayList<Integer>();
 
         for (int i = 0; i < this.friendList.size(); i++) {
             copy.set(i, this.friendList.get(i));
@@ -42,16 +41,16 @@ public abstract class User {
         return copy;
     }
 
-    public void addToFriendList(UUID userId) {
+    public void addToFriendList(Integer userId) {
         /*
-        Precondition: UUID <userId> is not already an element of <this.friendList>
+        Precondition: Integer <userId> is not already an element of <this.friendList>
          */
         this.friendList.add(userId);
     }
 
-    public void removeFromFriendList(UUID userId) {
+    public void removeFromFriendList(Integer userId) {
         /*
-        Precondition: String <userId> is an element of <this.friendList>
+        Precondition: Integer <userId> is an element of <this.friendList>
          */
         this.friendList.remove(userId);
     }
