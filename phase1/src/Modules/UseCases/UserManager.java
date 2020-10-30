@@ -3,7 +3,6 @@ package Modules.UseCases;
 import java.util.ArrayList;
 import java.util.UUID;
 import Modules.Entities.User;
-import com.sun.xml.internal.bind.v2.TODO;
 
 
 /** UseCase for basic management of common user actions specified in {@link Modules.Entities.User}
@@ -30,7 +29,7 @@ public abstract class UserManager {
      */
     public boolean canMessage(User user1, User user2){
 
-        return user1.getFriendList().contains(user2.getUserId());
+        return user1.getFriendList().contains(user2.getID());
     }
 
     // #TODO: Implement method specification
