@@ -1,4 +1,7 @@
 package Modules.UseCases;
 
-public class AttendeeManager {
+public class AttendeeManager{
+
+
+
 }
