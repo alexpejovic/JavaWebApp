@@ -23,10 +23,10 @@ public class MessageTest {
         Message m2 = new Message("So long and thanks for all the fish", "user3", "user1");
         assertEquals("Hello World!", m.getContent());
         assertEquals("So long and thanks for all the fish", m2.getContent());
-        assertEquals("user1", m.getSender());
-        assertEquals("user1", m2.getReceiver());
-        assertEquals("user2", m.getReceiver());
-        assertEquals("user3", m2.getSender());
+        assertEquals("user1", m.getSenderID());
+        assertEquals("user1", m2.getReceiverID());
+        assertEquals("user2", m.getReceiverID());
+        assertEquals("user3", m2.getSenderID());
         assertEquals(messageDate, m.getDateTime());
         assertNotNull(m2.getDateTime());
     }
