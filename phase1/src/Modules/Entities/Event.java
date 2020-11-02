@@ -1,8 +1,9 @@
 package Modules.Entities;
 
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
-public class Event {
+public class Event implements Identifiable{
 
     /** ArrayList that stores the usernames of attendees who are signed up to attend this event**/
     private ArrayList<String> attendeeList;
@@ -14,14 +15,20 @@ public class Event {
      * room where the event will take place**/
     private int roomNumber;
 
+    /** The start time for the Event **/
+    private LocalDateTime startTime;
+
+    private String eventId;
 
     /**
      * Sets the room capacity and room number for the room where the Event will take place
      * @param roomNumber the room number the Event will be held
+     * @param time the time at which the Event will begin
      */
-    public Event(int roomNumber){
+    public Event(int roomNumber, LocalDateTime time){
         this.capacity = 2;
         this.roomNumber = roomNumber;
+        this.startTime = time;
         attendeeList = new ArrayList<>();
     }
 
@@ -40,6 +47,17 @@ public class Event {
     }
 
     /**
+     * @return The the start time for the Event
+     */
+    public LocalDateTime getStartTime(){ return startTime;}
+
+    @Override
+    public String getID() { return eventId;}
+
+    @Override
+    public void setID(String ID) { eventId = ID;}
+
+    /**
      * Removes specific attendee from the Event's list of attendees
      * @param userName the username of the attendee being removed from the Event's attendee list
      */
@@ -54,5 +72,6 @@ public class Event {
     public void addAttendee(String userName){
         attendeeList.add(userName);
     }
+
 
 }
