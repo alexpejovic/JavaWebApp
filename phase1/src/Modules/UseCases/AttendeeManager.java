@@ -1,7 +1,9 @@
 package Modules.UseCases;
 
 import Modules.Entities.Attendee;
+import Modules.Entities.Event;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class AttendeeManager{
@@ -25,5 +27,30 @@ public class AttendeeManager{
             newAttendee.addEvent(events.get(i));
         }
         attendeeList.add(newAttendee);
+    }
+
+    /**
+     *
+     * @param attendee the attendee whose time availability we want to check
+     * @param time the time at which we want to know if the attendee is available
+     * @return true if the attendee does not have any events at this time, false otherwise
+     */
+    public boolean timeAvailable(Attendee attendee, LocalDateTime time){
+        ArrayList<String> eventList = attendee.getEventsList();
+        for(int i = 0; i < eventList.size(); i++){
+            //need list of all events
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param attendee the attendee whose events list we want to alter
+     * @param event the event that we want to add to the attendee's events list
+     */
+    public void addEventToAttendee(Attendee attendee, Event event){
+        if (timeAvailable(attendee, event.getStartTime())){
+            attendee.addEvent(event.getID());
+        }
     }
 }
