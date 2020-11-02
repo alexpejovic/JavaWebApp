@@ -4,9 +4,9 @@ import Modules.Exceptions.EventNotFoundException;
 
 import java.util.ArrayList;
 
-public class Attendee extends User {
+public class Attendee extends User implements Identifiable{
     // ids of events Attendee is attending
-    /** a list of events that this attendee is attendin g*/
+    /** a list of events that this attendee is attending */
     private ArrayList<String> eventsList;
     /** an exception thrown if looking for an event ID that is not in this attendee's list */
     private Exception EventNotFoundException;
