@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class RoomManager {
     /** A list of all Room entities in this conference */
     private ArrayList<Room> rooms;
-    private Object RoomNotFoundException;
 
     /**
      * Initializes a new RoomManager with no Rooms
@@ -28,9 +27,9 @@ public class RoomManager {
      * @param roomNumber the unique room number of this room
      * @param capacity maximum number of people allowed in this room
      */
-    public void addRoom(int roomNumber, int capacity){
+    public void addRoom(String roomNumber, int capacity){
         for(Room room: rooms){
-            if (room.getRoomNumber() == roomNumber){
+            if (room.getID().equals(roomNumber)){
                 throw new NonUniqueIdException();
             }
         }
@@ -43,9 +42,9 @@ public class RoomManager {
      * @param roomNumber the unique room number of the Room we want
      * @return the Room in this RoomManager with roomNumber
      */
-    private Room getRoom(int roomNumber){
+    private Room getRoom(String roomNumber){
         for(Room room: rooms){
-            if (room.getRoomNumber() == roomNumber){
+            if (room.getID().equals(roomNumber)){
                 return room;
             }
         }
@@ -60,7 +59,7 @@ public class RoomManager {
      * @param eventId the id of the Event we want to check
      * @return true iff there is a Room in this RoomManager that matches roomNumber and that Room
      */
-    public boolean isHostingEvent(int roomNumber, String eventId){
+    public boolean isHostingEvent(String roomNumber, String eventId){
         return this.getRoom(roomNumber).isEventInRoom(eventId);
     }
 
@@ -69,7 +68,7 @@ public class RoomManager {
      * @param roomNumber the room number of the Room we want to get the capacity of
      * @return the capacity of the room 
      */
-    public int capacityOfRoom(int roomNumber){
+    public int capacityOfRoom(String roomNumber){
         return this.getRoom(roomNumber).getCapacity();
     }
 
@@ -78,7 +77,7 @@ public class RoomManager {
      * @param roomNumber the room number of the Room we want to add the event to
      * @param eventId the id of the Event that we want to schedule in the specified Room
      */
-    public void addEventToRoom(int roomNumber, String eventId){
+    public void addEventToRoom(String roomNumber, String eventId){
         this.getRoom(roomNumber).addEvent(eventId);
     }
 
@@ -87,7 +86,7 @@ public class RoomManager {
      * @param roomNumber the room number of the Room we want to remove the event to
      * @param eventId the id of the Event that we want to remove from the specified Room
      */
-    public void removeEventFromRoom(int roomNumber, String eventId){
+    public void removeEventFromRoom(String roomNumber, String eventId){
         this.getRoom(roomNumber).removeEvent(eventId);
     }
 
@@ -95,7 +94,7 @@ public class RoomManager {
      * return a list of all event ids for events occurring for a Room in rooms
      * @param roomNumber the room number of the Room we want the list from
      */
-    public ArrayList getEventsInRoom(int roomNumber){
+    public ArrayList getEventsInRoom(String roomNumber){
         return this.getRoom(roomNumber).getEvents();
     }
 

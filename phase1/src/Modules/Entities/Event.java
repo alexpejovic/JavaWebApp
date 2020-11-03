@@ -13,7 +13,7 @@ public class Event implements Identifiable{
 
     /** The location of the event indicated by the unique room number of the
      * room where the event will take place**/
-    private int roomNumber;
+    private String roomNumber;
 
     /** The start time for the Event **/
     private LocalDateTime startTime;
@@ -25,7 +25,7 @@ public class Event implements Identifiable{
      * @param roomNumber the room number the Event will be held
      * @param time the time at which the Event will begin
      */
-    public Event(int roomNumber, LocalDateTime time){
+    public Event(String roomNumber, LocalDateTime time){
         this.capacity = 2;
         this.roomNumber = roomNumber;
         this.startTime = time;
@@ -42,7 +42,7 @@ public class Event implements Identifiable{
     /**
      * @return The room number of the room where the Event will be held
      */
-    public int getRoomNumber(){
+    public String getRoomNumber(){
         return roomNumber;
     }
 

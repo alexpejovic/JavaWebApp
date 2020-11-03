@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 /** A class representing a room in a conference
  **/
-public class Room {
+public class Room implements Identifiable{
     /** list of event ids for the Events that this room is hosting
     rooms can only host one event at a time **/
     private ArrayList<String> events;
 
     /** room number of this Room
     room number are unique to each Room object **/
-    private int roomNumber;
+    private String roomNumber;
 
      /** the maximum number of people allowed in this room, including Speakers **/
     private int capacity ;
@@ -21,10 +21,27 @@ public class Room {
      * @param roomNumber the number of the room
      * @param capacity the maximum number of people allowed in the room
      */
-    public Room(int roomNumber, int capacity){
+    public Room(String roomNumber, int capacity){
         this.roomNumber = roomNumber;
         this.capacity = capacity;
         events = new ArrayList<String>();
+    }
+
+    /**
+     * Returns the unique room number of this Room
+     * @return room number of the room
+     */
+    @Override
+    public String getID() {
+        return roomNumber;
+    }
+
+    /**
+     * @param ID unique message identification token
+     */
+    @Override
+    public void setID(String ID) {
+        roomNumber = ID;
     }
 
     /**
@@ -86,11 +103,5 @@ public class Room {
         return capacity;
     }
 
-    /**
-     * Returns the unique room number of this Room
-     * @return room number of the room
-     */
-    public int getRoomNumber() {
-        return roomNumber;
-    }
+
 }

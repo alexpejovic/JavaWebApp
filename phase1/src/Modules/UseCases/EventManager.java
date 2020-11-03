@@ -44,7 +44,7 @@ public class EventManager {
      * @param startTime the time that the event starts at
      * @return Returns true if the event was successfully created and added to events, false otherwise
      */
-    public boolean createEvent(int roomNumber, LocalDateTime startTime) {
+    public boolean createEvent(String roomNumber, LocalDateTime startTime) {
         return this.eventList.add(new Event(roomNumber, startTime));
     }
 
