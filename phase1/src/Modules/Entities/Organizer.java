@@ -27,13 +27,7 @@ public class Organizer extends Attendee {
      * @return a soft copy of the Events this Organizer is managing
      */
     public ArrayList<String> getManagedEvents() {
-        ArrayList<String> copy = new ArrayList<>();
-
-        for (int i = 0; i < this.managedEvents.size(); i++) {
-            copy.set(i, this.managedEvents.get(i));
-        }
-
-        return copy;
+        return new ArrayList<>(this.managedEvents);
     }
 
     //setters
