@@ -1,5 +1,7 @@
 package Modules.Entities;
 
+import Modules.Exceptions.EventNotFoundException;
+
 import java.util.ArrayList;
 
 /** A class representing a room in a conference
@@ -24,7 +26,7 @@ public class Room implements Identifiable{
     public Room(String roomNumber, int capacity){
         this.roomNumber = roomNumber;
         this.capacity = capacity;
-        events = new ArrayList<String>();
+        events = new ArrayList<>();
     }
 
     /**
@@ -37,7 +39,7 @@ public class Room implements Identifiable{
     }
 
     /**
-     * @param ID unique message identification token
+     * @param ID unique id room number for this Room
      */
     @Override
     public void setID(String ID) {
@@ -59,11 +61,12 @@ public class Room implements Identifiable{
      * @param eventId the id of the event we want to add
      */
     public void removeEvent(String eventId){
-        try{
+        if(events.contains(eventId)){
             events.remove(eventId);
         }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("There is no event with that id occurring in this Room");
+        else{
+            // there is no event with that id in this room
+            throw new EventNotFoundException();
         }
     }
 
@@ -102,6 +105,5 @@ public class Room implements Identifiable{
     public int getCapacity() {
         return capacity;
     }
-
 
 }

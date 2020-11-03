@@ -1,4 +1,4 @@
 package Modules.Exceptions;
 
-public class EventNotFoundException {
+public class EventNotFoundException extends RuntimeException {
 }
