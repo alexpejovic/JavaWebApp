@@ -15,9 +15,10 @@ public class Organizer extends Attendee {
     /**
      * @param username the username for this Organizer
      * @param pwd the password for this Organizer
+     * @param userID the unique ID for this Organizer
      */
-    public Organizer(String username, String pwd) {
-        super(username, pwd);
+    public Organizer(String username, String pwd, String userID) {
+        super(username, pwd, userID);
         this.managedEvents = new ArrayList<>();
     }
 
