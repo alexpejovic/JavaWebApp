@@ -48,4 +48,16 @@ public class EventManager {
         return this.eventList.add(new Event(roomNumber, startTime));
     }
 
+    /**
+     *
+     * @return a shallow copy of the existing events in this conference
+     */
+    public ArrayList<Event> getEventList() {
+        ArrayList<Event> copy = new ArrayList<>(eventList.size());
+        for(int i = 0; i < eventList.size(); i++){
+            copy.set(i, eventList.get(i));
+        }
+        return copy;
+    }
+
 }
