@@ -11,7 +11,8 @@ public class MessageTest {
     @Test
     public void testMessage() {
         LocalDateTime messageDate = LocalDateTime.of(2020, 10, 15, 13, 25);
-        Message m = new Message("Hello World!", "user1", "user2", messageDate);
+        String messageID = String.format("%s,%s,%s", "user1", "user2", messageDate);
+        Message m = new Message("Hello World!", "user1", "user2", messageID, messageDate);
         Message m2 = new Message("So long and thanks for all the fish", "user1", "user2");
     }
 
@@ -19,7 +20,8 @@ public class MessageTest {
     @Test
     public void testGetters() {
         LocalDateTime messageDate = LocalDateTime.of(2020, 10, 15, 13, 25);
-        Message m = new Message("Hello World!", "user1", "user2", messageDate);
+        String messageID = String.format("%s,%s,%s", "user1", "user2", messageDate);
+        Message m = new Message("Hello World!", "user1", "user2", messageID, messageDate);
         Message m2 = new Message("So long and thanks for all the fish", "user3", "user1");
         assertEquals("Hello World!", m.getContent());
         assertEquals("So long and thanks for all the fish", m2.getContent());
