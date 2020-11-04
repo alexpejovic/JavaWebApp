@@ -1,9 +1,11 @@
 package Modules.UseCases;
 
 import Modules.Entities.Room;
+import Modules.Exceptions.EventNotFoundException;
 import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.RoomNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -27,13 +29,25 @@ public class RoomManager {
      * @param roomNumber the unique room number of this room
      * @param capacity maximum number of people allowed in this room
      */
-    public void addRoom(String roomNumber, int capacity){
+    public void createRoom(String roomNumber, int capacity){
         for(Room room: rooms){
             if (room.getID().equals(roomNumber)){
                 throw new NonUniqueIdException();
             }
         }
         rooms.add(new Room(roomNumber,capacity));
+    }
+
+    /**
+     * Returns shallow copy of list of all Rooms in this RoomManager
+     * @return copy of all Rooms entities in this RoomManager
+     */
+    public ArrayList<Room> getRooms(){
+        ArrayList<Room> copy = new ArrayList<>();
+        for (Room room : rooms){
+            copy.add(room);
+        }
+        return copy;
     }
 
     /**
@@ -52,14 +66,13 @@ public class RoomManager {
         throw new RoomNotFoundException();
     }
 
-
     /**
      * Checks if a Room in rooms is hosting a specific event
      * @param roomNumber the room number of the Room we want to check
      * @param eventId the id of the Event we want to check
      * @return true iff there is a Room in this RoomManager that matches roomNumber and that Room
      */
-    public boolean isHostingEvent(String roomNumber, String eventId){
+    public boolean isEventInRoom(String roomNumber, String eventId){
         return this.getRoom(roomNumber).isEventInRoom(eventId);
     }
 
@@ -94,9 +107,33 @@ public class RoomManager {
      * return a list of all event ids for events occurring for a Room in rooms
      * @param roomNumber the room number of the Room we want the list from
      */
-    public ArrayList getEventsInRoom(String roomNumber){
+    public ArrayList<String> getEventsInRoom(String roomNumber){
         return this.getRoom(roomNumber).getEvents();
     }
 
+    /**
+     * Returns whether or not there is an event booked in this room at a certain time period
+     * @param roomNumber the room number of the room we want to check
+     * @param startTime the start (inclusive) of the time period we want to check
+     * @param endTime the end (exclusive) of the time period we want to check
+     * @param eventManager the eventManager for this conference
+     * @return true iff there is no events in this room anytime during the time period
+     */
+    public boolean isRoomAvailable(String roomNumber, LocalDateTime startTime,LocalDateTime endTime,
+                                   EventManager eventManager){
+        ArrayList<String> eventList = this.getRoom(roomNumber).getEvents();
+        for (String eventId: eventList){
+            LocalDateTime eventStartTime = eventManager.timeOfEvent(eventId);
+            // For phase 1, events only last 1 hour so eventEndTime 1 hour past eventStartTime
+            // TODO: change this once Event has endTime
+            LocalDateTime eventEndTime = eventStartTime.plusHours(1);
+            if(eventStartTime.isEqual(startTime) ||
+                    (eventStartTime.isAfter(startTime) && eventStartTime.isBefore(endTime)) ||
+                    (eventEndTime.isAfter(startTime) && eventEndTime.isBefore(endTime)) ) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

@@ -74,7 +74,7 @@ public class Room implements Identifiable{
      * Returns a list of event ids for all events that occur in this room
      * @return the list of event ids
      */
-    public ArrayList getEvents(){
+    public ArrayList<String> getEvents(){
         ArrayList<String> copy = new ArrayList<>();
 
         for (String eventId: events){
@@ -105,5 +105,39 @@ public class Room implements Identifiable{
     public int getCapacity() {
         return capacity;
     }
+
+    /**
+     * Returns if this Room is equal to another Room
+     * Two rooms are equal if they have the same roomNumber (id),
+     * capacity, and host the same events
+     * @param room2 the other Room object we are checking equality to
+     * @return true iff this Room is equal to room2
+     */
+    // for testing
+    public boolean equals(Room room2){
+        //checking capacity and room number (id)
+        if (this.capacity != room2.getCapacity() || !this.roomNumber.equals(room2.getID()) ){
+            return false;
+        }
+
+        // list of event ids for room2
+        ArrayList<String> events2 = room2.getEvents();
+
+        //Checking that all events in this room are in room2
+        for (String eventId: events){
+            if (!events2.contains(eventId)){
+                return false;
+            }
+        }
+        //Checking that all events in room2 are in this room
+        for (String eventId: events2){
+            if (!events.contains(eventId)){
+                return false;
+            }
+        }
+        // now we know the this Room and room are equal
+        return true;
+    }
+
 
 }
