@@ -1,6 +1,7 @@
 package Modules.UseCases;
 
 import Modules.Entities.Event;
+import Modules.Exceptions.EventNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,31 +39,38 @@ public class EventManager {
     }
 
     /**
-     * Return the index of the event identified by an eventID
+     * Private helper function that returns the index of the event identified by an eventID. Raises an
+     * EventNotFoundException if there is no event without the specified event ID
      * @param eventID the unique ID of the event
-     * @return The index of the event
+     * @return The index of the event if eventID is valid
      */
-    public int indexOfEvent(String eventID) {
+    private int indexOfEvent(String eventID) {
         for (int i = 0; i < this.eventList.size(); i++) {
             if (this.eventList.get(i).getID().equals(eventID)) {
                 return i;
             }
         }
 
-        return -1;
+        throw new EventNotFoundException();
     }
 
     /**
-     * Return the event identified by an event ID
+     * Private helper function that returns the event identified by an event ID. Raises an EventNotFoundException if
+     * there is no event with the specified event ID
      * @param eventID the unique ID of the event
      * @return The event of the ID
      */
-    public Event getEvent(String eventID) {
-        return this.eventList.get(indexOfEvent(eventID));
+    private Event getEvent(String eventID) {
+        for (Event event: this.eventList) {
+            if (event.getID().equals(eventID)) {
+                return event;
+            }
+        }
+        throw new EventNotFoundException();
     }
 
     /**
-     * Return the start time of an event
+     * Returns the start time of an event
      * @param eventID the unique ID of the event
      * @return LocalDateTime representing the start time of the event
      */
