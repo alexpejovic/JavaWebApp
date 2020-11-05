@@ -18,6 +18,9 @@ public class Event implements Identifiable{
     /** The start time for the Event **/
     private LocalDateTime startTime;
 
+    /** The name of the Event **/
+    private String name;
+
     private String eventId;
 
     /**
@@ -56,6 +59,24 @@ public class Event implements Identifiable{
 
     @Override
     public void setID(String ID) { eventId = ID;}
+
+
+    /** Gets the name of the Event
+     *
+     * @return The name of the Event
+     */
+    public String getName() {
+        return name;
+    }
+
+
+    /** Sets the name of the Event
+     *
+     * @param name The name of the Event
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * Removes specific attendee from the Event's list of attendees

@@ -16,7 +16,7 @@ public class Room implements Identifiable{
     private String roomNumber;
 
      /** the maximum number of people allowed in this room, including Speakers **/
-    private int capacity ;
+    private int capacity;
 
     /**
      * Initializes a new Room object with no events

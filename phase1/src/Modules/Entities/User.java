@@ -57,7 +57,7 @@ public abstract class User implements Identifiable{
     public void removeFromFriendList(String userID) {
         /*
         Precondition: String <userId> is an element of <this.friendList>
-         */
+        */
         this.friendList.remove(userID);
     }
 

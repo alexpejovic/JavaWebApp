@@ -1,12 +1,9 @@
 package Modules.UseCases;
 
-import java.util.ArrayList;
-import java.util.UUID;
 import Modules.Entities.User;
 
 
-/** UseCase for basic management of common user actions specified in {@link Modules.Entities.User}
- *
+/** UseCase for basic management of common user actions specified in {@link Modules.Entities.User}.
  */
 public abstract class UserManager {
 
@@ -32,8 +29,4 @@ public abstract class UserManager {
         return user1.getFriendList().contains(user2.getID());
     }
 
-    // #TODO: Implement method specification
-    public ArrayList<UUID> getEvents(User user){
-        return new ArrayList<>();
-    }
 }
