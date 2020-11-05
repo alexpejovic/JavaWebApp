@@ -3,8 +3,14 @@ package Modules.Gateways;
 import java.util.ArrayList;
 import java.io.*;
 
+/**
+ * reads and writes files for our program
+ */
 public class ReaderWriter {
 
+    /**
+     * @param filename the name of the file being read
+     */
     public void readSerFile(String filename) {
 
         ArrayList<Object> objects = null;
@@ -20,12 +26,17 @@ public class ReaderWriter {
             System.out.println("Successfully read Events");
 
         } catch (FileNotFoundException e) {
-            System.out.println("events.ser is missing");
+            System.out.println(filename + " is missing");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * @param filename the name of the file being written to
+     * @param writeObjects ArrayList of objects being written to filename
+     * @throws IOException Exception thrown when Object cannot be found
+     */
     public void writeSerFile(String filename, ArrayList<Object> writeObjects) throws IOException {
         try{
             FileOutputStream file = new FileOutputStream(filename);
