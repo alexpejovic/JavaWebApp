@@ -40,8 +40,8 @@ public abstract class User implements Identifiable{
          */
         ArrayList<String> copy = new ArrayList<>();
 
-        for (int i = 0; i < this.friendList.size(); i++) {
-            copy.set(i, this.friendList.get(i));
+        for (String userID: this.friendList) {
+            copy.add(userID);
         }
 
         return copy;
