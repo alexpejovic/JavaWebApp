@@ -38,6 +38,39 @@ public class EventManager {
     }
 
     /**
+     * Return the index of the event identified by an eventID
+     * @param eventID the unique ID of the event
+     * @return The index of the event
+     */
+    public int indexOfEvent(String eventID) {
+        for (int i = 0; i < this.eventList.size(); i++) {
+            if (this.eventList.get(i).getID().equals(eventID)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * Return the event identified by an event ID
+     * @param eventID the unique ID of the event
+     * @return The event of the ID
+     */
+    public Event getEvent(String eventID) {
+        return this.eventList.get(indexOfEvent(eventID));
+    }
+
+    /**
+     * Return the start time of an event
+     * @param eventID the unique ID of the event
+     * @return LocalDateTime representing the start time of the event
+     */
+    public LocalDateTime timeOfEvent(String eventID) {
+        return getEvent(eventID).getStartTime();
+    }
+
+    /**
      * Creates an event (if possible) and adds it to ArrayList events
      *
      * @param roomNumber the room number of the room where the event is set to take place
