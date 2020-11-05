@@ -6,6 +6,10 @@ import Modules.Exceptions.EventNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * This class represents the use case class EventManager
+ * This use case manages the entity Event
+ */
 public class EventManager {
 
     /**
@@ -94,9 +98,9 @@ public class EventManager {
      * @return a shallow copy of the existing events in this conference
      */
     public ArrayList<Event> getEventList() {
-        ArrayList<Event> copy = new ArrayList<>(eventList.size());
-        for(int i = 0; i < eventList.size(); i++){
-            copy.set(i, eventList.get(i));
+        ArrayList<Event> copy = new ArrayList<>();
+        for(Event event: this.eventList){
+            copy.add(event);
         }
         return copy;
     }
