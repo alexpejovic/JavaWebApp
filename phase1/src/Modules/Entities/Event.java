@@ -78,6 +78,14 @@ public class Event implements Identifiable{
         this.name = name;
     }
 
+    /** Gets the remaining available seats at this event
+     *
+     * @return The number of seats available at this Event
+     */
+    public int getAvailableSeats() {
+        return capacity - attendeeList.size();
+    }
+
     /**
      * Removes specific attendee from the Event's list of attendees
      * @param userName the username of the attendee being removed from the Event's attendee list
