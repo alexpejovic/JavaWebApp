@@ -18,10 +18,12 @@ public class Event implements Identifiable{
     /** The start time for the Event **/
     private LocalDateTime startTime;
 
+    private String eventId;
+
     /** The name of the Event **/
     private String name;
 
-    private String eventId;
+    private String speaker = null;
 
     /**
      * Sets the room capacity and room number for the room where the Event will take place
@@ -54,12 +56,11 @@ public class Event implements Identifiable{
      */
     public LocalDateTime getStartTime(){ return startTime;}
 
-    @Override
-    public String getID() { return eventId;}
+    public void setStartTime(LocalDateTime time){this.startTime = time;}
 
-    @Override
-    public void setID(String ID) { eventId = ID;}
+    public void scheduleSpeaker(String speaker){this.speaker = speaker;}
 
+    public boolean hasSpeaker(){return this.speaker != null;}
 
     /** Gets the name of the Event
      *
@@ -85,6 +86,12 @@ public class Event implements Identifiable{
     public int getAvailableSeats() {
         return capacity - attendeeList.size();
     }
+
+    @Override
+    public String getID() { return eventId;}
+
+    @Override
+    public void setID(String ID) { eventId = ID;}
 
     /**
      * Removes specific attendee from the Event's list of attendees
