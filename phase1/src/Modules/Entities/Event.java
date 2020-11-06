@@ -18,11 +18,15 @@ public class Event implements Identifiable{
     /** The start time for the Event **/
     private LocalDateTime startTime;
 
+    /** The Id of the Event **/
     private String eventId;
+
+    /** The end time for the Event **/
+    private String endTime;
 
     /** The name of the Event **/
     private String name;
-
+    /** The Speaker who will present at the Event **/
     private String speaker = null;
 
     /**
@@ -56,10 +60,20 @@ public class Event implements Identifiable{
      */
     public LocalDateTime getStartTime(){ return startTime;}
 
+    /**
+     * Set the end time for the Event
+     * @param time is the start Time for the Event
+     */
     public void setStartTime(LocalDateTime time){this.startTime = time;}
 
+    /** Set a speaker to present at this Event
+     * @param speaker the speaker who is assigned to present at this Event
+     */
     public void scheduleSpeaker(String speaker){this.speaker = speaker;}
 
+    /** Checks if there is a speaker presenting at the Event
+     * @return true if the event has a speaker scheduled, false if not
+     */
     public boolean hasSpeaker(){return this.speaker != null;}
 
     /** Gets the name of the Event
@@ -109,5 +123,16 @@ public class Event implements Identifiable{
         attendeeList.add(userName);
     }
 
+    /**
+     * Set the end time for the Event
+     * @param endTime is the time the Event ends
+     */
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
+    /** Gets the time the event will end
+     * @return The end time for the Event
+     */
+    public String getEndTime(){return this.endTime;}
 }
