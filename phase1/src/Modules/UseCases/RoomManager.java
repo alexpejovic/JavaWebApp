@@ -38,6 +38,18 @@ public class RoomManager {
     }
 
     /**
+     * Creates a new Room object and adds it to this RoomManager's list of Rooms
+     * only if the new Room's roomNumber is not the same as any other Room
+     * in this RoomManager's list of Rooms
+     * the new room number will be "r" +"i" where i represents that this is the ith Room in this RoomManager
+     * @param capacity maximum number of people allowed in this room
+     */
+    public void createRoom(int capacity){
+        String roomNumber = "r" + rooms.size();
+        rooms.add(new Room(roomNumber,capacity));
+    }
+
+    /**
      * Returns shallow copy of list of all Rooms in this RoomManager
      * @return copy of all Rooms entities in this RoomManager
      */

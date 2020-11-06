@@ -14,21 +14,31 @@ public class RoomManagerTest {
 
     @Test
     public void testCreateRoom(){
-        RoomManager roomManager = new RoomManager();
+        RoomManager roomManager1 = new RoomManager(); // for constructor that takes in room number
+        RoomManager roomManager2 = new RoomManager(); // for constructor that auto generates room number
+
 
         //should start with no events in room
-        assertEquals(new ArrayList<Room>(), roomManager.getRooms() );
+        assertEquals(new ArrayList<Room>(), roomManager1.getRooms() );
 
         // creating a room
-        roomManager.createRoom("1",2);
+        roomManager1.createRoom("r0",2);
+        roomManager2.createRoom(2);
+
         ArrayList<Room> expected = new ArrayList<>();
-        expected.add(new Room("1", 2));
-        assertTrue(testRoomArrayListEquals(expected,roomManager.getRooms()));
+        expected.add(new Room("r0", 2));
+
+        assertTrue(testRoomArrayListEquals(expected,roomManager1.getRooms()));
+        assertTrue(testRoomArrayListEquals(expected,roomManager2.getRooms()));
 
         // creating another room
-        roomManager.createRoom("2", 5);
-        expected.add(new Room("2", 5));
-        assertTrue(testRoomArrayListEquals(expected,roomManager.getRooms()));
+        roomManager1.createRoom("r1", 5);
+        roomManager2.createRoom(5);
+
+        expected.add(new Room("r1", 5));
+        assertTrue(testRoomArrayListEquals(expected,roomManager1.getRooms()));
+        assertTrue(testRoomArrayListEquals(expected,roomManager2.getRooms()));
+
 
     }
 
@@ -39,31 +49,31 @@ public class RoomManagerTest {
         RoomManager roomManager = new RoomManager();
 
         // adding a room
-        roomManager.createRoom("1",2);
+        roomManager.createRoom("r1",2);
         ArrayList<Room> expected = new ArrayList<>();
-        expected.add(new Room("1", 2));
+        expected.add(new Room("r1", 2));
         assertTrue(testRoomArrayListEquals(expected,roomManager.getRooms()));
 
         // capacityOfRoom()
-        assertEquals(2, roomManager.capacityOfRoom("1"));
+        assertEquals(2, roomManager.capacityOfRoom("r1"));
 
         // isEventInRoom()
-        assertFalse(roomManager.isEventInRoom("1", "e1"));
+        assertFalse(roomManager.isEventInRoom("r1", "e1"));
 
         // getEventsInRoom()
         // should have no events in room 1
-        assertEquals(new ArrayList<String>(), roomManager.getEventsInRoom("1"));
+        assertEquals(new ArrayList<String>(), roomManager.getEventsInRoom("r1"));
 
         // addEventToRoom() - Adding event to room 1
         LocalDateTime date1 = LocalDateTime.of(2020, 11, 3, 11, 11);
-        Event event1 = new Event("1", date1, date1.plusHours(1), "e1");
-        roomManager.addEventToRoom("1","e1");
+        Event event1 = new Event("r1", date1, date1.plusHours(1), "e1");
+        roomManager.addEventToRoom("r1","e1");
         ArrayList<String> expected1 = new ArrayList<>();
         expected1.add("e1");
-        assertEquals(expected1, roomManager.getEventsInRoom("1"));
+        assertEquals(expected1, roomManager.getEventsInRoom("r1"));
 
         // removeEventFromRoom()
-        roomManager.removeEventFromRoom("1","e1");
+        roomManager.removeEventFromRoom("r1","e1");
         expected1.remove("e1");
         assertEquals(expected1, roomManager.getEventsInRoom("1"));
 
@@ -80,21 +90,20 @@ public class RoomManagerTest {
         LocalDateTime time4 = LocalDateTime.of(2020,11, 5, 4 ,0);
         LocalDateTime time5 = LocalDateTime.of(2020,11, 5, 5 ,0);
 
-        // adding a room 1 to eventManager
-        roomManager.createRoom("1",2);
+        // adding a room 0 to eventManager
+        roomManager.createRoom("r0",2);
         ArrayList<Room> expected = new ArrayList<>();
-        expected.add(new Room("1", 2));
+        expected.add(new Room("r0", 2));
         assertTrue(testRoomArrayListEquals(expected,roomManager.getRooms()));
 
         // adding events e1 and e2 to eventManager
-        eventManager.createEvent("1",time2);
+        // eventManager.createEvent("0",time2);
         // create event doesn't take a id?
-        // constructor for event doesn't take id either?? - so possible for some instances of Event to not have id??
-        //TODO: finish test
+        // TODO: finish test
 
 
-        // room 1 has no events
-        assertTrue(roomManager.isRoomAvailable("1", time1, time3, eventManager));
+        // room 0 has no events
+        assertTrue(roomManager.isRoomAvailable("r0", time1, time3, eventManager));
 
 
 
@@ -107,19 +116,19 @@ public class RoomManagerTest {
     @Test(expected = RoomNotFoundException.class)
     public void testCapacityOfRoomEx(){
         RoomManager roomManager = new RoomManager();
-        roomManager.capacityOfRoom("1");
+        roomManager.capacityOfRoom("r0");
     }
 
     @Test(expected = RoomNotFoundException.class)
     public void testIsEventInRoomEx(){
         RoomManager roomManager = new RoomManager();
-        roomManager.isEventInRoom("1", "e1");
+        roomManager.isEventInRoom("r0", "e1");
     }
 
     @Test(expected = RoomNotFoundException.class)
     public void testAddEventToRoomEx(){
         RoomManager roomManager = new RoomManager();
-        roomManager.addEventToRoom("1", "e1");
+        roomManager.addEventToRoom("r0", "e1");
     }
 
     // helper method to determine if two ArrayLists of Rooms have the same rooms

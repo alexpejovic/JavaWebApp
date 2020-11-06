@@ -15,12 +15,12 @@ public class RoomTest {
     // Testing getters for capacity and ID
     public void testGetters(){
         LocalDateTime eventDate = LocalDateTime.of(2020, 11, 3, 11, 11);
-        Room rm = new Room("1",2);
+        Room rm = new Room("r0",2);
 
         // getCapacity()
         assertEquals(2, rm.getCapacity());
         // getID() - room number of room
-        assertEquals("1", rm.getRoomNumber());
+        assertEquals("r0", rm.getRoomNumber());
 
 
     }
@@ -29,7 +29,7 @@ public class RoomTest {
     // Testing methods related to events
     public void testEvents(){
         LocalDateTime eventDate = LocalDateTime.of(2020, 11, 3, 11, 11);
-        Room rm = new Room("1",2);
+        Room rm = new Room("r0",2);
 
         // getEvent()
         // event should be initialized with empty event list
@@ -56,10 +56,10 @@ public class RoomTest {
     @Test
     // test equals()
     public void testEquals(){
-        Room rm1 = new Room("1",2);
-        Room rm2 = new Room("1", 2);
-        Room rm3 = new Room("1",5);
-        Room rm4 = new Room("2", 2);
+        Room rm1 = new Room("r0",2);
+        Room rm2 = new Room("r0", 2);
+        Room rm3 = new Room("r1",5);
+        Room rm4 = new Room("r1", 2);
 
         assertTrue(rm1.equals(rm1));
         assertTrue(rm1.equals(rm2));
