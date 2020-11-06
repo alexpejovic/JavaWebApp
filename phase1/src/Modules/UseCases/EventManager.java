@@ -78,8 +78,17 @@ public class EventManager {
      * @param eventID the unique ID of the event
      * @return LocalDateTime representing the start time of the event
      */
-    public LocalDateTime timeOfEvent(String eventID) {
+    public LocalDateTime startTimeOfEvent(String eventID) {
         return getEvent(eventID).getStartTime();
+    }
+
+    /**
+     * Returns the end time of an event
+     * @param eventID the unique ID of the event
+     * @return LocalDateTime representing the end time of the event
+     */
+    public LocalDateTime endTimeOfEvent(String eventID) {
+        return getEvent(eventID).getEndTime();
     }
 
     /**
@@ -87,10 +96,12 @@ public class EventManager {
      *
      * @param roomNumber the room number of the room where the event is set to take place
      * @param startTime the time that the event starts at
+     * @param endTime the time that the event end at
+     * @param eventID the unique ID of the event
      * @return Returns true if the event was successfully created and added to events, false otherwise
      */
-    public boolean createEvent(String roomNumber, LocalDateTime startTime) {
-        return this.eventList.add(new Event(roomNumber, startTime));
+    public boolean createEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventID) {
+        return this.eventList.add(new Event(roomNumber, startTime, endTime, eventID));
     }
 
     /**
