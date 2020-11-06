@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /** A class representing a room in a conference
  **/
-public class Room implements Identifiable{
+public class Room {
     /** list of event ids for the Events that this room is hosting
     rooms can only host one event at a time **/
     private ArrayList<String> events;
@@ -33,18 +33,11 @@ public class Room implements Identifiable{
      * Returns the unique room number of this Room
      * @return room number of the room
      */
-    @Override
-    public String getID() {
+    public String getRoomNumber() {
         return roomNumber;
     }
 
-    /**
-     * @param ID unique id room number for this Room
-     */
-    @Override
-    public void setID(String ID) {
-        roomNumber = ID;
-    }
+
 
     /**
      * Adds a event id to the list of events this room is hosting
@@ -116,7 +109,7 @@ public class Room implements Identifiable{
     // for testing
     public boolean equals(Room room2){
         //checking capacity and room number (id)
-        if (this.capacity != room2.getCapacity() || !this.roomNumber.equals(room2.getID()) ){
+        if (this.capacity != room2.getCapacity() || !this.roomNumber.equals(room2.getRoomNumber()) ){
             return false;
         }
 

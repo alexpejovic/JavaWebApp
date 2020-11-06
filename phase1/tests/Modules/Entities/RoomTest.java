@@ -2,7 +2,6 @@ package Modules.Entities;
 
 import Modules.Exceptions.EventNotFoundException;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ public class RoomTest {
         // getCapacity()
         assertEquals(2, rm.getCapacity());
         // getID() - room number of room
-        assertEquals("1", rm.getID());
+        assertEquals("1", rm.getRoomNumber());
 
 
     }

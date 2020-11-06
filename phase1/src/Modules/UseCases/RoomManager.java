@@ -1,7 +1,6 @@
 package Modules.UseCases;
 
 import Modules.Entities.Room;
-import Modules.Exceptions.EventNotFoundException;
 import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.RoomNotFoundException;
 
@@ -31,7 +30,7 @@ public class RoomManager {
      */
     public void createRoom(String roomNumber, int capacity){
         for(Room room: rooms){
-            if (room.getID().equals(roomNumber)){
+            if (room.getRoomNumber().equals(roomNumber)){
                 throw new NonUniqueIdException();
             }
         }
@@ -58,7 +57,7 @@ public class RoomManager {
      */
     private Room getRoom(String roomNumber){
         for(Room room: rooms){
-            if (room.getID().equals(roomNumber)){
+            if (room.getRoomNumber().equals(roomNumber)){
                 return room;
             }
         }
