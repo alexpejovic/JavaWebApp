@@ -22,7 +22,7 @@ public class Event implements Identifiable{
     private String eventId;
 
     /** The end time for the Event **/
-    private String endTime;
+    private LocalDateTime endTime;
 
     /** The name of the Event **/
     private String name;
@@ -30,7 +30,8 @@ public class Event implements Identifiable{
     private String speaker = null;
 
     /**
-     * Sets the room capacity and room number for the room where the Event will take place
+     * Sets the room capacity and room number for the room where the Event will take place with only Startime
+     * Assumes this event will last 1 hour
      * @param roomNumber the room number the Event will be held
      * @param time the time at which the Event will begin
      */
@@ -38,6 +39,23 @@ public class Event implements Identifiable{
         this.capacity = 2;
         this.roomNumber = roomNumber;
         this.startTime = time;
+        this.endTime = time.plusHours(1);
+        attendeeList = new ArrayList<>();
+    }
+
+    /**
+     * Constructor for this Event
+     * @param roomNumber the room number where this Event will be held
+     * @param startTime the time at which this Event will begin
+     * @param endTime the time at which this Event will end
+     * @param eventId the unique id of this Event
+     */
+    public Event(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventId ){
+        this.capacity = 2;
+        this.roomNumber = roomNumber;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.eventId = eventId;
         attendeeList = new ArrayList<>();
     }
 
@@ -127,12 +145,12 @@ public class Event implements Identifiable{
      * Set the end time for the Event
      * @param endTime is the time the Event ends
      */
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
     /** Gets the time the event will end
      * @return The end time for the Event
      */
-    public String getEndTime(){return this.endTime;}
+    public LocalDateTime getEndTime(){return this.endTime;}
 }

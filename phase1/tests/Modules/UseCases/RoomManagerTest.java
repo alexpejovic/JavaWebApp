@@ -56,8 +56,7 @@ public class RoomManagerTest {
 
         // addEventToRoom() - Adding event to room 1
         LocalDateTime date1 = LocalDateTime.of(2020, 11, 3, 11, 11);
-        Event event1 = new Event("1", date1);
-        event1.setID("e1");
+        Event event1 = new Event("1", date1, date1.plusHours(1), "e1");
         roomManager.addEventToRoom("1","e1");
         ArrayList<String> expected1 = new ArrayList<>();
         expected1.add("e1");
