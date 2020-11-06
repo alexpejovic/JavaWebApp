@@ -40,8 +40,8 @@ public abstract class User implements Identifiable{
          */
         ArrayList<String> copy = new ArrayList<>();
 
-        for (int i = 0; i < this.friendList.size(); i++) {
-            copy.set(i, this.friendList.get(i));
+        for (String userID: this.friendList) {
+            copy.add(userID);
         }
 
         return copy;
@@ -57,7 +57,7 @@ public abstract class User implements Identifiable{
     public void removeFromFriendList(String userID) {
         /*
         Precondition: String <userId> is an element of <this.friendList>
-         */
+        */
         this.friendList.remove(userID);
     }
 

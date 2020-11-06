@@ -18,9 +18,6 @@ public class Event implements Identifiable{
     /** The start time for the Event **/
     private LocalDateTime startTime;
 
-    /** Speaker assigned to this Event**/
-    private String speakerID = null;
-
     private String eventId;
 
     /**
@@ -54,9 +51,6 @@ public class Event implements Identifiable{
      */
     public LocalDateTime getStartTime(){ return startTime;}
 
-    /** set The the start time for the Event*/
-    public void setStartTime(LocalDateTime time){ this.startTime = time;}
-
     @Override
     public String getID() { return eventId;}
 
@@ -79,17 +73,5 @@ public class Event implements Identifiable{
         attendeeList.add(userName);
     }
 
-    /**
-     * Schedules speaker to speak at this event
-     * @param userID the userID of the speaker
-     */
-    public void scheduleSpeaker(String userID){this.speakerID = userID;}
-
-    /**
-     * @return if speaker is assigned to the Event
-     */
-    public boolean hasSpeaker(){
-        return speakerID != null;
-    }
 
 }

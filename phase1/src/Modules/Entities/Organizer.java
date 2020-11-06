@@ -15,9 +15,10 @@ public class Organizer extends Attendee {
     /**
      * @param username the username for this Organizer
      * @param pwd the password for this Organizer
+     * @param userID the unique ID for this Organizer
      */
-    public Organizer(String username, String pwd) {
-        super(username, pwd);
+    public Organizer(String username, String pwd, String userID) {
+        super(username, pwd, userID);
         this.managedEvents = new ArrayList<>();
     }
 
@@ -26,13 +27,7 @@ public class Organizer extends Attendee {
      * @return a soft copy of the Events this Organizer is managing
      */
     public ArrayList<String> getManagedEvents() {
-        ArrayList<String> copy = new ArrayList<>();
-
-        for (int i = 0; i < this.managedEvents.size(); i++) {
-            copy.set(i, this.managedEvents.get(i));
-        }
-
-        return copy;
+        return new ArrayList<>(this.managedEvents);
     }
 
     //setters

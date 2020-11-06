@@ -1,6 +1,8 @@
 package Modules.UseCases;
 
 import Modules.Entities.Room;
+import Modules.Exceptions.NonUniqueIdException;
+import Modules.Exceptions.RoomNotFoundException;
 
 import java.util.ArrayList;
 
@@ -25,49 +27,75 @@ public class RoomManager {
      * @param roomNumber the unique room number of this room
      * @param capacity maximum number of people allowed in this room
      */
-    public void addRoom(int roomNumber, int capacity){
-        boolean uniqueRoomNumber = true;
+    public void addRoom(String roomNumber, int capacity){
         for(Room room: rooms){
-            if (room.getRoomNumber() == roomNumber){
-                System.out.println("There is already a room with that room number.");
-                uniqueRoomNumber = false;
+            if (room.getID().equals(roomNumber)){
+                throw new NonUniqueIdException();
             }
         }
-        if (uniqueRoomNumber){
-            rooms.add(new Room(roomNumber,capacity));
-        }
+        rooms.add(new Room(roomNumber,capacity));
     }
 
     /**
-     * Checks if a room is hosting a specific event
+     * Private helper that returns the Room in this RoomManager with roomNumber
+     * or raises a RoomNotFoundException if there is no Room in this RoomManager
+     * @param roomNumber the unique room number of the Room we want
+     * @return the Room in this RoomManager with roomNumber
+     */
+    private Room getRoom(String roomNumber){
+        for(Room room: rooms){
+            if (room.getID().equals(roomNumber)){
+                return room;
+            }
+        }
+        // there is no Room with this RoomManager with roomNumber
+        throw new RoomNotFoundException();
+    }
+
+
+    /**
+     * Checks if a Room in rooms is hosting a specific event
      * @param roomNumber the room number of the Room we want to check
      * @param eventId the id of the Event we want to check
      * @return true iff there is a Room in this RoomManager that matches roomNumber and that Room
      */
-    public boolean isHostingEvent(int roomNumber, String eventId){
-        for(Room room: rooms) {
-            if (room.getRoomNumber() == roomNumber) {
-                return room.isEventInRoom(eventId);
-            }
-        }
-        // there is no Room with this RoomManager with roomNumber
-        System.out.println("There is no room with that room number in this Room Manager.");
-        return false;
+    public boolean isHostingEvent(String roomNumber, String eventId){
+        return this.getRoom(roomNumber).isEventInRoom(eventId);
     }
 
     /**
-     *Returns the capacity of the Room specified by that room number
+     * Returns the capacity of a Room in rooms
      * @param roomNumber the room number of the Room we want to get the capacity of
-     * @return the capacity of the room or -1 if there is no Room with that roomNumber in this RoomManager
+     * @return the capacity of the room 
      */
-    public int capacityOfRoom(int roomNumber){
-        for(Room room: rooms) {
-            if (room.getRoomNumber() == roomNumber) {
-                return room.getCapacity();
-            }
-        }
-        // there is no Room with this RoomManager with roomNumber
-        return -1;
+    public int capacityOfRoom(String roomNumber){
+        return this.getRoom(roomNumber).getCapacity();
+    }
+
+    /**
+     * Add eventid to the list of events for a Room in rooms
+     * @param roomNumber the room number of the Room we want to add the event to
+     * @param eventId the id of the Event that we want to schedule in the specified Room
+     */
+    public void addEventToRoom(String roomNumber, String eventId){
+        this.getRoom(roomNumber).addEvent(eventId);
+    }
+
+    /**
+     * Remove eventid to the list of events for a Room in rooms
+     * @param roomNumber the room number of the Room we want to remove the event to
+     * @param eventId the id of the Event that we want to remove from the specified Room
+     */
+    public void removeEventFromRoom(String roomNumber, String eventId){
+        this.getRoom(roomNumber).removeEvent(eventId);
+    }
+
+    /**
+     * return a list of all event ids for events occurring for a Room in rooms
+     * @param roomNumber the room number of the Room we want the list from
+     */
+    public ArrayList getEventsInRoom(String roomNumber){
+        return this.getRoom(roomNumber).getEvents();
     }
 
 
