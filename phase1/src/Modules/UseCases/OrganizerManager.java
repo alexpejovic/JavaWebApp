@@ -52,7 +52,7 @@ public class OrganizerManager {
      * @param userId the Organizer's userId
      */
     public void createOrganizerAccount(String userName, String password, String userId){
-        Organizer newOrganizer = new Organizer(userName, password);
+        Organizer newOrganizer = new Organizer(userName, password, userId);
         listOfOrganizers.add(newOrganizer);
     }
 
@@ -61,7 +61,7 @@ public class OrganizerManager {
      * @param roomNumber the Room's unique room number
      * @param capacity the the maximum number of users allowed in the room
      */
-    public void newRoom(int roomNumber, int capacity){
+    public void newRoom(String roomNumber, int capacity){
         Room newRoom = new Room(roomNumber, capacity);
         listOfRooms.add(newRoom);
     }
@@ -162,11 +162,11 @@ public class OrganizerManager {
      * @param roomNumber The location where the Event will take place
      * @param time The start time for the Event
      */
-    public void createNewEvent(Organizer organizer, int roomNumber, LocalDateTime time){
+    public void createNewEvent(Organizer organizer, String roomNumber, LocalDateTime time){
         //checks that room number doesn't have event at given time
         boolean canOrganize = true;
         for (Room room: listOfRooms){
-            if (room.getRoomNumber() == roomNumber){
+            if (room.getRoomNumber().equals(roomNumber)){
                 for(Object eventID: room.getEvents()){
                     Event eventObject = listOfEvents.get(listOfEvents.indexOf(eventID));
                     if (eventObject.getStartTime() == time){canOrganize = false;}

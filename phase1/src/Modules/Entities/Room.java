@@ -106,4 +106,9 @@ public class Room implements Identifiable{
         return capacity;
     }
 
+    /**
+     * @return the room number of this Room
+     */
+    public String getRoomNumber() {return this.roomNumber;}
+
 }
