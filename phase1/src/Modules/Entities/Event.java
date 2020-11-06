@@ -20,6 +20,9 @@ public class Event implements Identifiable{
 
     private String eventId;
 
+    /** The name of the Event **/
+    private String name;
+
     private String speaker = null;
 
     /**
@@ -58,6 +61,31 @@ public class Event implements Identifiable{
     public void scheduleSpeaker(String speaker){this.speaker = speaker;}
 
     public boolean hasSpeaker(){return this.speaker != null;}
+
+    /** Gets the name of the Event
+     *
+     * @return The name of the Event
+     */
+    public String getName() {
+        return name;
+    }
+
+
+    /** Sets the name of the Event
+     *
+     * @param name The name of the Event
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /** Gets the remaining available seats at this event
+     *
+     * @return The number of seats available at this Event
+     */
+    public int getAvailableSeats() {
+        return capacity - attendeeList.size();
+    }
 
     @Override
     public String getID() { return eventId;}
