@@ -13,6 +13,21 @@ import static org.junit.Assert.*;
 public class RoomManagerTest {
 
     @Test
+    public void testRoomManager(){
+        RoomManager roomManager1 = new RoomManager();
+
+        //testing the constructor that takes in a list of Rooms
+        ArrayList<Room> expected = new ArrayList<>();
+        Room r0 = new Room("r0",2);
+        Room r1 = new Room("r1", 5);
+        expected.add(r0);
+        expected.add(r1);
+        RoomManager roomManager2 = new RoomManager(expected);
+        assertTrue(testRoomArrayListEquals(expected, roomManager2.getRooms()));
+    }
+
+
+    @Test
     public void testCreateRoom(){
         RoomManager roomManager1 = new RoomManager(); // for constructor that takes in room number
         RoomManager roomManager2 = new RoomManager(); // for constructor that auto generates room number
@@ -75,7 +90,7 @@ public class RoomManagerTest {
         // removeEventFromRoom()
         roomManager.removeEventFromRoom("r1","e1");
         expected1.remove("e1");
-        assertEquals(expected1, roomManager.getEventsInRoom("1"));
+        assertEquals(expected1, roomManager.getEventsInRoom("r1"));
 
     }
 
@@ -97,16 +112,27 @@ public class RoomManagerTest {
         assertTrue(testRoomArrayListEquals(expected,roomManager.getRooms()));
 
         // adding events e1 and e2 to eventManager
-        // eventManager.createEvent("0",time2);
-        // create event doesn't take a id?
+        eventManager.createEvent("0",time2,time3,"e1");
+        eventManager.createEvent("0", time4, time5.plusHours(1),"e2");
         // TODO: finish test
 
-
         // room 0 has no events
-        assertTrue(roomManager.isRoomAvailable("r0", time1, time3, eventManager));
+        assertTrue(roomManager.isRoomAvailable("r0", time1, time5, eventManager));
 
+        // adding event 1 to roomManager
+        roomManager.addEventToRoom("r0", "e1");
+        assertTrue(roomManager.isRoomAvailable("r0", time1, time2, eventManager));
+        assertFalse(roomManager.isRoomAvailable("r0", time1, time3, eventManager));
+        assertFalse(roomManager.isRoomAvailable("r0", time1, time4, eventManager));
+        assertTrue(roomManager.isRoomAvailable("r0", time3, time5, eventManager));
 
-
+        // adding event 2 to roomManager
+        roomManager.addEventToRoom("r0", "e2");
+        assertTrue(roomManager.isRoomAvailable("r0", time1, time2, eventManager));
+        assertTrue(roomManager.isRoomAvailable("r0", time3, time4, eventManager));
+        assertFalse(roomManager.isRoomAvailable("r0", time3, time5, eventManager));
+        assertFalse(roomManager.isRoomAvailable("r0", time1, time5, eventManager));
+        assertFalse(roomManager.isRoomAvailable("r0", time1.plusMinutes(30), time5, eventManager));
 
     }
 

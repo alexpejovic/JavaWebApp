@@ -18,7 +18,18 @@ public class RoomManager {
      * Initializes a new RoomManager with no Rooms
      */
     public RoomManager(){
-        this.rooms = new ArrayList<Room>();
+        this.rooms = new ArrayList<>();
+    }
+
+    /**
+     * Initializes a new RoomManager
+     * @param rooms the Rooms to be put in this RoomManager
+     */
+    public RoomManager(ArrayList<Room> rooms){
+        this.rooms = new ArrayList<>();
+        for (Room room: rooms){
+            this.createRoom(room.getRoomNumber(),room.getCapacity());
+        }
     }
 
     /**
@@ -134,10 +145,8 @@ public class RoomManager {
                                    EventManager eventManager){
         ArrayList<String> eventList = this.getRoom(roomNumber).getEvents();
         for (String eventId: eventList){
-            LocalDateTime eventStartTime = eventManager.timeOfEvent(eventId);
-            // For phase 1, events only last 1 hour so eventEndTime 1 hour past eventStartTime
-            // TODO: change this once Event has endTime
-            LocalDateTime eventEndTime = eventStartTime.plusHours(1);
+            LocalDateTime eventStartTime = eventManager.startTimeOfEvent(eventId);
+            LocalDateTime eventEndTime = eventManager.endTimeOfEvent(eventId);
             if(eventStartTime.isEqual(startTime) ||
                     (eventStartTime.isAfter(startTime) && eventStartTime.isBefore(endTime)) ||
                     (eventEndTime.isAfter(startTime) && eventEndTime.isBefore(endTime)) ) {
