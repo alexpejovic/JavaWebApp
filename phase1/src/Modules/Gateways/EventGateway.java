@@ -12,7 +12,7 @@ public class EventGateway {
     /**
      * @param filename the name of the file being read
      */
-    public void readSerFile(String filename) {
+    public ArrayList<Event> readSerFile(String filename) {
 
         ArrayList<Event> events = null;
         try {
@@ -26,11 +26,15 @@ public class EventGateway {
 
             System.out.println("Successfully read Events");
 
+            return events;
+
         } catch (FileNotFoundException e) {
             System.out.println(filename + " is missing");
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            return events;
         }
+
+        return events;
     }
 
     /**

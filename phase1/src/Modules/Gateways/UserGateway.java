@@ -30,7 +30,7 @@ public class UserGateway {
         } catch (FileNotFoundException e) {
             System.out.println(filename + " is missing");
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            return users;
         }
 
         return users;

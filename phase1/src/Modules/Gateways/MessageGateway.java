@@ -12,7 +12,7 @@ public class MessageGateway {
     /**
      * @param filename the name of the file being read
      */
-    public void readSerFile(String filename) {
+    public ArrayList<Message> readSerFile(String filename) {
 
         ArrayList<Message> messages = null;
         try {
@@ -26,11 +26,15 @@ public class MessageGateway {
 
             System.out.println("Successfully read Messages");
 
+            return messages;
+
         } catch (FileNotFoundException e) {
             System.out.println(filename + " is missing");
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            return messages;
         }
+
+        return messages;
     }
 
     /**
