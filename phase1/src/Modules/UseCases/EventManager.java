@@ -32,6 +32,7 @@ public class EventManager {
         for (Event event : this.eventList) {
             // Iterates through each event and checks if schedule is free from time to time + 1 hour
             // (assumes 1 hour length)
+            // TODO: No longer assume 1 hour length
             if (!(time.until(event.getStartTime(), java.time.temporal.ChronoUnit.HOURS) > 1 ||
                     time.until(event.getStartTime(), java.time.temporal.ChronoUnit.HOURS) < -1)) {
                 return false;
@@ -115,5 +116,35 @@ public class EventManager {
         }
         return copy;
     }
+
+    /**
+     * Checks if an event can allow another attendee to attend
+     * @param eventID the unique ID of the event
+     * @return returns true if there is room for another attendee in the room that the event takes place in, false
+     * otherwise
+     */
+    public boolean canAttend(String eventID) {
+        return getEvent(eventID).getAvailableSeats() > 0;
+    }
+
+    /**
+     * Adds an attendee userID to the list of attendees attending an event
+     * @param eventID the unique ID of the event
+     * @param userID the unique userID of the user
+     */
+    public void addAttendee(String eventID, String userID) {
+        getEvent(eventID).addAttendee(userID);
+    }
+
+    /**
+     * Removes an attendee's userID from the list of attendees attending an event
+     * @param eventID the unique ID of the event
+     * @param userID the unique userID of the user
+     */
+    public void removeAttendee(String eventID, String userID) {
+        getEvent(eventID).removeAttendee(userID);
+    }
+
+    //TODO: Set, remove speaker methods
 
 }
