@@ -23,10 +23,10 @@ public class EventManagerTest {
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
 
-        assertTrue(manager.createEvent("1", eventDate1));
-        assertTrue(manager.createEvent("2", eventDate1));
-        assertTrue(manager.createEvent("1", eventDate2));
-        assertTrue(manager.createEvent("3", eventDate3));
+        assertTrue(manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1"));
+        assertTrue(manager.createEvent("2", eventDate1, eventDate1.plusHours(1), "event2"));
+        assertTrue(manager.createEvent("1", eventDate2, eventDate2.plusHours(1), "event3"));
+        assertTrue(manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event4"));
     }
 
     @Test
@@ -41,9 +41,9 @@ public class EventManagerTest {
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
 
-        manager.createEvent("1", eventDate1);
-        manager.createEvent("2", eventDate2);
-        manager.createEvent("3", eventDate3);
+        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1");
+        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2");
+        manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event3");
     }
 
     @Test
@@ -53,9 +53,9 @@ public class EventManagerTest {
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
 
-        manager.createEvent("1", eventDate1);
-        manager.createEvent("2", eventDate2);
-        manager.createEvent("3", eventDate3);
+        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1");
+        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2");
+        manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event3");
 
         LocalDateTime eventDate4 = LocalDateTime.of(2020, 11, 3, 11, 12);
         LocalDateTime eventDate5 = LocalDateTime.of(2021, 12, 3, 10, 11);
