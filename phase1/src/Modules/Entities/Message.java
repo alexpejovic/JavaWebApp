@@ -2,7 +2,7 @@ package Modules.Entities;
 
 import java.time.LocalDateTime;
 
-public class Message implements Identifiable {
+public class Message implements Identifiable, Comparable<Message> {
     // Message content
     private final String content;
 
@@ -21,6 +21,7 @@ public class Message implements Identifiable {
      * @param content The content of the message
      * @param senderID The ID string of the sender
      * @param receiverID The ID string of the receiver
+     * @param messageID The ID of the message object
      * @param dateTime The date and time that the message was sent
      */
     public Message(String content, String senderID, String receiverID, String messageID, LocalDateTime dateTime) {
@@ -87,5 +88,10 @@ public class Message implements Identifiable {
      */
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    @Override
+    public int compareTo(Message message) {
+        return this.dateTime.compareTo(message.getDateTime());
     }
 }
