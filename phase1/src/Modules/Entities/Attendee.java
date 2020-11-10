@@ -9,7 +9,7 @@ public class Attendee extends User implements Identifiable{
     /** a list of events that this attendee is attending */
     private ArrayList<String> eventsList;
     /** an exception thrown if looking for an event ID that is not in this attendee's list */
-    private Exception EventNotFoundException;
+    private RuntimeException EventNotFoundException;
 
     /**
      *

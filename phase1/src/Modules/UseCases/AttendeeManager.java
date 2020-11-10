@@ -30,6 +30,14 @@ public class AttendeeManager{
     }
 
     /**
+     * takes an already created attendee and adds it to the list of current existing attendees
+     * @param attendee an existing attendee
+     */
+    public void addAttendee(Attendee attendee){
+        attendeeList.add(attendee);
+    }
+
+    /**
      *
      * @param attendee the attendee whose time availability we want to check
      * @param time the time at which we want to know if the attendee is available
@@ -72,5 +80,39 @@ public class AttendeeManager{
             copy.set(i, attendeeList.get(i));
         }
         return copy;
+    }
+
+    /**
+     *
+     * @param username the username entered by user
+     * @return true if there exists a user account with this username, false otherwise
+     */
+    public boolean isUser(String username){
+        for (Attendee attendee: attendeeList){
+            if (attendee.getUsername().equals(username)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * check if the password entered by user matches password on file
+     * @param username the username og the account whose password we want to check
+     * @param password the password entered that we want to compare to password on file
+     * @return true if entered password matches the password on file, false otherwise
+     */
+    public boolean validatePassword(String username, String password){
+        for (Attendee attendee: attendeeList){
+            if (attendee.getUsername().equals(username)){
+                if (attendee.getPassword().equals(password)){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 }
