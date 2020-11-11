@@ -33,38 +33,58 @@ public class LoginController {
         this.speakerManager = speakerManager;
     }
 
-
+    /**
+     * Returns whether or not there is a matching username and password combination
+     * within all the Users in this conference
+     * @param username the username we want to check
+     * @param password the password we want to check
+     * @return true iff there is a User with the matching username and password.
+     */
     public boolean validateUsernamePassword(String username, String password){
         //TODO: need the user managers to implement way to check password otherwise accessing
         // entities would be violation of clean architecture
 
-//        // checking if this user is an attendee
-//        if (attendeeManager.isUser(username)){
-//            return attendeeManager.validatePassword(username);
-//        }
+        // checking if this user is an attendee
+        if (attendeeManager.isUser(username)){
+            return attendeeManager.validatePassword(password, username);
+        }
 //        // checking if this user is an organizer
 //        else if (organizerManager.isUser(username)){
-//            return attendeeManager.validatePassword(username);
+//            return attendeeManager.validatePassword(password, username);
 //        }
 //        // checking if this user is an speaker
 //        else if (speakerManager.isUser(username)){
-//            return attendeeManager.validatePassword(username);
+//            return attendeeManager.validatePassword(password, username);
 //        }
-
-        // originally wanted to do something like this but this would be the responsibility of use cases
-        // can't access entity methods
-//        ArrayList<Attendee> attendees = attendeeManager.getAttendeeList();
-//        for (Attendee attendee: attendees){
-//            if (attendee.getUsername().equals(username)){
-//                return attendee.getPassword().equals(password);
-//            }
-//        }
-//        // ... same for organizers and speakers
 
         throw new UserNotFoundException();
 
+    }
 
+    /**
+     * Returns the User with this username
+     * @param username the username of the User we want
+     * @return the User we are looking for
+     */
+    public User returnUser(String username){
+        // checking if this user is an attendee
+        if (attendeeManager.isUser(username)){
+            // need attendeeManager to implement getUser
+            // or UserManager to implement so attendeeManager can inherit
 
+//            return attendeeManager.getUser(username);
+
+        }
+//        // checking if this user is an organizer
+//        else if (organizerManager.isUser(username)){
+//            return organizerManager.getUser(username);
+//        }
+//        // checking if this user is an speaker
+//        else if (speakerManager.isUser(username)){
+//            return organizerManager.getUser(username);
+//        }
+        //TODO: finish once user managers are finished implementing methods
+        return null; // just here temporarily so there isn't error
     }
 
 
