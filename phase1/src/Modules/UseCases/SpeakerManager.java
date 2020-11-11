@@ -70,4 +70,30 @@ public class SpeakerManager {
         }
         return newSpeakerList;
     }
+
+    /**
+     * Returns whether a given password matches that of a particular user
+     * @param speaker the speaker in question
+     * @param pwd the password we are checking
+     * @return whether the speakers password is equal to pwd
+     */
+
+    public boolean validatePassword(Speaker speaker, String pwd){
+        return speaker.getPassword().equals(pwd);
+    }
+
+    /**
+     * Returns whether a particular speaker is a registered speaker
+     * @param speaker the speaker in question
+     * @return whether a particular speaker is a registered speaker
+     */
+    public boolean isUser(Speaker speaker){
+         int ind = 0;
+         while(ind < speakerList.size()){
+             if(speakerList.get(ind).getID().equals(speaker.getID())){
+                 return true;
+             }
+         }
+         return false;
+    }
 }
