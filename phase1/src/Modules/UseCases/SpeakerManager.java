@@ -93,6 +93,7 @@ public class SpeakerManager {
              if(speakerList.get(ind).getID().equals(speaker.getID())){
                  return true;
              }
+             ind++;
          }
          return false;
     }
