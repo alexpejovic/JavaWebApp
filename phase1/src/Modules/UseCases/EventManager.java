@@ -32,7 +32,6 @@ public class EventManager {
         for (Event event : this.eventList) {
             // Iterates through each event and checks if schedule is free from time to time + 1 hour
             // (assumes 1 hour length)
-            // TODO: No longer assume 1 hour length
             if (!(time.until(event.getStartTime(), java.time.temporal.ChronoUnit.HOURS) > 1 ||
                     time.until(event.getStartTime(), java.time.temporal.ChronoUnit.HOURS) < -1)) {
                 return false;
@@ -41,6 +40,24 @@ public class EventManager {
 
         return true;
 
+    }
+
+    /**
+     * Checks if an event can be booked in a specific room, at a specified start and end time
+     * Precondition: startTime is before endTime
+     * @param roomNumber the room number of the room to check
+     * @param startTime the time that the event would start at
+     * @param endTime the time that the event would end at
+     * @return returns true if it is possible to book an event at the given location and time, false otherwise
+     */
+    public boolean canBook(String roomNumber, LocalDateTime startTime, LocalDateTime endTime) {
+        for (Event event: getEventsInRoom(roomNumber)) {
+            if (!(endTime.isBefore(event.getStartTime()) || startTime.isAfter(event.getEndTime()))) {
+                // Note that false is returned if endTime is equal to an event's startTime
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -145,6 +162,55 @@ public class EventManager {
         getEvent(eventID).removeAttendee(userID);
     }
 
-    //TODO: Set, remove speaker methods
+    /**
+     * Returns a list of events that occur in a room
+     * @param roomNumber the room number of the room
+     * @return returns an arrayList of events that take place in the specified room
+     */
+    private ArrayList<Event> getEventsInRoom(String roomNumber) {
+        ArrayList<Event> eventsInRoom = new ArrayList<>();
+        for (Event event: this.eventList) {
+            if (event.getRoomNumber().equals(roomNumber)) {
+                eventsInRoom.add(event);
+            }
+        }
+        return eventsInRoom;
+    }
+
+    /**
+     * Returns if an event has a speaker
+     * @param eventID the unique ID of the event
+     * @return returns true if the event has a speaker booked, false otherwise
+     */
+    public boolean hasSpeaker(String eventID) {
+        return getEvent(eventID).hasSpeaker();
+    }
+
+    /**
+     * Sets the speaker of the event. This method removes the previous speaker if there was one
+     * @param speakerID the unique user ID of the speaker
+     * @param eventID the unique ID of the event
+     */
+    public void setSpeaker(String speakerID, String eventID) {
+        getEvent(eventID).scheduleSpeaker(speakerID);
+    }
+
+    /**
+     * Returns the name of the event
+     * @param eventID the unique ID of the event
+     * @return returns a String representing the name of the event
+     */
+    public String getName(String eventID) {
+        return getEvent(eventID).getName();
+    }
+
+    /**
+     * Sets the new name of the event
+     * @param eventID the unique ID of the event
+     * @param name the new name of the event
+     */
+    public void renameEvent(String eventID, String name) {
+        getEvent(eventID).setName(name);
+    }
 
 }
