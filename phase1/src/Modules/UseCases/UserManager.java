@@ -2,21 +2,36 @@ package Modules.UseCases;
 
 import Modules.Entities.User;
 
+import java.util.ArrayList;
+
 
 /** UseCase for basic management of common user actions specified in {@link Modules.Entities.User}.
  */
 public abstract class UserManager {
 
-    /** Validates password of user
-     *
-     * @param password String representation of a password
-     * @param user User whose password we wish to validate
-     * @return Returns true if the user's password is password, false otherwise
+    /**
+     * Checks if the password entered by user matches password on file
+     * @param username the username of the account whose password we want to check
+     * @param password the password entered that we want to compare to password on file
+     * @return true if there is a account with username and entered password matches, false otherwise
      */
-    public boolean validatePassword(String password, User user){
+    public abstract boolean validatePassword(String password, String username);
 
-        return password.equals(user.getPassword());
-    }
+
+    /**
+     * Returns whether a particular user is a particular user type
+     * @param username the username of the User in question
+     * @return true iff a particular speaker is particular user type
+     */
+    public abstract boolean isUser(String username);
+
+    /**
+     * Returns the specific User with username
+     * @param username the username we want to check
+     * @return the specific User that has the given username
+     */
+    public abstract User getUser(String username);
+
 
     /** Checks if user1 is able to message user2
      *

@@ -1,12 +1,16 @@
 package Modules.UseCases;
 
+import Modules.Entities.Attendee;
 import Modules.Entities.Speaker;
+import Modules.Entities.User;
+import Modules.Exceptions.UserNotFoundException;
+
 import java.util.ArrayList;
 
 /**
  * This class performs actions on Speakers and gives important information about all Speakers
  */
-public class SpeakerManager {
+public class SpeakerManager extends UserManager{
     private ArrayList<Speaker> speakerList;
 
     /**
@@ -72,29 +76,53 @@ public class SpeakerManager {
     }
 
     /**
-     * Returns whether a given password matches that of a particular user
-     * @param speaker the speaker in question
-     * @param pwd the password we are checking
-     * @return whether the speakers password is equal to pwd
+     * Returns whether or not there is a specific speaker account with the given username and password
+     * @param username the username of the account whose password we want to check
+     * @param password the password entered that we want to compare to password on file
+     * @return true if entered password matches the password on file, false otherwise
      */
-
-    public boolean validatePassword(Speaker speaker, String pwd){
-        return speaker.getPassword().equals(pwd);
+    @Override
+    public boolean validatePassword(String username, String password){
+        for (Speaker speaker: speakerList){
+            if (speaker.getUsername().equals(username)){
+                return speaker.getPassword().equals(password);
+            }
+        }
+        return false;
     }
 
     /**
      * Returns whether a particular speaker is a registered speaker
-     * @param speaker the speaker in question
+     * @param username the username entered by user
      * @return whether a particular speaker is a registered speaker
      */
-    public boolean isUser(Speaker speaker){
+    @Override
+    public boolean isUser(String username){
          int ind = 0;
          while(ind < speakerList.size()){
-             if(speakerList.get(ind).getID().equals(speaker.getID())){
+             if(speakerList.get(ind).getID().equals(username)){
                  return true;
              }
              ind++;
          }
          return false;
     }
+
+    /**
+     * Returns the specific Speaker with username
+     * @param username the username we want to check
+     * @return the specific Speaker entity that has the given username
+     */
+    @Override
+    public User getUser(String username){
+        for (Speaker speaker: speakerList){
+            if (speaker.getUsername().equals(username)){
+                return speaker;
+            }
+        }
+        throw new UserNotFoundException();
+    }
+
+
+
 }

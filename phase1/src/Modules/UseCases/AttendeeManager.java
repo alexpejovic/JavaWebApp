@@ -2,11 +2,13 @@ package Modules.UseCases;
 
 import Modules.Entities.Attendee;
 import Modules.Entities.Event;
+import Modules.Entities.User;
+import Modules.Exceptions.UserNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class AttendeeManager{
+public class AttendeeManager extends UserManager{
     /** a list of all existing attendees */
     ArrayList<Attendee> attendeeList;
 
@@ -15,7 +17,7 @@ public class AttendeeManager{
     }
 
     /**
-     * creates a new attendee using the given parameters and adds them to the list of exisitng attendees
+     * creates a new attendee using the given parameters and adds them to the list of existing attendees
      * @param username the username for this attendee
      * @param password the password for this attendee
      * @param userID the userID for this attendee
@@ -83,10 +85,11 @@ public class AttendeeManager{
     }
 
     /**
-     *
+     * Returns if there is a attendee with a specific username
      * @param username the username entered by user
-     * @return true if there exists a user account with this username, false otherwise
+     * @return true if there exists a attendee account with this username, false otherwise
      */
+    @Override
     public boolean isUser(String username){
         for (Attendee attendee: attendeeList){
             if (attendee.getUsername().equals(username)){
@@ -97,22 +100,34 @@ public class AttendeeManager{
     }
 
     /**
-     * check if the password entered by user matches password on file
-     * @param username the username og the account whose password we want to check
+     * Returns whether or not there is a specific attendee account with the given username and password
+     * @param username the username of the account whose password we want to check
      * @param password the password entered that we want to compare to password on file
      * @return true if entered password matches the password on file, false otherwise
      */
+    @Override
     public boolean validatePassword(String username, String password){
         for (Attendee attendee: attendeeList){
             if (attendee.getUsername().equals(username)){
-                if (attendee.getPassword().equals(password)){
-                    return true;
-                }
-                else{
-                    return false;
-                }
+                return attendee.getPassword().equals(password);
             }
         }
         return false;
     }
+
+    /**
+     * Returns the specific Attendee with username
+     * @param username the username we want to check
+     * @return the specific Attendee entity that has the given username
+     */
+    @Override
+    public User getUser(String username){
+        for(Attendee attendee: attendeeList){
+            if (attendee.getUsername().equals(username)){
+                return attendee;
+            }
+        }
+        throw new UserNotFoundException();
+    }
+
 }

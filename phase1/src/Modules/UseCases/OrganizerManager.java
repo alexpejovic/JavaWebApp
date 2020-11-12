@@ -2,14 +2,12 @@ package Modules.UseCases;
 
 import java.util.ArrayList;
 
-import Modules.Entities.Event;
-import Modules.Entities.Organizer;
-import Modules.Entities.Speaker;
-import Modules.Entities.Room;
-import java.time.LocalDateTime;
-import Modules.Entities.Attendee;
+import Modules.Entities.*;
+import Modules.Exceptions.UserNotFoundException;
 
-public class OrganizerManager{
+import java.time.LocalDateTime;
+
+public class OrganizerManager extends UserManager{
     /** List of all Organizers in the conference*/
     ArrayList<Organizer> listOfOrganizers;
 
@@ -31,6 +29,52 @@ public class OrganizerManager{
         this.listOfRooms = new ArrayList<>();
         this.listOfAttendees = new ArrayList<>();
         this.listOfEvents = new ArrayList<>();
+    }
+
+    /**
+     * Returns if there is a attendee with a specific username
+     * @param username the username entered by user
+     * @return true if there exists a organizer account with this username, false otherwise
+     */
+    @Override
+    public boolean isUser(String username){
+        for (Organizer organizer: listOfOrganizers){
+            if (organizer.getUsername().equals(username)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns whether or not there is a specific organizer account with the given username and password
+     * @param username the username of the account whose password we want to check
+     * @param password the password entered that we want to compare to password on file
+     * @return true if entered password matches the password on file, false otherwise
+     */
+    @Override
+    public boolean validatePassword(String username, String password){
+        for (Organizer organizer: listOfOrganizers){
+            if (organizer.getUsername().equals(username)){
+                return organizer.getPassword().equals(password);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the specific Organizer with username
+     * @param username the username we want to check
+     * @return the specific Organizer entity that has the given username
+     */
+    @Override
+    public User getUser(String username){
+        for (Organizer organizer: listOfOrganizers){
+            if (organizer.getUsername().equals(username)){
+                return organizer;
+            }
+        }
+        throw new UserNotFoundException();
     }
 
     /**
