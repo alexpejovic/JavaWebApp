@@ -3,6 +3,8 @@ package Modules.UseCases;
 import java.util.ArrayList;
 
 import Modules.Entities.*;
+import Modules.Exceptions.EventNotFoundException;
+import Modules.Exceptions.RoomNotFoundException;
 import Modules.Exceptions.UserNotFoundException;
 
 import java.time.LocalDateTime;
@@ -23,12 +25,18 @@ public class OrganizerManager extends UserManager{
     /** List of all Events in the conference */
     ArrayList<Event> listOfEvents;
 
-    public OrganizerManager(){
+    private EventManager eventManager;
+
+    private RoomManager roomManager;
+
+    public OrganizerManager(EventManager eventManager, RoomManager roomManager){
         this.listOfOrganizers = new ArrayList<>();
         this.listOfSpeakers = new ArrayList<>();
         this.listOfRooms = new ArrayList<>();
         this.listOfAttendees = new ArrayList<>();
         this.listOfEvents = new ArrayList<>();
+        this.roomManager = roomManager;
+        this.eventManager = eventManager;
     }
 
     /**
@@ -78,25 +86,6 @@ public class OrganizerManager extends UserManager{
     }
 
     /**
-     * Creates a Speaker account and adds it to the list of all speakers
-     * @param userName the Speaker's username
-     * @param password the Speaker's password
-     * @param userId the Speaker's userId
-     * @return a new Speaker account               
-     */
-    public Speaker createSpeakerAccount(String userName, String password, String userId){
-        Speaker newSpeaker = new Speaker(userName, password, userId);
-        return newSpeaker;
-
-    }
-
-    /**
-     * adds speaker into the system
-     * @param newSpeaker the speaker being added into the system
-     */
-    public void addSpeakerAccount(Speaker newSpeaker){listOfSpeakers.add(newSpeaker);}
-
-    /**
      * adds newly created organizer account into the system
      * @param newOrganizer the organizer account added into the system
      */
@@ -110,186 +99,148 @@ public class OrganizerManager extends UserManager{
      * @return a new Organizer account based on the info given
      */
     public Organizer createOrganizerAccount(String userName, String password, String userId){
-        Organizer newOrganizer = new Organizer(userName, password, userId);
-        return newOrganizer;
+        return (new Organizer(userName, password, userId));
     }
 
     /**
-     * Creates a new Room and adds it to the system
-     * @param roomNumber the Room's unique room number
-     * @param capacity the the maximum number of users allowed in the room
-     * @return a new room
-     */
-    public Room createNewRoom(String roomNumber, int capacity){
-        Room newRoom = new Room(roomNumber, capacity);
-        return newRoom;
-    }
-
-    /**
-     * Adds new room into the system
-     * @param newRoom the room being added into the system
-     */
-    public void addNewRoom(Room newRoom){listOfRooms.add(newRoom);}
-
-    /**
-     * @param room The room where the Event is taking place
-     * @param time The time at which the Event is taking place
+     * @param roomId The id of the room where the Event is taking place
+     * @param startTime The time at which the Event will start
+     * @param endTime The time at which the Event will end
      * @return the Event object of the event that is taking place in a specific Room at a specific time
      */
-    private Event eventAtTime(Room room, LocalDateTime time) {
-        Event eventAtTime = null;
-        for (int i = 0; i < room.getEvents().size(); i++) {
-            Object eventID = room.getEvents().get(i);
-            for (Event event : listOfEvents) {
-                if (event.getID() == eventID) {
-                    eventAtTime = event;
-                }
+    private Event eventAtTime(String roomId, LocalDateTime startTime, LocalDateTime endTime) {
+        Room room = findRoom(roomId);
+        for (String currEvent: room.getEvents()) {
+            Event event = findEvent(currEvent);
+            if (event.getStartTime().equals(startTime) && event.getEndTime().equals(endTime)) {
+                return event;
             }
         }
-        return eventAtTime;
+        throw new EventNotFoundException();
     }
+
+    /**
+     * Private method that return the room object of the room storing the given room number
+     * @param roomNumber the room number of the room object being searched for
+     * @return The room object with the corresponding room number
+     */
+    private Room findRoom(String roomNumber){
+        for (Room currRoom: listOfRooms){
+            if (roomNumber.equals(currRoom.getRoomNumber())){return currRoom;}
+        }
+        throw new RoomNotFoundException();
+    }
+
+    /**
+     * Private helper method that finds the speaker object with specific id
+     * @param speakerId the id of the speaker being searched for
+     * @return the speaker object containing the corresponding speaker id
+     */
+    private Speaker findSpeaker(String speakerId){
+        for(Speaker currSpeaker: listOfSpeakers){
+            if (speakerId.equals(currSpeaker.getID())){
+                return currSpeaker;
+            }
+        }
+        throw new UserNotFoundException();
+    }
+
+    /**
+     * Private helper method that finds the Organizer object in the system with the given id
+     * @param organizerId the Organizer's id
+     * @return the Organizer object that stores the corresponding id
+     */
+    private Organizer findOrganizer(String organizerId){
+        for (Organizer currOrganizer: listOfOrganizers){
+            if (organizerId.equals(currOrganizer.getID())){
+                return currOrganizer;
+            }
+        }
+        throw new UserNotFoundException();
+    }
+
+    /**
+     * Private helper method that finds the event object in the system with the given id
+     * @param eventId the Organizer's id
+     * @return the Event object that stores the corresponding id
+     */
+    private Event findEvent(String eventId){
+        for (Event currEvent: listOfEvents){
+            if (currEvent.getID().equals(eventId)){
+                return currEvent;
+            }
+        }
+        throw new EventNotFoundException();
+    }
+
 
     /**
      * Checks if speaker is scheduled for event that is taking place in the room during a specific time
-     * @param speaker the Speaker speaking at an event
-     * @param time the time the Speaker is speaking at
+     * @param speakerId the speaker id of the Speaker speaking at the Event
+     * @param startTime the time the event starts
+     * @param endTime the time the event finishes
      * @return true if speaker is available at the specific time and i.e the speaker
      * isn't scheduled for any Events at the given time, false otherwise
      */
-    private boolean isSpeakerAvailable(Speaker speaker, LocalDateTime time){
-        boolean availableSpeaker = true;
-        for (int counter = 0; counter < speaker.getHostEvents().size(); counter++){
-            String eventId = speaker.getHostEvents().get(counter);
-            for (Event currEvent : listOfEvents) {
-                if (currEvent.getID().equals(eventId) && currEvent.getStartTime() == time) {
-                    availableSpeaker = false;
-                    break;
-                }
+    public boolean isSpeakerAvailable(String speakerId, LocalDateTime startTime, LocalDateTime endTime){
+        Speaker speaker = findSpeaker(speakerId);
+        for (String currEventID: speaker.getHostEvents()){
+            Event currEvent = findEvent(currEventID);
+            LocalDateTime currStartTime = currEvent.getStartTime();
+            LocalDateTime currEndTime = currEvent.getEndTime();
+            if(startTime.equals(currStartTime) && endTime.equals(currEndTime)){
+                return false;
             }
         }
-        return availableSpeaker;
+        return true;
     }
+
 
     /**
      * Checks if room and speaker are available available to schedule Speaker in the room at a given time
      * Schedules Speaker to speak at an existing Event, in a specific room, at a specific time
-     * @param speaker the Speaker
-     * @param room the Room where the Speaker will hold the event
-     * @param time the time the Speaker is scheduled to be in the room
+     * @param speakerId the Speaker's id
+     * @param roomNumber the number of the Room where the Speaker will hold the event
+     * @param startTime the time the Speaker is scheduled to begin event in the room
+     * @param endTime the time the event will end
      */
-    public void scheduleSpeaker(Organizer organizer, Speaker speaker, Room room, LocalDateTime time){
-        boolean availableSpeaker = isSpeakerAvailable(speaker, time);
-        boolean availableRoom = true;
-        Event eventAtTime = eventAtTime(room,time);
+    public void scheduleSpeaker(String speakerId, String roomNumber, LocalDateTime startTime, LocalDateTime endTime){
+        Room room = findRoom(roomNumber);
+        Speaker speaker = findSpeaker(speakerId);
+        Event eventAtTime = eventAtTime(roomNumber,startTime, endTime);
 
-        if (organizer.getManagedEvents().contains(eventAtTime.getID())) {
-            //check if room is available at that time (has 0 speakers)
-            if (eventAtTime.hasSpeaker()) {
-                availableRoom = false;
-            }
-            if (availableRoom && availableSpeaker) {
-                //assign speaker to room by assigning speaker to event in this room
-                eventAtTime.scheduleSpeaker(speaker.getID());
-                room.addEvent(eventAtTime.getID());
-            }
-        }
+        eventAtTime.scheduleSpeaker(speaker.getID());
+        room.addEvent(eventAtTime.getID());
+
     }
+
 
     /**
      * Checks if room and speaker are available available to schedule Speaker in the room at a given time
-     * Assigns a new event to the room at a specific time and schedules Speaker to speak at this Event
-     * @param speaker the Speaker
-     * @param room the Room where the Speaker will hold the event
-     * @param event the Event that the speaker will speak at
+     * Assigns a new event to the room at a specific time and schedules Speaker to speak at an existing Event
+     * @param speakerId the Speaker's id
+     * @param roomId the Room's number where the Speaker will hold the event
+     * @param eventId the Event's id that the speaker will speak at
      */
-    public void scheduleSpeaker(Organizer organizer, Speaker speaker, Room room, Event event){
-        boolean availableSpeaker = isSpeakerAvailable(speaker, event.getStartTime());
-        boolean availableRoom = true;
+    public void scheduleSpeaker(String speakerId, String roomId, String eventId){
+        Room room = findRoom(roomId);
+        Event event = findEvent(eventId);
 
-        if (organizer.getManagedEvents().contains(event.getID())) {
-            //check if room is available at that time (has 0 speakers)
-            if (event.hasSpeaker()) {
-                availableRoom = false;
-            }
-            if (availableRoom && availableSpeaker) {
-                //assign speaker to room by assigning speaker to event in this room
-                event.scheduleSpeaker(speaker.getID());
-                room.addEvent(event.getID());
+        event.scheduleSpeaker(speakerId);
+        room.addEvent(eventId);
 
-            }
-        }
     }
 
     /**
-     * Checks that event can be scheduled for specific time in a specific room
-     * If it can then creates new Event, assigned it a location (room number) and start time
-     * @param organizer The organizer who is organizing the Event
-     * @param roomNumber The location where the Event will take place
-     * @param time The start time for the Event
+     * Updates the organizers list of organized events
+     * @param organizerId the organizer's id
+     * @param eventId the id of the Event being added to the organizer's list of organized events
      */
-    public void createNewEvent(Organizer organizer, String roomNumber, LocalDateTime time){
-        //checks that room number doesn't have event at given time
-        boolean canOrganize = true;
-        for (Room room: listOfRooms){
-            if (room.getRoomNumber().equals(roomNumber)){
-                for(Object eventID: room.getEvents()){
-                    Event eventObject = listOfEvents.get(listOfEvents.indexOf(eventID));
-                    if (eventObject.getStartTime() == time){canOrganize = false;}
-                }
-            }
-        }
-        if (canOrganize) {
-            Event newEvent = new Event(roomNumber, time);
-            organizer.addManagedEvent(newEvent.getID());
-        }
+    public void addToOrganizedEvents(String organizerId, String eventId){
+        Organizer organizer = findOrganizer(organizerId);
+        organizer.addManagedEvent(eventId);
     }
 
-    /**
-     * Reschedules the time the Event will start at
-     * @param event the Event being rescheduled for another time
-     * @param time the new start time being set for the Event
-     * @param organizer the organizer who is wants to reschedule the event
-     */
-    public void rescheduleEvent(Organizer organizer, Event event, LocalDateTime time){
-        // checks that the Organizer can reschedule the event
-        if (organizer.getManagedEvents().contains(event.getID())){ event.setStartTime(time);}
-    }
-
-    /**
-     * Cancels and removes Event fully from the conference
-     * @param event the Event being removed from the conference
-     * @param organizer the organizer who is wants to cancel the event
-     */
-    public void cancelEvent(Organizer organizer, Event event) throws Exception {
-        //checks that the organizer can cancel the event
-        if (organizer.getManagedEvents().contains(event.getID())) {
-
-            // remove Event from total list of events in the conference
-            listOfEvents.remove(event);
-
-            //remove event stored in every attendee scheduled to attend the event
-            for (Attendee attendee : listOfAttendees) {
-                ArrayList<String> eventList = attendee.getEventsList();
-                if (eventList.contains(event.getID())) {
-                    attendee.removeEvent(event.getID());
-                }
-            }
-            //remove event from the room that had the event scheduled
-            for (Room room : listOfRooms) {
-                ArrayList eventList = room.getEvents();
-                eventList.remove(event.getID());
-            }
-            // removed event from the speaker's list of events it is scheduled to speak at
-            for (Speaker speaker : listOfSpeakers) {
-                ArrayList<String> eventList = speaker.getHostEvents();
-                eventList.remove(event.getID());
-            }
-            //remove event from list of events organized of the organizer who organized the event
-            for (Organizer thisOrganizer : listOfOrganizers) {
-                thisOrganizer.removeEvent(event.getID());
-            }
-        }
-    }
 }
 
 
