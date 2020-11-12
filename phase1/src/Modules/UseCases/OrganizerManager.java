@@ -9,7 +9,7 @@ import Modules.Entities.Room;
 import java.time.LocalDateTime;
 import Modules.Entities.Attendee;
 
-public class OrganizerManager {
+public class OrganizerManager{
     /** List of all Organizers in the conference*/
     ArrayList<Organizer> listOfOrganizers;
 
@@ -38,33 +38,54 @@ public class OrganizerManager {
      * @param userName the Speaker's username
      * @param password the Speaker's password
      * @param userId the Speaker's userId
+     * @return a new Speaker account               
      */
-    public void createSpeakerAccount(String userName, String password, String userId){
+    public Speaker createSpeakerAccount(String userName, String password, String userId){
         Speaker newSpeaker = new Speaker(userName, password, userId);
-        listOfSpeakers.add(newSpeaker);
+        return newSpeaker;
 
     }
+
+    /**
+     * adds speaker into the system
+     * @param newSpeaker the speaker being added into the system
+     */
+    public void addSpeakerAccount(Speaker newSpeaker){listOfSpeakers.add(newSpeaker);}
+
+    /**
+     * adds newly created organizer account into the system
+     * @param newOrganizer the organizer account added into the system
+     */
+    public void addOrganizer(Organizer newOrganizer){listOfOrganizers.add(newOrganizer);}
 
     /**
      * Creates an Organizer account and adds it to the list of all Organizers
      * @param userName the Organizer's username
      * @param password the Organizer's password
      * @param userId the Organizer's userId
+     * @return a new Organizer account based on the info given
      */
-    public void createOrganizerAccount(String userName, String password, String userId){
+    public Organizer createOrganizerAccount(String userName, String password, String userId){
         Organizer newOrganizer = new Organizer(userName, password, userId);
-        listOfOrganizers.add(newOrganizer);
+        return newOrganizer;
     }
 
     /**
      * Creates a new Room and adds it to the system
      * @param roomNumber the Room's unique room number
      * @param capacity the the maximum number of users allowed in the room
+     * @return a new room
      */
-    public void newRoom(String roomNumber, int capacity){
+    public Room createNewRoom(String roomNumber, int capacity){
         Room newRoom = new Room(roomNumber, capacity);
-        listOfRooms.add(newRoom);
+        return newRoom;
     }
+
+    /**
+     * Adds new room into the system
+     * @param newRoom the room being added into the system
+     */
+    public void addNewRoom(Room newRoom){listOfRooms.add(newRoom);}
 
     /**
      * @param room The room where the Event is taking place
