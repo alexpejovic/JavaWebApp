@@ -48,14 +48,14 @@ public class LoginController {
         if (attendeeManager.isUser(username)){
             return attendeeManager.validatePassword(password, username);
         }
-//        // checking if this user is an organizer
-//        else if (organizerManager.isUser(username)){
-//            return attendeeManager.validatePassword(password, username);
-//        }
-//        // checking if this user is an speaker
-//        else if (speakerManager.isUser(username)){
-//            return attendeeManager.validatePassword(password, username);
-//        }
+        // checking if this user is an organizer
+        else if (organizerManager.isUser(username)){
+            return attendeeManager.validatePassword(password, username);
+        }
+        // checking if this user is an speaker
+        else if (speakerManager.isUser(username)){
+            return attendeeManager.validatePassword(password, username);
+        }
 
         throw new UserNotFoundException();
 
@@ -63,28 +63,25 @@ public class LoginController {
 
     /**
      * Returns the User with this username
+     * Precondition: there is a User in this conference with the given username
      * @param username the username of the User we want
      * @return the User we are looking for
      */
     public User returnUser(String username){
         // checking if this user is an attendee
         if (attendeeManager.isUser(username)){
-            // need attendeeManager to implement getUser
-            // or UserManager to implement so attendeeManager can inherit
-
-//            return attendeeManager.getUser(username);
-
+            return attendeeManager.getUser(username);
         }
-//        // checking if this user is an organizer
-//        else if (organizerManager.isUser(username)){
-//            return organizerManager.getUser(username);
-//        }
-//        // checking if this user is an speaker
-//        else if (speakerManager.isUser(username)){
-//            return organizerManager.getUser(username);
-//        }
-        //TODO: finish once user managers are finished implementing methods
-        return null; // just here temporarily so there isn't error
+        // checking if this user is an organizer
+        else if (organizerManager.isUser(username)){
+            return organizerManager.getUser(username);
+        }
+        // checking if this user is an speaker
+        else if (speakerManager.isUser(username)){
+            return organizerManager.getUser(username);
+        }
+        //throws a exception if there is no user with the given username
+        throw new UserNotFoundException();
     }
 
 

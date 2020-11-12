@@ -48,11 +48,11 @@ public class AccountCreator {
      * @param events a list of event ids that the Attendee is attending at
      */
     public void createAttendeeAccount(String username, String password, ArrayList<String> events){
-        // speaker's id starts with s then has the speaker # starting from 0
+        // attendee's id starts with a then has the attendee # starting from 0
         String userId = "a"+ attendeeManager.getAttendeeList().size();
         attendeeManager.addAttendee(username,password,userId,events);
     }
 
-    // seems like a code smell... idk maybe
+
 
 }
