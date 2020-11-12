@@ -41,18 +41,22 @@ public class AttendeeManager extends UserManager{
 
     /**
      *
-     * @param attendee the attendee whose time availability we want to check
-     * @param time the time at which we want to know if the attendee is available
-     * @param eventManager the EventManager instance for this program
-     * @return true if the attendee does not have any events at this time, false otherwise
+     * @param attendee the attendee whose availabilty we want to check
+     * @param startTime the beginning of the time period we want to check
+     * @param endTime the end of the tim eperiod we want to check
+     * @param eventManager the current EventManager
+     * @return true if attendee is available between startTime and endTime, false otherwise
      */
-    public boolean timeAvailable(Attendee attendee, LocalDateTime time, EventManager eventManager){
+    public boolean timeAvailable(Attendee attendee, LocalDateTime startTime, LocalDateTime endTime,
+                                 EventManager eventManager){
         ArrayList<String> attendeeEventList = attendee.getEventsList();
         ArrayList<Event> allEventsList = eventManager.getEventList();
         for (String id : attendeeEventList) {
             for (Event event : allEventsList) {
-                if (id == event.getID()) {
-                    if (event.getStartTime() == time) {
+                if (id.equals(event.getID())) {
+                    if (event.getStartTime().equals(startTime) ) {
+                        return false;
+                    }else if (event.getStartTime().isAfter(startTime) && endTime.isAfter(event.getEndTime())){
                         return false;
                     }
                 }
@@ -67,7 +71,7 @@ public class AttendeeManager extends UserManager{
      * @param event the event that we want to add to the attendee's events list
      */
     public void addEventToAttendee(Attendee attendee, Event event, EventManager eventManager){
-        if (timeAvailable(attendee, event.getStartTime(), eventManager)){
+        if (timeAvailable(attendee, event.getStartTime(), event.getEndTime(), eventManager)){
             attendee.addEvent(event.getID());
         }
     }

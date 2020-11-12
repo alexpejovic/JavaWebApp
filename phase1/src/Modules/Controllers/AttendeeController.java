@@ -6,6 +6,7 @@ import Modules.Entities.User;
 import Modules.Gateways.UserGateway;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.EventManager;
+import Modules.UseCases.MessageManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,14 +16,20 @@ import java.util.ArrayList;
 public class AttendeeController {
     private AttendeeManager attendeeManager;
     private EventManager eventManager;
-    private MessageController messageController;
+    private MessageManager messageManager;
     private Attendee attendee;
-    public AttendeeController(AttendeeManager attendeeManager, EventManager eventManager,Attendee attendee){
+    public AttendeeController(AttendeeManager attendeeManager, EventManager eventManager,Attendee attendee,
+                              MessageManager messageManager){
         this.attendeeManager = attendeeManager;
         this.eventManager = eventManager;
         this.attendee = attendee;
-        this.messageController = new MessageController();
+        this.messageManager = messageManager;
     }
+
+    /**
+     *
+     * @param users the existing users read-in from the stored file
+     */
     public void addAttendees(ArrayList<User> users){
         for(User user : users){
             String id = user.getID();
@@ -31,47 +38,62 @@ public class AttendeeController {
                     }
         }
     }
-    public void run(){
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        ArrayList<Event> events = eventManager.getEventList();
 
-        System.out.println("Type \"message\" to send a message, \"show events\" to see the list of events, or " +
-                "\"sign up\" to sign up for an event.");
-        try{
-            String input = br.readLine();
-            while(input.equals("message")){
-                //messageController.run()
-            }
-            while (input.equals("show events")){
-                ArrayList<String> displayEvents = new ArrayList<String>();
-                for(Event event: events){
-                    String element = event.getName() + ": " + event.getStartTime() + "-" +event.getEndTime() +
-                            " ID: " + event.getID();
-                    displayEvents.add(element);
-                }
-                System.out.println(displayEvents);
-            }
-            while (input.equals("sign up")){
-                System.out.println("Please type the ID of the event you would like to attend");
-            }
-            while (input.startsWith("E")){
-                Boolean eventExists = false;
-                for (Event event: events){
-                    if (event.getID().equals(input)){
-                        attendeeManager.addEventToAttendee(attendee, event, eventManager);
-                        //eventManager.addAttendee or smth
-                        eventExists = true;
-                    }
-                }
-                if (eventExists == false){
-                    System.out.println("Sorry, looks like there's no event with that ID. Please try enter a new" +
-                            "event ID.");
+    /**
+     *
+     * @return the list of existing events
+     */
+    public ArrayList<Event> displayEvents(){
+        return eventManager.getEventList();
+    }
+
+    /**
+     *
+     * @param eventID the ID of the event that attendee wishes to sign up for
+     * @return true if the sign up was successful, false if attendee was not available at that time or if the event was
+     * full
+     */
+    public boolean signUp(String eventID){
+        ArrayList<Event> events = eventManager.getEventList();
+        boolean signUpSuccessful = false;
+        for (Event event: events){
+            if (event.getID().equals(eventID)){
+                if (attendeeManager.timeAvailable(attendee, event.getStartTime(), event.getEndTime(), eventManager) &&
+                        eventManager.canAttend(event.getID())){
+                    attendeeManager.addEventToAttendee(attendee, event, eventManager);
+                    eventManager.addAttendee(event.getID(), attendee.getID());
+                    signUpSuccessful = true;
                 }
             }
         }
-        catch (IOException e){
-            System.out.println("uh oh");
+        return signUpSuccessful;
+    }
+
+    /**
+     *
+     * @param receiverID the ID of the user that this message is to be sent to
+     * @param message the content of the message to be sent
+     * @return true if the message was successfully sent, false if the user was not on attendee's friends list
+     */
+    public boolean sendMessage(String receiverID, String message){
+        if (attendee.getFriendList().contains(receiverID)){
+            messageManager.sendMessage(attendee.getID(), receiverID, message);
+            return true;
         }
+        return false;
+    }
+
+    /**
+     *
+     * @param userID the ID of the user to be added to attendee's friends list
+     * @return true if the given user was added to attendee's friend list, false if the user was already friend
+     */
+    public boolean addUserToFriendList(String userID){
+        if(!attendee.getFriendList().contains(userID)){
+            attendee.addToFriendList(userID);
+            return true;
+        }
+        return false;
     }
 
 
