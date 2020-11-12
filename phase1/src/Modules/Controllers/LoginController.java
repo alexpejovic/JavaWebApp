@@ -19,6 +19,8 @@ public class LoginController {
     private OrganizerManager organizerManager;
     private SpeakerManager speakerManager;
 
+    private User loggedUser;
+
     /**
      * Constructor for LoginController
      * @param attendeeManager the AttendeeManager use case for this conference
@@ -31,6 +33,30 @@ public class LoginController {
         this.attendeeManager = attendeeManager;
         this.organizerManager = organizerManager;
         this.speakerManager = speakerManager;
+    }
+
+    /** Logs in a user into their account. If log-in is successful, User information is stored in loggedUser.
+     *
+     * @param username Username of user intending to log-in
+     * @param password Password of user intending to log-in
+     * @return True if log-in is successful, false otherwise
+     */
+    public boolean logIn(String username, String password){
+
+        if(validateUsernamePassword(username, password)) {
+            loggedUser = returnUser(username);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    /** Getter for user who is currently logged-in
+     *
+     * @return The user currently logged-in
+     */
+    public User getLoggedUser() {
+        return loggedUser;
     }
 
     /**

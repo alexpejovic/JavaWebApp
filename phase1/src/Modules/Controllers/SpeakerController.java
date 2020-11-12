@@ -17,7 +17,7 @@ public class SpeakerController {
 
 
     public SpeakerController(Speaker speaker, EventManager eventManager, SpeakerManager speakerManager){
-        this.speaker = speaker
+        this.speaker = speaker;
         this.eventManager = eventManager;
         this.speakerManager = speakerManager;
     }
@@ -25,7 +25,7 @@ public class SpeakerController {
         int ind = 0;
         while(ind < users.size()){
             if(users.get(ind).getID().startsWith("s")) {
-                speakerManager.addSpeaker(users.get(ind).getUsername(), users.get(ind).getUsername(), users.get(ind).getPassword(), users.get(ind).getHostEvents);
+                // speakerManager.addSpeaker(users.get(ind).getUsername(), users.get(ind).getUsername(), users.get(ind).getPassword(), users.get(ind).getHostEvents);
             }
         }
     }
