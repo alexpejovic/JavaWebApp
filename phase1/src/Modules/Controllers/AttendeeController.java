@@ -26,18 +26,6 @@ public class AttendeeController {
         this.messageManager = messageManager;
     }
 
-    /**
-     *
-     * @param users the existing users read-in from the stored file
-     */
-    public void addAttendees(ArrayList<User> users){
-        for(User user : users){
-            String id = user.getID();
-                    if (id.startsWith("a")){
-                        attendeeManager.addAttendee((Attendee) user);
-                    }
-        }
-    }
 
     /**
      *

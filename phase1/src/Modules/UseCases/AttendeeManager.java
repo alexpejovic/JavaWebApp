@@ -12,8 +12,15 @@ public class AttendeeManager extends UserManager{
     /** a list of all existing attendees */
     ArrayList<Attendee> attendeeList;
 
-    public AttendeeManager(){
-        this.attendeeList = new ArrayList<>();
+    /**
+     *
+     * @param attendeeList a list of all attendees read from file
+     */
+    public AttendeeManager(ArrayList<Attendee> attendeeList){
+        for (Attendee attendee: attendeeList){
+            this.attendeeList.add(attendee);
+        }
+
     }
 
     /**
