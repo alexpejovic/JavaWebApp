@@ -9,16 +9,9 @@ import java.util.ArrayList;
 */
 public class RoomGateway {
 
-    String filename = "res/rooms.ser";
+    private final String filename = "res/rooms.ser";
 
-    public RoomGateway() {
-        this.filename = filename;
-    }
-
-    /**
-     * @param filename the name of the file being read
-     */
-    public ArrayList<Room> readSerFile(String filename) {
+    public ArrayList<Room> readSerFile() {
 
         ArrayList<Room> rooms = null;
         try {
@@ -44,11 +37,11 @@ public class RoomGateway {
     }
 
     /**
-     * @param filename the name of the file being written to
      * @param writeRooms ArrayList of objects being written to filename
      * @throws IOException Exception thrown when Object cannot be found
      */
-    public void writeSerFile(String filename, ArrayList<Room> writeRooms) throws IOException {
+    public void writeSerFile(ArrayList<Room> writeRooms) throws IOException {
+
         try{
             FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream writer = new ObjectOutputStream(file);

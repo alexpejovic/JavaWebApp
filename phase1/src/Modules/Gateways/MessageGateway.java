@@ -9,16 +9,9 @@ import java.io.*;
  */
 public class MessageGateway {
 
-    String filename = "res/messages.ser";
+    private final String filename = "res/messages.ser";
 
-    public MessageGateway() {
-        this.filename = filename;
-    }
-
-    /**
-     * @param filename the name of the file being read
-     */
-    public ArrayList<Message> readSerFile(String filename) {
+    public ArrayList<Message> readSerFile() {
 
         ArrayList<Message> messages = null;
         try {
@@ -44,11 +37,10 @@ public class MessageGateway {
     }
 
     /**
-     * @param filename the name of the file being written to
      * @param writeMessages ArrayList of objects being written to filename
      * @throws IOException Exception thrown when Object cannot be found
      */
-    public void writeSerFile(String filename, ArrayList<Message> writeMessages) throws IOException {
+    public void writeSerFile(ArrayList<Message> writeMessages) throws IOException {
         try{
             FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream writer = new ObjectOutputStream(file);
