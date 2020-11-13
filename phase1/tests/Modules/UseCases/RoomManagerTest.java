@@ -14,7 +14,7 @@ public class RoomManagerTest {
 
     @Test
     public void testRoomManager(){
-        RoomManager roomManager1 = new RoomManager();
+        RoomManager roomManager1 = new RoomManager(new ArrayList<>());
 
         //testing the constructor that takes in a list of Rooms
         ArrayList<Room> expected = new ArrayList<>();
@@ -29,8 +29,8 @@ public class RoomManagerTest {
 
     @Test
     public void testCreateRoom(){
-        RoomManager roomManager1 = new RoomManager(); // for constructor that takes in room number
-        RoomManager roomManager2 = new RoomManager(); // for constructor that auto generates room number
+        RoomManager roomManager1 = new RoomManager(new ArrayList<>()); // for constructor that takes in room number
+        RoomManager roomManager2 = new RoomManager(new ArrayList<>()); // for constructor that auto generates room number
 
 
         //should start with no events in room
@@ -61,7 +61,7 @@ public class RoomManagerTest {
     // tests relating to accessing events occurring in a room
     public void testRoomEvents(){
 
-        RoomManager roomManager = new RoomManager();
+        RoomManager roomManager = new RoomManager(new ArrayList<>());
 
         // adding a room
         roomManager.createRoom("r1",2);
@@ -96,7 +96,7 @@ public class RoomManagerTest {
 
     @Test
     public void testIsRoomAvailable(){
-        RoomManager roomManager = new RoomManager();
+        RoomManager roomManager = new RoomManager(new ArrayList<>());
         ArrayList<Event> events = new ArrayList<Event>();
         EventManager eventManager = new EventManager(events);
 
@@ -142,19 +142,19 @@ public class RoomManagerTest {
 
     @Test(expected = RoomNotFoundException.class)
     public void testCapacityOfRoomEx(){
-        RoomManager roomManager = new RoomManager();
+        RoomManager roomManager = new RoomManager(new ArrayList<>());
         roomManager.capacityOfRoom("r0");
     }
 
     @Test(expected = RoomNotFoundException.class)
     public void testIsEventInRoomEx(){
-        RoomManager roomManager = new RoomManager();
+        RoomManager roomManager = new RoomManager(new ArrayList<>());
         roomManager.isEventInRoom("r0", "e1");
     }
 
     @Test(expected = RoomNotFoundException.class)
     public void testAddEventToRoomEx(){
-        RoomManager roomManager = new RoomManager();
+        RoomManager roomManager = new RoomManager(new ArrayList<>());
         roomManager.addEventToRoom("r0", "e1");
     }
 
