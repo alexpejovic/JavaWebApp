@@ -2,6 +2,7 @@ package Modules.Controllers;
 
 import Modules.Entities.Attendee;
 import Modules.Entities.Event;
+import Modules.Entities.Message;
 import Modules.Entities.User;
 import Modules.Gateways.UserGateway;
 import Modules.UseCases.AttendeeManager;
@@ -84,5 +85,16 @@ public class AttendeeController {
         return false;
     }
 
+    /**
+     * Returns the message received by user and the full conversation between the receiver and sender
+     * @param receiverId the id of the user who received the message
+     * @param senderId the id of the user who sends the message
+     * @return array list of messages that correspond to the sorted conversation between sender and receiver
+     */
+    public ArrayList<Message> seeMessage(String receiverId, String senderId){
+        return messageManager.getConversation(receiverId, senderId);
+    }
 
 }
+
+
