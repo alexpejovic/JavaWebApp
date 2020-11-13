@@ -12,8 +12,15 @@ public class AttendeeManager extends UserManager{
     /** a list of all existing attendees */
     ArrayList<Attendee> attendeeList;
 
-    public AttendeeManager(){
-        this.attendeeList = new ArrayList<>();
+    /**
+     *
+     * @param attendeeList a list of all attendees read from file
+     */
+    public AttendeeManager(ArrayList<Attendee> attendeeList){
+        for (Attendee attendee: attendeeList){
+            this.attendeeList.add(attendee);
+        }
+
     }
 
     /**
@@ -54,9 +61,11 @@ public class AttendeeManager extends UserManager{
         for (String id : attendeeEventList) {
             for (Event event : allEventsList) {
                 if (id.equals(event.getID())) {
-                    if (event.getStartTime().equals(startTime) ) {
+                    if (event.getStartTime().equals(startTime) || event.getEndTime().equals(endTime)) {
                         return false;
-                    }else if (event.getStartTime().isAfter(startTime) && endTime.isAfter(event.getEndTime())){
+                    }else if (event.getStartTime().isAfter(startTime) && event.getStartTime().isBefore(endTime)){
+                        return false;
+                    }else if (event.getEndTime().isAfter(startTime) && event.getEndTime().isBefore(endTime)){
                         return false;
                     }
                 }

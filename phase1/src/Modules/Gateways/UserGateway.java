@@ -8,10 +8,10 @@ import java.io.*;
  * reads and writes files for Users
  */
 public class UserGateway {
-    /**
-     * @param filename the name of the file being read
-     */
-    public ArrayList<User> readSerFile(String filename) {
+
+    private final String filename = "res/users.ser";
+
+    public ArrayList<User> readSerFile() {
 
         ArrayList<User> users = null;
         try {
@@ -37,11 +37,10 @@ public class UserGateway {
     }
 
     /**
-     * @param filename the name of the file being written to
      * @param writeUsers ArrayList of Users being written to filename
      * @throws IOException Exception thrown when Object cannot be found
      */
-    public void writeSerFile(String filename, ArrayList<User> writeUsers) throws IOException {
+    public void writeSerFile(ArrayList<User> writeUsers) throws IOException {
         try{
             FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream writer = new ObjectOutputStream(file);

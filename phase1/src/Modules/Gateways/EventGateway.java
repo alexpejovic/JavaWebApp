@@ -9,10 +9,9 @@ import java.io.*;
  */
 public class EventGateway {
 
-    /**
-     * @param filename the name of the file being read
-     */
-    public ArrayList<Event> readSerFile(String filename) {
+    private final String filename = "res/events.ser";
+
+    public ArrayList<Event> readSerFile() {
 
         ArrayList<Event> events = null;
         try {
@@ -38,11 +37,10 @@ public class EventGateway {
     }
 
     /**
-     * @param filename the name of the file being written to
      * @param writeEvents ArrayList of objects being written to filename
      * @throws IOException Exception thrown when Object cannot be found
      */
-    public void writeSerFile(String filename, ArrayList<Event> writeEvents) throws IOException {
+    public void writeSerFile(ArrayList<Event> writeEvents) throws IOException {
         try{
             FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream writer = new ObjectOutputStream(file);
