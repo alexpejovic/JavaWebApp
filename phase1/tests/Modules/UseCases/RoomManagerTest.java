@@ -97,7 +97,8 @@ public class RoomManagerTest {
     @Test
     public void testIsRoomAvailable(){
         RoomManager roomManager = new RoomManager();
-        EventManager eventManager = new EventManager();
+        ArrayList<Event> events = new ArrayList<Event>();
+        EventManager eventManager = new EventManager(events);
 
         LocalDateTime time1 = LocalDateTime.of(2020,11, 5, 1 ,0);
         LocalDateTime time2 = LocalDateTime.of(2020,11, 5, 2 ,0);

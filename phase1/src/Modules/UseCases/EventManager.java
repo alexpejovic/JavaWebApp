@@ -17,8 +17,10 @@ public class EventManager {
      */
     private ArrayList<Event> eventList;
 
-    public EventManager() {
-        this.eventList = new ArrayList<>();
+    public EventManager(ArrayList<Event> eventList) {
+        for(Event event: eventList){
+            this.eventList.add(event);
+        }
     }
 
     /**

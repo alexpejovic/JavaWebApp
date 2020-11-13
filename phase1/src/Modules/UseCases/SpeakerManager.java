@@ -15,10 +15,12 @@ public class SpeakerManager extends UserManager{
 
     /**
      * A constructor for the SpeakerManager class
-     * Instantiates the speakerList as an empty ArrayList
+     * speakerList a list of existing speakers read from stored file
      */
-    public SpeakerManager(){
-        this.speakerList = new ArrayList<>();
+    public SpeakerManager(ArrayList<Speaker> speakerList){
+        for(Speaker speaker: speakerList){
+            this.speakerList.add(speaker);
+        }
     }
 
     /**

@@ -13,12 +13,14 @@ public class EventManagerTest {
 
     @Test
     public void testEventManager() {
-        EventManager manager = new EventManager();
+        ArrayList<Event> events = new ArrayList<Event>();
+        EventManager manager = new EventManager(events);
     }
 
     @Test
     public void testCreateEvent() {
-        EventManager manager = new EventManager();
+        ArrayList<Event> events = new ArrayList<Event>();
+        EventManager manager = new EventManager(events);
         LocalDateTime eventDate1 = LocalDateTime.of(2020, 11, 3, 11, 11);
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
@@ -35,7 +37,8 @@ public class EventManagerTest {
 
     @Test
     public void testCanBook() {
-        EventManager manager = new EventManager();
+        ArrayList<Event> events = new ArrayList<Event>();
+        EventManager manager = new EventManager(events);
         LocalDateTime eventDate1 = LocalDateTime.of(2020, 11, 3, 11, 11);
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
@@ -57,7 +60,8 @@ public class EventManagerTest {
 
     @Test
     public void testHelpers() {
-        EventManager manager = new EventManager();
+        ArrayList<Event> events = new ArrayList<Event>();
+        EventManager manager = new EventManager(events);
         LocalDateTime eventDate1 = LocalDateTime.of(2020, 11, 3, 11, 11);
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
@@ -69,7 +73,8 @@ public class EventManagerTest {
 
     @Test
     public void testIsScheduleFree() {
-        EventManager manager = new EventManager();
+        ArrayList<Event> events = new ArrayList<Event>();
+        EventManager manager = new EventManager(events);
         LocalDateTime eventDate1 = LocalDateTime.of(2020, 11, 3, 11, 11);
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
@@ -90,7 +95,8 @@ public class EventManagerTest {
 
     @Test
     public void testBooleans() {
-        EventManager manager = new EventManager();
+        ArrayList<Event> events = new ArrayList<Event>();
+        EventManager manager = new EventManager(events);
         LocalDateTime eventDate1 = LocalDateTime.of(2020, 11, 3, 11, 11);
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);

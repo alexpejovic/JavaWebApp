@@ -29,8 +29,10 @@ public class OrganizerManager extends UserManager{
 
     private RoomManager roomManager;
 
-    public OrganizerManager(EventManager eventManager, RoomManager roomManager){
-        this.listOfOrganizers = new ArrayList<>();
+    public OrganizerManager(EventManager eventManager, RoomManager roomManager, ArrayList<Organizer> organizers){
+        for(Organizer organizer: organizers){
+            this.listOfOrganizers.add(organizer);
+        }
         this.listOfSpeakers = new ArrayList<>();
         this.listOfRooms = new ArrayList<>();
         this.listOfAttendees = new ArrayList<>();
