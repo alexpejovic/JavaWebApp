@@ -8,6 +8,13 @@ import java.io.*;
  * reads and writes files for Users
  */
 public class UserGateway {
+
+    String filename = "res/users.ser";
+
+    public UserGateway() {
+        this.filename = filename;
+    }
+
     /**
      * @param filename the name of the file being read
      */

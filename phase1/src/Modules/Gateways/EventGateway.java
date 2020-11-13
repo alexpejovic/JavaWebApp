@@ -9,6 +9,12 @@ import java.io.*;
  */
 public class EventGateway {
 
+    String filename = "res/events.ser";
+
+    public EventGateway() {
+        this.filename = filename;
+    }
+
     /**
      * @param filename the name of the file being read
      */

@@ -9,6 +9,12 @@ import java.io.*;
  */
 public class MessageGateway {
 
+    String filename = "res/messages.ser";
+
+    public MessageGateway() {
+        this.filename = filename;
+    }
+
     /**
      * @param filename the name of the file being read
      */

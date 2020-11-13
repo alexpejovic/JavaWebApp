@@ -4,7 +4,16 @@ import Modules.Entities.Room;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * reads and writes files for Rooms
+*/
 public class RoomGateway {
+
+    String filename = "res/rooms.ser";
+
+    public RoomGateway() {
+        this.filename = filename;
+    }
 
     /**
      * @param filename the name of the file being read
