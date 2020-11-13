@@ -14,12 +14,6 @@ public class RoomManager {
     /** A list of all Room entities in this conference */
     private ArrayList<Room> rooms;
 
-    /**
-     * Initializes a new RoomManager with no Rooms
-     */
-    public RoomManager(){
-        this.rooms = new ArrayList<>();
-    }
 
     /**
      * Initializes a new RoomManager
