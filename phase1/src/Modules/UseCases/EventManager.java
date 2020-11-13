@@ -2,6 +2,7 @@ package Modules.UseCases;
 
 import Modules.Entities.Event;
 import Modules.Exceptions.EventNotFoundException;
+import Modules.Exceptions.NonUniqueIdException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class EventManager {
     private ArrayList<Event> eventList;
 
     public EventManager(ArrayList<Event> eventList) {
+        this.eventList = new ArrayList<>();
         for(Event event: eventList){
             this.eventList.add(event);
         }
@@ -121,6 +123,11 @@ public class EventManager {
      * @return Returns true if the event was successfully created and added to events, false otherwise
      */
     public boolean createEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventID) {
+        for (Event event: this.eventList) {
+            if (event.getID().equals(eventID)) {
+                throw new NonUniqueIdException();
+            }
+        }
         return this.eventList.add(new Event(roomNumber, startTime, endTime, eventID));
     }
 
