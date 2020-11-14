@@ -30,12 +30,18 @@ public class LogInUI {
 
         System.out.println("---Log In---\n");
 
-        do {
+        System.out.println("\nEnter Username");
+        username = input.nextLine();
+        System.out.println("\nEnter Password");
+        password = input.nextLine();
+
+        while (!loginController.validateUsernamePassword(username, password)) {
+            System.out.println("\nInvalid Username and Password Combination. Please Retry.");
             System.out.println("\nEnter Username");
             username = input.nextLine();
             System.out.println("\nEnter Password");
             password = input.nextLine();
-        } while (loginController.validateUsernamePassword(username, password));
+        }
 
         return loginController.logIn(username, password);
     }
