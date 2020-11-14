@@ -95,6 +95,13 @@ public class EventManager {
         throw new EventNotFoundException();
     }
 
+    public String getEventID(String eventName){
+        for(Event event: eventList){
+            if (eventName.equals(event.getName())){ return event.getID();}
+        }
+        throw new EventNotFoundException();
+    }
+
     /**
      * Returns the start time of an event
      * @param eventID the unique ID of the event
