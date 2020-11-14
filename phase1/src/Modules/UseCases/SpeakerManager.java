@@ -1,6 +1,5 @@
 package Modules.UseCases;
 
-import Modules.Entities.Attendee;
 import Modules.Entities.Speaker;
 import Modules.Entities.User;
 import Modules.Exceptions.UserNotFoundException;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
  * This class performs actions on Speakers and gives important information about all Speakers
  */
 public class SpeakerManager extends UserManager{
-    private ArrayList<Speaker> speakerList;
+    ArrayList<Speaker> speakerList;
 
     /**
      * A constructor for the SpeakerManager class
@@ -38,6 +37,14 @@ public class SpeakerManager extends UserManager{
             i++;
         }
         speakerList.add(newSpeaker);
+    }
+
+    /**
+     * Add an existing speaker to the conference
+     * @param speaker the speaker to be added
+     */
+    public void addSpeaker(Speaker speaker){
+        speakerList.add(speaker);
     }
 
     /**
@@ -119,6 +126,20 @@ public class SpeakerManager extends UserManager{
     public User getUser(String username){
         for (Speaker speaker: speakerList){
             if (speaker.getUsername().equals(username)){
+                return speaker;
+            }
+        }
+        throw new UserNotFoundException();
+    }
+
+    /**
+     * Return the speaker entity matching a given speakerId
+     * @param speakerId the speaker Id given
+     * @return the speaker entity matching speakerId
+     */
+    public Speaker getSpeaker(String speakerId){
+        for(Speaker speaker: speakerList){
+            if(speaker.getID().equals(speakerId)) {
                 return speaker;
             }
         }
