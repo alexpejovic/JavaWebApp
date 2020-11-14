@@ -38,11 +38,12 @@ public class AttendeeController {
 
     /**
      *
-     * @param eventID the ID of the event that attendee wishes to sign up for
+     * @param eventName the name of the event that attendee wishes to sign up for
      * @return true if the sign up was successful, false if attendee was not available at that time or if the event was
      * full
      */
-    public boolean signUp(String eventID){
+    public boolean signUp(String eventName){
+        String eventID = eventManager.getEventID(eventName);
         ArrayList<Event> events = eventManager.getEventList();
         boolean signUpSuccessful = false;
         for (Event event: events){
