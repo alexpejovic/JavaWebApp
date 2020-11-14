@@ -18,12 +18,12 @@ public class AttendeeController {
     private AttendeeManager attendeeManager;
     private EventManager eventManager;
     private MessageManager messageManager;
-    private Attendee attendee;
-    public AttendeeController(AttendeeManager attendeeManager, EventManager eventManager,Attendee attendee,
+    private String attendeeID;
+    public AttendeeController(AttendeeManager attendeeManager, EventManager eventManager,String attendeeID,
                               MessageManager messageManager){
         this.attendeeManager = attendeeManager;
         this.eventManager = eventManager;
-        this.attendee = attendee;
+        this.attendeeID = attendeeID;
         this.messageManager = messageManager;
     }
 
@@ -47,10 +47,10 @@ public class AttendeeController {
         boolean signUpSuccessful = false;
         for (Event event: events){
             if (event.getID().equals(eventID)){
-                if (attendeeManager.timeAvailable(attendee, event.getStartTime(), event.getEndTime(), eventManager) &&
+                if (attendeeManager.timeAvailable(attendeeManager.getAttendee(attendeeID), event.getStartTime(), event.getEndTime(), eventManager) &&
                         eventManager.canAttend(event.getID())){
-                    attendeeManager.addEventToAttendee(attendee, event, eventManager);
-                    eventManager.addAttendee(event.getID(), attendee.getID());
+                    attendeeManager.addEventToAttendee(attendeeManager.getAttendee(attendeeID), event, eventManager);
+                    eventManager.addAttendee(event.getID(), attendeeID);
                     signUpSuccessful = true;
                 }
             }
@@ -65,8 +65,8 @@ public class AttendeeController {
      * @return true if the message was successfully sent, false if the user was not on attendee's friends list
      */
     public boolean sendMessage(String receiverID, String message){
-        if (attendee.getFriendList().contains(receiverID)){
-            messageManager.sendMessage(attendee.getID(), receiverID, message);
+        if (attendeeManager.getAttendee(attendeeID).getFriendList().contains(receiverID)){
+            messageManager.sendMessage(attendeeID, receiverID, message);
             return true;
         }
         return false;
@@ -78,8 +78,8 @@ public class AttendeeController {
      * @return true if the given user was added to attendee's friend list, false if the user was already friend
      */
     public boolean addUserToFriendList(String userID){
-        if(!attendee.getFriendList().contains(userID)){
-            attendee.addToFriendList(userID);
+        if(!attendeeManager.getAttendee(attendeeID).getFriendList().contains(userID)){
+            attendeeManager.getAttendee(attendeeID).addToFriendList(userID);
             return true;
         }
         return false;
