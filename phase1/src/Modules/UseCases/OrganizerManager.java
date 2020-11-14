@@ -73,15 +73,15 @@ public class OrganizerManager extends UserManager{
     }
 
     /**
-     * Returns the specific Organizer with username
+     * Returns the specific Organizer's userID with username
      * @param username the username we want to check
-     * @return the specific Organizer entity that has the given username
+     * @return the userID of the specific Organizer entity that has the given username
      */
     @Override
-    public User getUser(String username){
+    public String getUserID(String username){
         for (Organizer organizer: listOfOrganizers){
             if (organizer.getUsername().equals(username)){
-                return organizer;
+                return organizer.getID();
             }
         }
         throw new UserNotFoundException();

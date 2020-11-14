@@ -26,11 +26,11 @@ public abstract class UserManager {
     public abstract boolean isUser(String username);
 
     /**
-     * Returns the specific User with username
+     * Returns the specific userID matching a username
      * @param username the username we want to check
-     * @return the specific User that has the given username
+     * @return the specific userID of a User that has the given username
      */
-    public abstract User getUser(String username);
+    public abstract String getUserID(String username);
 
 
     /** Checks if user1 is able to message user2

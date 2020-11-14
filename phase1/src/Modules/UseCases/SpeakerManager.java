@@ -111,15 +111,15 @@ public class SpeakerManager extends UserManager{
     }
 
     /**
-     * Returns the specific Speaker with username
+     * Returns the specific Speaker's userID with username
      * @param username the username we want to check
-     * @return the specific Speaker entity that has the given username
+     * @return the userID of the specific Speaker entity that has the given username
      */
     @Override
-    public User getUser(String username){
+    public String getUserID(String username){
         for (Speaker speaker: speakerList){
             if (speaker.getUsername().equals(username)){
-                return speaker;
+                return speaker.getID();
             }
         }
         throw new UserNotFoundException();
