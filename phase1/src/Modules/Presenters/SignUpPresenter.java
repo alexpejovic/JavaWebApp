@@ -27,4 +27,21 @@ public class SignUpPresenter {
 
         return eventList;
     }
+
+
+    /** Reformats a list of events into a list of event names
+     *
+     * @param events List of events
+     * @return List of names of events
+     */
+    public ArrayList<String> getEventNames(ArrayList<Event> events){
+
+        ArrayList<String> eventList = new ArrayList<>();
+
+        for(Event event: events){
+            eventList.add(event.getName());
+        }
+
+        return eventList;
+    }
 }

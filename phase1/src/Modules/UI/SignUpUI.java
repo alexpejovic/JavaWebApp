@@ -1,7 +1,6 @@
 package Modules.UI;
 
 import Modules.Controllers.AttendeeController;
-import Modules.Entities.Event;
 import Modules.Presenters.SignUpPresenter;
 
 import java.util.ArrayList;
@@ -34,9 +33,9 @@ public class SignUpUI {
 
         Scanner input = new Scanner(System.in);
         String eventNum;
-        ArrayList<Event> events = attendeeController.displayEvents();
-        ArrayList<String> eventStrings = signUpPresenter.getEventList(events);
-        int max = events.size();
+        ArrayList<String> eventStrings = signUpPresenter.getEventList(attendeeController.displayEvents());
+        ArrayList<String> eventNames = signUpPresenter.getEventNames(attendeeController.displayEvents());
+        int max = eventStrings.size();
 
         System.out.println("---Sign Up for an Event---\n");
 
@@ -44,10 +43,10 @@ public class SignUpUI {
             System.out.println(event);
         }
 
-        System.out.println("Enter the Number of the event which you want to sign up for and click Enter");
+        System.out.println("Enter the number of the event which you want to sign up for and click Enter");
         eventNum = input.nextLine();
 
-        if(isValidInput(eventNum, max) && attendeeController.signUp(events.get(Integer.parseInt(eventNum) - 1).getID())){
+        if(isValidInput(eventNum, max) && attendeeController.signUp(eventNames.get(Integer.parseInt(eventNum) - 1))){
             System.out.println("Sign-Up successful");
             return true;
         }
