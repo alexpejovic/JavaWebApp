@@ -53,6 +53,16 @@ public class AccountCreator {
         attendeeManager.addAttendee(username,password,userId,events);
     }
 
+    /** Creates a new Organizer
+     *
+     * @param username the username of Organizer
+     * @param password the password of Organizer
+     */
+    public void createOrganizerAccount(String username, String password){
+        String userId = "o" + organizerManager.getListOfOrganizers().size();
+        organizerManager.createOrganizerAccount(username, password, userId);
+    }
+
 
 
 }
