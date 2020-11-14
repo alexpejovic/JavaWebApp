@@ -48,7 +48,7 @@ public class Attendee extends User implements Identifiable{
     public ArrayList<String> getEventsList() {
         ArrayList<String> copy = new ArrayList<>(eventsList.size());
         for(int i = 0; i < eventsList.size(); i++){
-            copy.set(i, eventsList.get(i));
+            copy.add(eventsList.get(i));
         }
         return copy;
     }

@@ -17,6 +17,7 @@ public class AttendeeManager extends UserManager{
      * @param attendeeList a list of all attendees read from file
      */
     public AttendeeManager(ArrayList<Attendee> attendeeList){
+        this.attendeeList = new ArrayList<>();
         for (Attendee attendee: attendeeList){
             this.attendeeList.add(attendee);
         }
@@ -92,7 +93,7 @@ public class AttendeeManager extends UserManager{
     public ArrayList<Attendee> getAttendeeList() {
         ArrayList<Attendee> copy = new ArrayList<>(attendeeList.size());
         for(int i = 0; i < attendeeList.size(); i++){
-            copy.set(i, attendeeList.get(i));
+            copy.add(attendeeList.get(i));
         }
         return copy;
     }
@@ -137,6 +138,20 @@ public class AttendeeManager extends UserManager{
     public User getUser(String username){
         for(Attendee attendee: attendeeList){
             if (attendee.getUsername().equals(username)){
+                return attendee;
+            }
+        }
+        throw new UserNotFoundException();
+    }
+
+    /**
+     * Returns the Attendee with this user ID
+     * @param userID the userID that we are looking for
+     * @return the Attendee with this userID
+     */
+    public Attendee getAttendee(String userID){
+        for (Attendee attendee: attendeeList){
+            if (attendee.getID().equals(userID)){
                 return attendee;
             }
         }
