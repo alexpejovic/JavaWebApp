@@ -10,14 +10,14 @@ import Modules.UseCases.SpeakerManager;
 import java.util.ArrayList;
 
 public class SpeakerController {
-    private Speaker speaker;
+    private String speakerID;
     private SpeakerManager speakerManager;
     private EventManager eventManager;
     private MessageManager messageManager;
 
 
-    public SpeakerController(Speaker speaker, EventManager eventManager, SpeakerManager speakerManager){
-        this.speaker = speaker;
+    public SpeakerController(String speakerID, EventManager eventManager, SpeakerManager speakerManager){
+        this.speakerID = speakerID;
         this.eventManager = eventManager;
         this.speakerManager = speakerManager;
     }
