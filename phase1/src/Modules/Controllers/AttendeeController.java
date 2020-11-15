@@ -1,9 +1,6 @@
 package Modules.Controllers;
 
-import Modules.Entities.Attendee;
-import Modules.Entities.Event;
-import Modules.Entities.Message;
-import Modules.Entities.User;
+import Modules.Entities.*;
 import Modules.Gateways.UserGateway;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.EventManager;
@@ -12,6 +9,7 @@ import Modules.UseCases.MessageManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class AttendeeController {
@@ -27,6 +25,19 @@ public class AttendeeController {
         this.messageManager = messageManager;
     }
 
+
+    /**
+     * Enters Organizer users into the system
+     * @param users list of all user ids in the system
+     */
+    public void inputAttendee(ArrayList<User> users){
+        for(User user : users){
+            String id = user.getID();
+            if (id.startsWith("a")){
+                attendeeManager.addAttendee((Attendee) user);
+            }
+        }
+    }
 
     /**
      *
@@ -59,6 +70,19 @@ public class AttendeeController {
         return signUpSuccessful;
     }
 
+    public boolean cancelEnrollment(String eventName) throws Exception {
+        String eventID = eventManager.getEventID(eventName);
+        //check if user is signed up for event
+        Attendee attendee = attendeeManager.getAttendee(attendeeID);
+        if (attendee.getEventsList().contains(eventID)){
+            eventManager.removeAttendee(eventID, attendeeID);
+            attendee.removeEvent(eventID);
+            return true;
+
+        }
+        return false;
+    }
+
     /**
      *
      * @param receiverID the ID of the user that this message is to be sent to
@@ -88,12 +112,11 @@ public class AttendeeController {
 
     /**
      * Returns the message received by user and the full conversation between the receiver and sender
-     * @param receiverId the id of the user who received the message
      * @param senderId the id of the user who sends the message
      * @return array list of messages that correspond to the sorted conversation between sender and receiver
      */
-    public ArrayList<Message> seeMessage(String receiverId, String senderId){
-        return messageManager.getConversation(receiverId, senderId);
+    public ArrayList<Message> seeMessage(String senderId){
+        return messageManager.getConversation(attendeeID, senderId);
     }
 
 }

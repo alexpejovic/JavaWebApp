@@ -115,7 +115,6 @@ public class RoomManagerTest {
         // adding events e1 and e2 to eventManager
         eventManager.createEvent("0",time2,time3,"e1");
         eventManager.createEvent("0", time4, time5.plusHours(1),"e2");
-        // TODO: finish test
 
         // room 0 has no events
         assertTrue(roomManager.isRoomAvailable("r0", time1, time5, eventManager));

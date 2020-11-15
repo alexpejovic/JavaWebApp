@@ -1,6 +1,7 @@
 package Modules.UseCases;
 
 import Modules.Entities.Event;
+import Modules.Entities.Organizer;
 import Modules.Exceptions.EventNotFoundException;
 import Modules.Exceptions.NonUniqueIdException;
 
@@ -45,6 +46,8 @@ public class EventManager {
         return true;
 
     }
+
+    public ArrayList<Event> getListOfEvents(){return eventList;}
 
     /**
      * Checks if an event can be booked in a specific room, at a specified start and end time

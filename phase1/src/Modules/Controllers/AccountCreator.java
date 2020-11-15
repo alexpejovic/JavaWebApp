@@ -1,5 +1,7 @@
 package Modules.Controllers;
 
+import Modules.Entities.Organizer;
+import Modules.Exceptions.NonUniqueIdException;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.OrganizerManager;
 import Modules.UseCases.SpeakerManager;
@@ -30,27 +32,57 @@ public class AccountCreator {
     }
 
     /**
-     * Creates a new Speaker
+     * Creates a new Speaker with unique user ID
      * @param username the username of the Speaker
      * @param password the password of the Speaker
      * @param events a list of event ids that the Speaker is speaking at
+     * @return true iff a new Speaker account is created
      */
-    public void createSpeakerAccount(String username, String password, ArrayList<String> events){
-        // speaker's id starts with s then has the speaker # starting from 0
-        String userId = "s"+ speakerManager.getSpeakers().size();
-        speakerManager.addSpeaker(username,password,userId,events);
+    public boolean createSpeakerAccount(String username, String password, ArrayList<String> events){
+        boolean accountCreated = true;
+        try{
+            // speaker's id starts with s then has the speaker # starting from 0
+            String userId = "s"+ speakerManager.NumSpeakers();
+            speakerManager.addSpeaker(username,password,userId,events);
+        } catch (NonUniqueIdException e){
+            accountCreated = false;
+        }
+        return accountCreated;
     }
 
     /**
-     * Creates a new Attendee
+     * Creates a new Attendee with unique user ID
      * @param username the username of the Attendee
      * @param password the password of the Attendee
      * @param events a list of event ids that the Attendee is attending at
      */
-    public void createAttendeeAccount(String username, String password, ArrayList<String> events){
-        // attendee's id starts with a then has the attendee # starting from 0
-        String userId = "a"+ attendeeManager.getAttendeeList().size();
-        attendeeManager.addAttendee(username,password,userId,events);
+    public boolean createAttendeeAccount(String username, String password, ArrayList<String> events){
+        boolean accountCreated = true;
+        try{
+            // attendee's id starts with a then has the attendee # starting from 0
+            String userId = "a"+ attendeeManager.getAttendeeList().size();
+            attendeeManager.addAttendee(username,password,userId,events);
+        } catch (NonUniqueIdException e){
+            accountCreated = false;
+        }
+        return accountCreated;
+    }
+
+    /**
+     * Creates a new Organizer with unique user ID
+     * @param username the username of the Organizer
+     * @param password the password of the Organizer
+     */
+    public boolean createOrganizerAccount(String username, String password){
+        boolean accountCreated = true;
+        try{
+            // organizer's id starts with a then has the organizer # starting from 0
+            String userId = "o"+ organizerManager.getListOfOrganizers().size();
+            organizerManager.createOrganizerAccount(username,password,userId);
+        } catch (NonUniqueIdException e){
+            accountCreated = false;
+        }
+        return accountCreated;
     }
 
 

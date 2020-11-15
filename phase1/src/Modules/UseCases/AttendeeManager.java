@@ -2,6 +2,7 @@ package Modules.UseCases;
 
 import Modules.Entities.Attendee;
 import Modules.Entities.Event;
+import Modules.Entities.Organizer;
 import Modules.Entities.User;
 import Modules.Exceptions.UserNotFoundException;
 
@@ -47,6 +48,8 @@ public class AttendeeManager extends UserManager{
         attendeeList.add(attendee);
     }
 
+    public ArrayList<Attendee> getListOfAttendees() { return attendeeList; }
+
     /**
      *
      * @param attendee the attendee whose availabilty we want to check
@@ -84,6 +87,11 @@ public class AttendeeManager extends UserManager{
         if (timeAvailable(attendee, event.getStartTime(), event.getEndTime(), eventManager)){
             attendee.addEvent(event.getID());
         }
+    }
+
+    public void removeEvent(String eventID, String attendeeID) throws Exception {
+        Attendee attendee = getAttendee(attendeeID);
+        attendee.removeEvent(eventID);
     }
 
     /**
@@ -130,15 +138,15 @@ public class AttendeeManager extends UserManager{
     }
 
     /**
-     * Returns the specific Attendee with username
+     * Returns the specific Attendee's userID with username
      * @param username the username we want to check
-     * @return the specific Attendee entity that has the given username
+     * @return the userID of the specific Attendee entity that has the given username
      */
     @Override
-    public User getUser(String username){
+    public String getUserID(String username){
         for(Attendee attendee: attendeeList){
             if (attendee.getUsername().equals(username)){
-                return attendee;
+                return attendee.getID();
             }
         }
         throw new UserNotFoundException();

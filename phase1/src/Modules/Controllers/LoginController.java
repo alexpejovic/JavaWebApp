@@ -1,14 +1,10 @@
 package Modules.Controllers;
 
-import Modules.Entities.Attendee;
 import Modules.Entities.User;
 import Modules.Exceptions.UserNotFoundException;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.OrganizerManager;
 import Modules.UseCases.SpeakerManager;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 /**
  * Controller that handles Logging in and Signing up for User accounts
@@ -19,7 +15,8 @@ public class LoginController {
     private OrganizerManager organizerManager;
     private SpeakerManager speakerManager;
 
-    private User loggedUser;
+    /** the unique userID of the User logged into this program*/
+    private String loggedUser;
 
     /**
      * Constructor for LoginController
@@ -44,18 +41,18 @@ public class LoginController {
     public boolean logIn(String username, String password){
 
         if(validateUsernamePassword(username, password)) {
-            loggedUser = returnUser(username);
+            loggedUser = returnUserID(username);
             return true;
         }
         else
             return false;
     }
 
-    /** Getter for user who is currently logged-in
+    /** Getter for userID of User who is currently logged-in
      *
-     * @return The user currently logged-in
+     * @return The userID of User currently logged-in
      */
-    public User getLoggedUser() {
+    public String getLoggedUser() {
         return loggedUser;
     }
 
@@ -67,44 +64,41 @@ public class LoginController {
      * @return true iff there is a User with the matching username and password.
      */
     public boolean validateUsernamePassword(String username, String password){
-        //TODO: need the user managers to implement way to check password otherwise accessing
-        // entities would be violation of clean architecture
 
         // checking if this user is an attendee
         if (attendeeManager.isUser(username)){
-            return attendeeManager.validatePassword(password, username);
+            return attendeeManager.validatePassword(username, password);
         }
         // checking if this user is an organizer
         else if (organizerManager.isUser(username)){
-            return attendeeManager.validatePassword(password, username);
+            return organizerManager.validatePassword(username, password);
         }
         // checking if this user is an speaker
         else if (speakerManager.isUser(username)){
-            return attendeeManager.validatePassword(password, username);
+            return speakerManager.validatePassword(username, password);
         }
-
-        throw new UserNotFoundException();
-
+        //user is not found
+        return false;
     }
 
     /**
-     * Returns the User with this username
+     * Returns the unique userID of the User with this username
      * Precondition: there is a User in this conference with the given username
      * @param username the username of the User we want
-     * @return the User we are looking for
+     * @return the userID of the User we are looking for
      */
-    public User returnUser(String username){
+    private String returnUserID(String username){
         // checking if this user is an attendee
         if (attendeeManager.isUser(username)){
-            return attendeeManager.getUser(username);
+            return attendeeManager.getUserID(username);
         }
         // checking if this user is an organizer
         else if (organizerManager.isUser(username)){
-            return organizerManager.getUser(username);
+            return organizerManager.getUserID(username);
         }
         // checking if this user is an speaker
         else if (speakerManager.isUser(username)){
-            return organizerManager.getUser(username);
+            return speakerManager.getUserID(username);
         }
         //throws a exception if there is no user with the given username
         throw new UserNotFoundException();
