@@ -48,6 +48,7 @@ public class SpeakerTest {
         assertEquals(length + 1, s.numEvents());
         assertTrue(s.isHosting("1164"));
         assertEquals(1, s.numEvents());
+        assertTrue(s.getHostEvents().size() == 1);
     }
 
     @Test

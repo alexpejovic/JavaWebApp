@@ -79,7 +79,7 @@ public class SpeakerController {
         if(getAttendees().isEmpty()){
             return false;
         } else{
-            for(Attendee attendee: getAttendees()){
+            for(Attendee attendee: this.getAttendees()){
                 messageManager.sendMessage(speakerId, attendee.getID(), message);
             }
             return true;
@@ -93,7 +93,7 @@ public class SpeakerController {
      * @return whether a message was sent or not
      */
     public boolean message(String recipientId, String message){
-        for(Attendee attendee: getAttendees()){
+        for(Attendee attendee: this.getAttendees()){
             if(attendee.getID().equals(recipientId)){
                 messageManager.sendMessage(speakerId, recipientId, message);
                 return true;

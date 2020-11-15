@@ -24,6 +24,14 @@ public class SpeakerManager extends UserManager{
     }
 
     /**
+     * Returns the list of registered speakers in this conference
+     * @return the list of registered speakers in this conference
+     */
+    public ArrayList<Speaker> getListOfSpeakers(){
+        return speakerList;
+    }
+
+    /**
      * Adds a new speaker entity to the speakerList
      * @param username the username being assigned to the new Speaker
      * @param password the password being assigned to the new Speaker
@@ -132,15 +140,6 @@ public class SpeakerManager extends UserManager{
         }
         throw new UserNotFoundException();
     }
-
-    /**
-     * Returns the Arraylist of all speakers in this conference
-     * @return a Arraylist of Speaker entities
-     */
-    public ArrayList<Speaker> getListOfSpeakers(){
-        return this.speakerList;
-    }
-
 
     /**
      * Return the speaker entity matching a given speakerId
