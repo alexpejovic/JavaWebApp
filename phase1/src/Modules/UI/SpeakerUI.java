@@ -47,7 +47,7 @@ public class SpeakerUI {
             System.out.println("Please select a option: \n" +
                     "1. Logout \n" +
                     "2. Exit Program \n" +
-                    "3. See list of my events \n " +
+                    "3. See list of my events \n" +
                     "4. Message attendees attending my events \n");
 
              selection = this.validSelection();
@@ -88,20 +88,20 @@ public class SpeakerUI {
         ArrayList<String> eventStrings = eventPresenter.getEventList(events);
 
         // printing events to screen
-        System.out.println("List of events that you are speaking at");
+        System.out.println("List of events that you are speaking at: ");
         for(String eventString: eventStrings){
             System.out.println(eventString);
         }
+        System.out.println(); // spacing
     }
 
     /**
      * private helper that allows speakers to message all attendees that are attending their events
      */
     private void messageAllAttendees(){
-        Scanner message = new Scanner(System.in);
         System.out.println("Please input a message");
 
-        String messageString = message.nextLine();
+        String messageString = input.nextLine();
 
         //sending message to attendees
         if (speakerController.messageAll(messageString)){
@@ -110,7 +110,7 @@ public class SpeakerUI {
         else{
             System.out.println("There are no attendees attending your events. No messages sent.");
         }
-        message.close(); // closing Scanner
+        System.out.println(); // spacing
     }
 
     /**
@@ -124,7 +124,7 @@ public class SpeakerUI {
             try{
                 selection = Integer.valueOf(input.nextLine());
 
-                if (selection < 1 || selection > 4){
+                if (!(selection < 1 || selection > 4)){
                     // selection is within Range of options
                     System.out.println();
                     isValidSelection = true;
