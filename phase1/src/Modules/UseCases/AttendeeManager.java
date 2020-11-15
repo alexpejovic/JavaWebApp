@@ -86,6 +86,11 @@ public class AttendeeManager extends UserManager{
         }
     }
 
+    public void removeEvent(String eventID, String attendeeID) throws Exception {
+        Attendee attendee = getAttendee(attendeeID);
+        attendee.removeEvent(eventID);
+    }
+
     /**
      *
      * @return a shallow copy of the list of existing attendees
