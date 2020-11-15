@@ -68,22 +68,22 @@ public class AccountCreator {
         return accountCreated;
     }
 
-//    /**
-//     * Creates a new Organizer with unique user ID
-//     * @param username the username of the Organizer
-//     * @param password the password of the Organizer
-//     */
-//    public boolean createOrganizerAccount(String username, String password){
-//        boolean accountCreated = true;
-//        try{
-//            // organizer's id starts with a then has the organizer # starting from 0
-//            String userId = "o"+ organizerManager.getOrganizerList().size();                   //need OrganizerManager to Implement getOrganizerList()
-//            organizerManager.createOrganizerAccount(username,password,userId);
-//        } catch (NonUniqueIdException e){
-//            accountCreated = false;
-//        }
-//        return accountCreated;
-//    }
+    /**
+     * Creates a new Organizer with unique user ID
+     * @param username the username of the Organizer
+     * @param password the password of the Organizer
+     */
+    public boolean createOrganizerAccount(String username, String password){
+        boolean accountCreated = true;
+        try{
+            // organizer's id starts with a then has the organizer # starting from 0
+            String userId = "o"+ organizerManager.getListOfOrganizers().size();
+            organizerManager.createOrganizerAccount(username,password,userId);
+        } catch (NonUniqueIdException e){
+            accountCreated = false;
+        }
+        return accountCreated;
+    }
 
 
 

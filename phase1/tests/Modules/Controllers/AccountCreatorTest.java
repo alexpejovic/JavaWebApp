@@ -41,20 +41,20 @@ public class AccountCreatorTest {
         assertTrue(attendeeManager.validatePassword("at","pass"));
     }
 
-//    @Test
-//    public void testCreateOrganizerAccount(){
-//        AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
-//        SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
-//
-//        OrganizerManager organizerManager = new OrganizerManager(new EventManager(new ArrayList<>()),
-//                new RoomManager(new ArrayList<>()),
-//                new ArrayList<>());
-//
-//        AccountCreator accountCreator = new AccountCreator(organizerManager,attendeeManager,speakerManager);
-//
-//        assertTrue(accountCreator.createOrganizerAccount("org","pass", new ArrayList<>()));
-//        assertTrue(organizerManager.isUser("org"));
-//        assertTrue(organizerManager.validatePassword("org","pass"));
-//    }
+    @Test
+    public void testCreateOrganizerAccount(){
+        AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
+
+        OrganizerManager organizerManager = new OrganizerManager(new EventManager(new ArrayList<>()),
+                new RoomManager(new ArrayList<>()),
+                new ArrayList<>());
+
+        AccountCreator accountCreator = new AccountCreator(organizerManager,attendeeManager,speakerManager);
+
+        assertTrue(accountCreator.createOrganizerAccount("org","pass"));
+        assertTrue(organizerManager.isUser("org"));
+        assertTrue(organizerManager.validatePassword("org","pass"));
+    }
 
 }
