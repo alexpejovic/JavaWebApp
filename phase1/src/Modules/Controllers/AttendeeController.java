@@ -2,6 +2,7 @@ package Modules.Controllers;
 
 import Modules.Entities.*;
 import Modules.Exceptions.EventNotFoundException;
+import Modules.Exceptions.UserNotFoundException;
 import Modules.Gateways.UserGateway;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.EventManager;
@@ -116,7 +117,7 @@ public class AttendeeController {
      * @param message the content of the message to be sent
      * @return true if the message was successfully sent, false if the user was not on attendee's friends list
      */
-    public boolean sendMessage(String receiverID, String message){
+    public boolean sendMessage(String receiverID, String message) throws UserNotFoundException{
         if (attendeeManager.getAttendee(attendeeID).getFriendList().contains(receiverID)){
             messageManager.sendMessage(attendeeID, receiverID, message);
             return true;

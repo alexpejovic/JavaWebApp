@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class MessagePresenter {
 
-    public ArrayList<String> getConversation(ArrayList<Message> messages){
+    public ArrayList<String> getMessageList(ArrayList<Message> messages){
 
         ArrayList<String> conversation = new ArrayList<>();
 
