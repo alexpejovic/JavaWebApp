@@ -67,19 +67,18 @@ public class LoginController {
 
         // checking if this user is an attendee
         if (attendeeManager.isUser(username)){
-            return attendeeManager.validatePassword(password, username);
+            return attendeeManager.validatePassword(username, password);
         }
         // checking if this user is an organizer
         else if (organizerManager.isUser(username)){
-            return attendeeManager.validatePassword(password, username);
+            return organizerManager.validatePassword(username, password);
         }
         // checking if this user is an speaker
         else if (speakerManager.isUser(username)){
-            return attendeeManager.validatePassword(password, username);
+            return speakerManager.validatePassword(username, password);
         }
-
-        throw new UserNotFoundException();
-
+        //user is not found
+        return false;
     }
 
     /**
@@ -88,7 +87,7 @@ public class LoginController {
      * @param username the username of the User we want
      * @return the userID of the User we are looking for
      */
-    public String returnUserID(String username){
+    private String returnUserID(String username){
         // checking if this user is an attendee
         if (attendeeManager.isUser(username)){
             return attendeeManager.getUserID(username);
@@ -99,7 +98,7 @@ public class LoginController {
         }
         // checking if this user is an speaker
         else if (speakerManager.isUser(username)){
-            return organizerManager.getUserID(username);
+            return speakerManager.getUserID(username);
         }
         //throws a exception if there is no user with the given username
         throw new UserNotFoundException();

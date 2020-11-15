@@ -18,6 +18,7 @@ public class SpeakerManager extends UserManager{
      * speakerList a list of existing speakers read from stored file
      */
     public SpeakerManager(ArrayList<Speaker> speakerList){
+        this.speakerList = new ArrayList<>();
         for(Speaker speaker: speakerList){
             this.speakerList.add(speaker);
         }
@@ -102,7 +103,7 @@ public class SpeakerManager extends UserManager{
     public boolean isUser(String username){
          int ind = 0;
          while(ind < speakerList.size()){
-             if(speakerList.get(ind).getID().equals(username)){
+             if(speakerList.get(ind).getUsername().equals(username)){
                  return true;
              }
              ind++;
