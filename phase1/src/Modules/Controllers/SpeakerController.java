@@ -21,11 +21,11 @@ public class SpeakerController {
 
     /**
      * A constructor for the speakerController class
-     * @param speakerId
-     * @param eventManager
-     * @param speakerManager
-     * @param attendeeManager
-     * @param messageManager
+     * @param speakerId the Id of a specific speaker
+     * @param eventManager the event manager for the conference
+     * @param speakerManager the speaker manager for the conference
+     * @param attendeeManager the attendee manager for the conference
+     * @param messageManager the message manager for the conference
      */
     public SpeakerController(String speakerId, EventManager eventManager, SpeakerManager speakerManager,
                              AttendeeManager attendeeManager, MessageManager messageManager){
