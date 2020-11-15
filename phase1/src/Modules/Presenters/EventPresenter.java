@@ -1,6 +1,8 @@
 package Modules.Presenters;
 
 import Modules.Entities.Event;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /** A class used to format all information regarding a Sign-Up Menu for an Attendee. This includes formatting a list
@@ -20,9 +22,18 @@ public class EventPresenter {
         int i = 1;
 
         for(Event event: events){
-            String eventString = i + ". " + event.getName() + " Remaining Seats: " + event.getAvailableSeats() +
-                    "Start Time: " + event.getStartTime().toString();
+            String eventName = event.getName();
+            if (eventName== null){
+                eventName = "unnamed event";
+            }
+
+            String eventString = i + ".   " + eventName + "   Remaining Seats: " + event.getAvailableSeats()
+                    + "   Room: " + event.getRoomNumber()
+                    + "   Start Time: " + event.getStartTime().toString()
+                    + "   End Time: " + event.getEndTime().toString();
+
             eventList.add(eventString);
+            i ++;
         }
 
         return eventList;
