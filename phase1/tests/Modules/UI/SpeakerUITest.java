@@ -3,6 +3,7 @@ package Modules.UI;
 import Modules.Controllers.SpeakerController;
 import Modules.Entities.Attendee;
 import Modules.Entities.Event;
+import Modules.Entities.Message;
 import Modules.Entities.Speaker;
 import Modules.Presenters.EventPresenter;
 import Modules.UseCases.AttendeeManager;
@@ -59,6 +60,12 @@ public class SpeakerUITest {
 
         System.out.println(speakerUI.run());
 
+        // testing that messages are sent to attendee0
+        ArrayList<Message> msgs = messageManager.getUserMessages("a0");
+        System.out.println("Messages for attendee 0 : ");
+        for (Message message: msgs){
+            System.out.println(message.getContent());
+        }
     }
 
 
