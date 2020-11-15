@@ -28,8 +28,8 @@ public class LoginControllerTest {
         SpeakerManager speakerManager = new SpeakerManager(speakers);
 
         OrganizerManager organizerManager = new OrganizerManager(new EventManager(new ArrayList<>()),
-                new RoomManager(new ArrayList<>()),
-                new ArrayList<>());
+                new RoomManager(new ArrayList<>()), new AttendeeManager(new ArrayList<>()),
+                new SpeakerManager(new ArrayList<>()),new ArrayList<>());
 
         LoginController loginController = new LoginController(attendeeManager,organizerManager,speakerManager);
 
