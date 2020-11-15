@@ -73,6 +73,10 @@ public class OrganizerManager extends UserManager{
         return false;
     }
 
+    public ArrayList<Organizer> getListOfOrganizers() {
+        return listOfOrganizers;
+    }
+
     /**
      * Returns the specific Organizer's userID with username
      * @param username the username we want to check
@@ -99,10 +103,9 @@ public class OrganizerManager extends UserManager{
      * @param userName the Organizer's username
      * @param password the Organizer's password
      * @param userId the Organizer's userId
-     * @return a new Organizer account based on the info given
      */
-    public Organizer createOrganizerAccount(String userName, String password, String userId){
-        return (new Organizer(userName, password, userId));
+    public void createOrganizerAccount(String userName, String password, String userId){
+        listOfOrganizers.add(new Organizer(userName, password, userId));
     }
 
     /**
