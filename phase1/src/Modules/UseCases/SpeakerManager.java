@@ -17,9 +17,18 @@ public class SpeakerManager extends UserManager{
      * speakerList a list of existing speakers read from stored file
      */
     public SpeakerManager(ArrayList<Speaker> speakerList){
+        this.speakerList = new ArrayList<>();
         for(Speaker speaker: speakerList){
             this.speakerList.add(speaker);
         }
+    }
+
+    /**
+     * Returns the list of registered speakers in this conference
+     * @return the list of registered speakers in this conference
+     */
+    public ArrayList<Speaker> getListOfSpeakers(){
+        return speakerList;
     }
 
     /**
@@ -122,7 +131,7 @@ public class SpeakerManager extends UserManager{
      * @param username the username we want to check
      * @return the specific Speaker entity that has the given username
      */
-    @Override
+
     public User getUser(String username){
         for (Speaker speaker: speakerList){
             if (speaker.getUsername().equals(username)){
@@ -130,6 +139,16 @@ public class SpeakerManager extends UserManager{
             }
         }
         throw new UserNotFoundException();
+    }
+
+    /**
+     * Returns the ID of a speaker
+     * @param username the username we want to check
+     * @return the ID of a speaker with username = username
+     */
+    @Override
+    public String getUserID(String username) {
+        return getUser(username).getID();
     }
 
     /**
