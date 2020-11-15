@@ -1,9 +1,6 @@
 package Modules.Controllers;
 
-import Modules.Entities.Attendee;
-import Modules.Entities.Event;
-import Modules.Entities.Message;
-import Modules.Entities.User;
+import Modules.Entities.*;
 import Modules.Gateways.UserGateway;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.EventManager;
@@ -12,6 +9,7 @@ import Modules.UseCases.MessageManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class AttendeeController {
@@ -27,6 +25,19 @@ public class AttendeeController {
         this.messageManager = messageManager;
     }
 
+
+    /**
+     * Enters Organizer users into the system
+     * @param users list of all user ids in the system
+     */
+    public void inputAttendee(ArrayList<User> users){
+        for(User user : users){
+            String id = user.getID();
+            if (id.startsWith("a")){
+                attendeeManager.addAttendee((Attendee) user);
+            }
+        }
+    }
 
     /**
      *
@@ -57,6 +68,19 @@ public class AttendeeController {
             }
         }
         return signUpSuccessful;
+    }
+
+    public boolean cancelEnrollment(String eventName) throws Exception {
+        String eventID = eventManager.getEventID(eventName);
+        //check if user is signed up for event
+        Attendee attendee = attendeeManager.getAttendee(attendeeID);
+        if (attendee.getEventsList().contains(eventID)){
+            eventManager.removeAttendee(eventID, attendeeID);
+            attendee.removeEvent(eventID);
+            return true;
+
+        }
+        return false;
     }
 
     /**
