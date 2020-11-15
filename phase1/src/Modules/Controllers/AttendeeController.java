@@ -88,6 +88,11 @@ public class AttendeeController {
         return signUpSuccessful;
     }
 
+    /** Cancels attendee's enrollment for one event
+     *
+     * @param eventName Name of event which is wished to be cancelled
+     * @return True if cancellation successful, false otherwise
+     */
     public boolean cancelEnrollment(String eventName){
         String eventID = eventManager.getEventID(eventName);
         //check if user is signed up for event
