@@ -1,7 +1,7 @@
 package Modules.UI;
 
 import Modules.Controllers.AttendeeController;
-import Modules.Presenters.SignUpPresenter;
+import Modules.Presenters.EventPresenter;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -11,17 +11,17 @@ import java.util.Scanner;
  */
 public class SignUpUI {
 
-    private SignUpPresenter signUpPresenter;
+    private EventPresenter eventPresenter;
     private AttendeeController attendeeController;
 
     /** Constructor.
      *
-     * @param signUpPresenter Presenter needed to format event list
+     * @param eventPresenter Presenter needed to format event list
      * @param attendeeController Controller corresponding to correct user
      */
-    SignUpUI(SignUpPresenter signUpPresenter, AttendeeController attendeeController){
+    SignUpUI(EventPresenter eventPresenter, AttendeeController attendeeController){
         this.attendeeController = attendeeController;
-        this.signUpPresenter = signUpPresenter;
+        this.eventPresenter = eventPresenter;
     }
 
 
@@ -33,8 +33,8 @@ public class SignUpUI {
 
         Scanner input = new Scanner(System.in);
         String eventNum;
-        ArrayList<String> eventStrings = signUpPresenter.getEventList(attendeeController.displayEvents());
-        ArrayList<String> eventNames = signUpPresenter.getEventNames(attendeeController.displayEvents());
+        ArrayList<String> eventStrings = eventPresenter.getEventList(attendeeController.displayEvents());
+        ArrayList<String> eventNames = eventPresenter.getEventNames(attendeeController.displayEvents());
         int max = eventStrings.size();
 
         System.out.println("---Sign Up for an Event---\n");
