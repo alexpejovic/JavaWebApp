@@ -1,6 +1,7 @@
 package Modules.UseCases;
 
 import Modules.Entities.Attendee;
+import Modules.Entities.Organizer;
 import Modules.Entities.Speaker;
 import Modules.Entities.User;
 import Modules.Exceptions.UserNotFoundException;
@@ -39,6 +40,10 @@ public class SpeakerManager extends UserManager{
             i++;
         }
         speakerList.add(newSpeaker);
+    }
+
+    public ArrayList<Speaker> getListOfSpeakers() {
+        return speakerList;
     }
 
     /**
