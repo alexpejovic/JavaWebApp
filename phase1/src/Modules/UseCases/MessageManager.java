@@ -55,9 +55,22 @@ public class MessageManager {
     public void sendMessage(String senderID, String receiverID, String message) {
         Message newMessage = new Message(message, senderID, receiverID);
         // Get userMessages for sender and add new message
-        messages.get(senderID).add(newMessage);
+        if(messages.containsKey(senderID)) {
+            messages.get(senderID).add(newMessage);
+        } else{
+            ArrayList<Message> newMessagesArray = new ArrayList<>();
+            newMessagesArray.add(newMessage);
+            messages.put(senderID, newMessagesArray);
+        }
         // Get userMessages for receiver and add new message
-        messages.get(receiverID).add(newMessage);
+        if(messages.containsKey(receiverID)) {
+            messages.get(receiverID).add(newMessage);
+        }
+        else{
+            ArrayList<Message> newMessagesArray = new ArrayList<>();
+            newMessagesArray.add(newMessage);
+            messages.put(receiverID, newMessagesArray);
+        }
     }
 
     /**

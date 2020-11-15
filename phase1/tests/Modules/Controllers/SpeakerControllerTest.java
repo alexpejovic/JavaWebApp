@@ -20,6 +20,7 @@ public class SpeakerControllerTest {
         Speaker s = new Speaker("Lebron", "James", "s23");
         Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
         Attendee a = new Attendee("Steph", "Curry", "a30");
+        Message m = new Message("Blew a 3-1 lead", s.getID(), a.getID(), "m123", LocalDateTime.now());
         ArrayList<Speaker> speakerArray = new ArrayList<>();
         speakerArray.add(s);
         SpeakerManager sm = new SpeakerManager(speakerArray);
@@ -35,6 +36,6 @@ public class SpeakerControllerTest {
         s.addEvent("1234");
         a.addEvent("1234");
         sc.message("a30", "Blew a 3-1 lead");
-        assertTrue(mm.getUserMessages(s.getUsername()).size() == 1);
+        assertTrue(mm.getUserMessages(s.getID()).size() == 1);
     }
 }
