@@ -2,6 +2,7 @@ package Modules.UseCases;
 
 import Modules.Entities.Attendee;
 import Modules.Entities.Event;
+import Modules.Entities.Organizer;
 import Modules.Entities.User;
 import Modules.Exceptions.UserNotFoundException;
 
@@ -46,6 +47,8 @@ public class AttendeeManager extends UserManager{
     public void addAttendee(Attendee attendee){
         attendeeList.add(attendee);
     }
+
+    public ArrayList<Attendee> getListOfAttendees() { return attendeeList; }
 
     /**
      *

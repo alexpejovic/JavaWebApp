@@ -1,5 +1,6 @@
 package Modules.UseCases;
 
+import Modules.Entities.Organizer;
 import Modules.Entities.Room;
 import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.RoomNotFoundException;
@@ -150,6 +151,10 @@ public class RoomManager {
             }
         }
         return true;
+    }
+
+    public ArrayList<Room> getListOfRooms() {
+        return rooms;
     }
 
 }
