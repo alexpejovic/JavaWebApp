@@ -13,32 +13,21 @@ public class OrganizerManager extends UserManager{
     /** List of all Organizers in the conference*/
     ArrayList<Organizer> listOfOrganizers;
 
-    /** List of all Speakers in the conference*/
-    ArrayList<Speaker> listOfSpeakers;
-
-    /** List of all Rooms in the conference*/
-    ArrayList<Room> listOfRooms;
-
-    /** List of all Attendees in the conference*/
-    ArrayList<Attendee> listOfAttendees;
-
-    /** List of all Events in the conference */
-    ArrayList<Event> listOfEvents;
-
     private EventManager eventManager;
 
     private RoomManager roomManager;
 
-    public OrganizerManager(EventManager eventManager, RoomManager roomManager, ArrayList<Organizer> organizers){
+    private AttendeeManager attendeeManager;
+
+    public OrganizerManager(EventManager eventManager, RoomManager roomManager, AttendeeManager attendeeManager, ArrayList<Organizer> organizers){
+        this.listOfOrganizers = new ArrayList<>();
         for(Organizer organizer: organizers){
             this.listOfOrganizers.add(organizer);
         }
-        this.listOfSpeakers = new ArrayList<>();
-        this.listOfRooms = new ArrayList<>();
-        this.listOfAttendees = new ArrayList<>();
-        this.listOfEvents = new ArrayList<>();
         this.roomManager = roomManager;
         this.eventManager = eventManager;
+        this.attendeeManager = attendeeManager;
+
     }
 
     /**
@@ -147,6 +136,22 @@ public class OrganizerManager extends UserManager{
         throw new UserNotFoundException();
     }
 
+    public ArrayList<String> forMessagingAllAttendees(){
+        ArrayList<String> allAttendeeIDs = new ArrayList<>();
+        for (Attendee attendee: listOfAttendees){
+            allAttendeeIDs.add(attendee.getID());
+        }
+        return allAttendeeIDs;
+    }
+
+    public ArrayList<String> forMessagingAllSpeakers(){
+        ArrayList<String> allSpeakerIDs = new ArrayList<>();
+        for (Speaker speaker: listOfSpeakers){
+            allSpeakerIDs.add(speaker.getID());
+        }
+        return allSpeakerIDs;
+    }
+
     /**
      * Private helper method that finds the Organizer object in the system with the given id
      * @param organizerId the Organizer's id
@@ -197,28 +202,8 @@ public class OrganizerManager extends UserManager{
         return true;
     }
 
-
     /**
-     * Checks if room and speaker are available available to schedule Speaker in the room at a given time
-     * Schedules Speaker to speak at an existing Event, in a specific room, at a specific time
-     * @param speakerId the Speaker's id
-     * @param roomNumber the number of the Room where the Speaker will hold the event
-     * @param startTime the time the Speaker is scheduled to begin event in the room
-     * @param endTime the time the event will end
-     */
-    public void scheduleSpeaker(String speakerId, String roomNumber, LocalDateTime startTime, LocalDateTime endTime){
-        Room room = findRoom(roomNumber);
-        Speaker speaker = findSpeaker(speakerId);
-        Event eventAtTime = eventAtTime(roomNumber,startTime, endTime);
-
-        eventAtTime.scheduleSpeaker(speaker.getID());
-        room.addEvent(eventAtTime.getID());
-
-    }
-
-
-    /**
-     * Checks if room and speaker are available available to schedule Speaker in the room at a given time
+     * Checks if room and speaker are available to schedule Speaker in the room at a given time
      * Assigns a new event to the room at a specific time and schedules Speaker to speak at an existing Event
      * @param speakerId the Speaker's id
      * @param roomId the Room's number where the Speaker will hold the event
@@ -227,9 +212,7 @@ public class OrganizerManager extends UserManager{
     public void scheduleSpeaker(String speakerId, String roomId, String eventId){
         Room room = findRoom(roomId);
         Event event = findEvent(eventId);
-
         event.scheduleSpeaker(speakerId);
-        room.addEvent(eventId);
 
     }
 
@@ -241,6 +224,15 @@ public class OrganizerManager extends UserManager{
     public void addToOrganizedEvents(String organizerId, String eventId){
         Organizer organizer = findOrganizer(organizerId);
         organizer.addManagedEvent(eventId);
+    }
+
+    public Event getEventInRoom(LocalDateTime startTime, LocalDateTime endTime, String roomNumber){
+        Room room = findRoom(roomNumber);
+        for (String eventId: room.getEvents()){
+            Event event = findEvent(eventId);
+            if (event.getStartTime() == startTime && event.getEndTime() == endTime){return event;}
+        }
+        return null;
     }
 
 }
