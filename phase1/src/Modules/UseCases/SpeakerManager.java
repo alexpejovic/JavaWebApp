@@ -1,7 +1,5 @@
 package Modules.UseCases;
 
-import Modules.Entities.Attendee;
-import Modules.Entities.Organizer;
 import Modules.Entities.Speaker;
 import Modules.Entities.User;
 import Modules.Exceptions.UserNotFoundException;
@@ -12,14 +10,13 @@ import java.util.ArrayList;
  * This class performs actions on Speakers and gives important information about all Speakers
  */
 public class SpeakerManager extends UserManager{
-    private ArrayList<Speaker> speakerList;
+    ArrayList<Speaker> speakerList;
 
     /**
      * A constructor for the SpeakerManager class
      * speakerList a list of existing speakers read from stored file
      */
     public SpeakerManager(ArrayList<Speaker> speakerList){
-        this.speakerList = new ArrayList<>();
         for(Speaker speaker: speakerList){
             this.speakerList.add(speaker);
         }
@@ -42,8 +39,12 @@ public class SpeakerManager extends UserManager{
         speakerList.add(newSpeaker);
     }
 
-    public ArrayList<Speaker> getListOfSpeakers() {
-        return speakerList;
+    /**
+     * Add an existing speaker to the conference
+     * @param speaker the speaker to be added
+     */
+    public void addSpeaker(Speaker speaker){
+        speakerList.add(speaker);
     }
 
     /**
@@ -108,7 +109,7 @@ public class SpeakerManager extends UserManager{
     public boolean isUser(String username){
          int ind = 0;
          while(ind < speakerList.size()){
-             if(speakerList.get(ind).getUsername().equals(username)){
+             if(speakerList.get(ind).getID().equals(username)){
                  return true;
              }
              ind++;
@@ -117,15 +118,29 @@ public class SpeakerManager extends UserManager{
     }
 
     /**
-     * Returns the specific Speaker's userID with username
+     * Returns the specific Speaker with username
      * @param username the username we want to check
-     * @return the userID of the specific Speaker entity that has the given username
+     * @return the specific Speaker entity that has the given username
      */
     @Override
-    public String getUserID(String username){
+    public User getUser(String username){
         for (Speaker speaker: speakerList){
             if (speaker.getUsername().equals(username)){
-                return speaker.getID();
+                return speaker;
+            }
+        }
+        throw new UserNotFoundException();
+    }
+
+    /**
+     * Return the speaker entity matching a given speakerId
+     * @param speakerId the speaker Id given
+     * @return the speaker entity matching speakerId
+     */
+    public Speaker getSpeaker(String speakerId){
+        for(Speaker speaker: speakerList){
+            if(speaker.getID().equals(speakerId)) {
+                return speaker;
             }
         }
         throw new UserNotFoundException();
