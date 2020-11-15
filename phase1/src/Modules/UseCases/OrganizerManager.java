@@ -61,16 +61,20 @@ public class OrganizerManager extends UserManager{
         return false;
     }
 
+    public ArrayList<Organizer> getListOfOrganizers() {
+        return listOfOrganizers;
+    }
+
     /**
-     * Returns the specific Organizer with username
+     * Returns the specific Organizer's userID with username
      * @param username the username we want to check
-     * @return the specific Organizer entity that has the given username
+     * @return the userID of the specific Organizer entity that has the given username
      */
     @Override
-    public User getUser(String username){
+    public String getUserID(String username){
         for (Organizer organizer: listOfOrganizers){
             if (organizer.getUsername().equals(username)){
-                return organizer;
+                return organizer.getID();
             }
         }
         throw new UserNotFoundException();
@@ -87,10 +91,9 @@ public class OrganizerManager extends UserManager{
      * @param userName the Organizer's username
      * @param password the Organizer's password
      * @param userId the Organizer's userId
-     * @return a new Organizer account based on the info given
      */
-    public Organizer createOrganizerAccount(String userName, String password, String userId){
-        return (new Organizer(userName, password, userId));
+    public void createOrganizerAccount(String userName, String password, String userId){
+        listOfOrganizers.add(new Organizer(userName, password, userId));
     }
 
     /**
@@ -201,6 +204,7 @@ public class OrganizerManager extends UserManager{
         }
         return true;
     }
+
 
     /**
      * Checks if room and speaker are available to schedule Speaker in the room at a given time

@@ -135,15 +135,15 @@ public class AttendeeManager extends UserManager{
     }
 
     /**
-     * Returns the specific Attendee with username
+     * Returns the specific Attendee's userID with username
      * @param username the username we want to check
-     * @return the specific Attendee entity that has the given username
+     * @return the userID of the specific Attendee entity that has the given username
      */
     @Override
-    public User getUser(String username){
+    public String getUserID(String username){
         for(Attendee attendee: attendeeList){
             if (attendee.getUsername().equals(username)){
-                return attendee;
+                return attendee.getID();
             }
         }
         throw new UserNotFoundException();

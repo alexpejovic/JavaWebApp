@@ -32,6 +32,7 @@ public class RoomManager {
      * in this RoomManager's list of Rooms
      * @param roomNumber the unique room number of this room
      * @param capacity maximum number of people allowed in this room
+     * @throws NonUniqueIdException when there is already a room with the same room number in this RoomManager
      */
     public void createRoom(String roomNumber, int capacity){
         for(Room room: rooms){
@@ -71,6 +72,7 @@ public class RoomManager {
      * or raises a RoomNotFoundException if there is no Room in this RoomManager
      * @param roomNumber the unique room number of the Room we want
      * @return the Room in this RoomManager with roomNumber
+     * @throws RoomNotFoundException if there is no room with given RoomNumber in this Room
      */
     private Room getRoom(String roomNumber){
         for(Room room: rooms){

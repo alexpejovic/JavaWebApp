@@ -28,15 +28,6 @@ public class OrganizerController {
         this.organizerId = organizerId;
     }
 
-    /**
-     * Creates new Organizer user account and enters it into the system
-     * @param userName the organizer user's name
-     * @param password the organizer user's password
-     * @param userId the organizer user's id
-     */
-    public void addNewOrganizerAccount(String userName, String password, String userId){
-        organizerManager.addOrganizer(organizerManager.createOrganizerAccount(userName, password, userId));
-    }
 
     /**
      * Creates new Room and enters it into the system
