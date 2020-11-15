@@ -34,8 +34,8 @@ public class Attendee extends User implements Identifiable{
      * removes the event with ID id from this attendee's events list, if it is in the list
      * @param id the unique ID of the event to be removed
      */
-    public void removeEvent(String id) throws Exception {
-        if (this.alreadyAttendingEvent(id) == false){
+    public void removeEvent(String id) throws EventNotFoundException {
+        if (!this.alreadyAttendingEvent(id)){
             throw EventNotFoundException;
         }
         eventsList.remove(id);
@@ -47,9 +47,7 @@ public class Attendee extends User implements Identifiable{
      */
     public ArrayList<String> getEventsList() {
         ArrayList<String> copy = new ArrayList<>(eventsList.size());
-        for(int i = 0; i < eventsList.size(); i++){
-            copy.add(eventsList.get(i));
-        }
+        copy.addAll(eventsList);
         return copy;
     }
 
@@ -58,10 +56,7 @@ public class Attendee extends User implements Identifiable{
      * @return true if this attendee's events list is empty, otherwise return false
      */
     public boolean hasNoEvents(){
-        if (eventsList.size() == 0){
-            return true;
-        }
-        return false;
+        return eventsList.size() == 0;
     }
 
     /**
@@ -70,9 +65,6 @@ public class Attendee extends User implements Identifiable{
      * @return true if this attendee is already attending the event with ID id, false otherwise
      */
     public boolean alreadyAttendingEvent(String id){
-        if (eventsList.contains(id) == true){
-            return true;
-        }
-        return false;
+        return eventsList.contains(id);
     }
 }

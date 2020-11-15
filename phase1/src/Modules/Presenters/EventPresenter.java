@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * of Events into a list of Strings which adequately represent an event.
  *
  */
-public class SignUpPresenter {
+public class EventPresenter {
 
     /** Reformats a list of events into a list of Strings which each describe the event
      *
@@ -40,6 +40,23 @@ public class SignUpPresenter {
 
         for(Event event: events){
             eventList.add(event.getName());
+        }
+
+        return eventList;
+    }
+
+    /** Reformats list of events into a list of event names with respective dates
+     *
+     * @param events List of events
+     * @return List of names of events along with dates
+     */
+    public ArrayList<String> getEventDates(ArrayList<Event> events){
+
+        ArrayList<String> eventList = new ArrayList<>();
+
+        for(Event event: events){
+            eventList.add(event.getName() + " Start Time: " + event.getStartTime().toString() + "" +
+                    " End Time: " + event.getEndTime().toString());
         }
 
         return eventList;

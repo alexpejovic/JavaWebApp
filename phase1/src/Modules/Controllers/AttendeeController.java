@@ -1,6 +1,7 @@
 package Modules.Controllers;
 
 import Modules.Entities.*;
+import Modules.Exceptions.EventNotFoundException;
 import Modules.Gateways.UserGateway;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.EventManager;
@@ -47,6 +48,23 @@ public class AttendeeController {
         return eventManager.getEventList();
     }
 
+
+    /** Getter for list of events which attendee is attending
+     *
+     * @return the list of events which this Attendee is attending
+     */
+    public ArrayList<Event> getAttendingEvents() {
+
+         ArrayList<String> eventStrings = attendeeManager.getAttendee(attendeeID).getEventsList();
+         ArrayList<Event> events = new ArrayList<>();
+
+         for(String event: eventStrings){
+             events.add(eventManager.getEvent(event));
+         }
+
+         return events;
+    }
+
     /**
      *
      * @param eventName the name of the event that attendee wishes to sign up for
@@ -70,13 +88,22 @@ public class AttendeeController {
         return signUpSuccessful;
     }
 
-    public boolean cancelEnrollment(String eventName) throws Exception {
+    /** Cancels attendee's enrollment for one event
+     *
+     * @param eventName Name of event which is wished to be cancelled
+     * @return True if cancellation successful, false otherwise
+     */
+    public boolean cancelEnrollment(String eventName){
         String eventID = eventManager.getEventID(eventName);
         //check if user is signed up for event
         Attendee attendee = attendeeManager.getAttendee(attendeeID);
         if (attendee.getEventsList().contains(eventID)){
             eventManager.removeAttendee(eventID, attendeeID);
-            attendee.removeEvent(eventID);
+            try {
+                attendee.removeEvent(eventID);
+            }catch (EventNotFoundException e){
+                e.printStackTrace();
+            }
             return true;
 
         }
