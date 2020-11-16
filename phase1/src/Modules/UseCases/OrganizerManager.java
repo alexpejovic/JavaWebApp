@@ -113,7 +113,7 @@ public class OrganizerManager extends UserManager {
      * @param endTime   The time at which the Event will end
      * @return the Event object of the event that is taking place in a specific Room at a specific time
      */
-    private Event eventAtTime(String roomId, LocalDateTime startTime, LocalDateTime endTime) {
+    public Event eventAtTime(String roomId, LocalDateTime startTime, LocalDateTime endTime) {
         Room room = findRoom(roomId);
         for (String currEvent : room.getEvents()) {
             Event event = findEvent(currEvent);
@@ -235,6 +235,13 @@ public class OrganizerManager extends UserManager {
     public void scheduleSpeaker(String speakerId, String roomId, String eventId) {
         Room room = findRoom(roomId);
         Event event = findEvent(eventId);
+        event.scheduleSpeaker(speakerId);
+
+    }
+
+    public void scheduleSpeaker(String speakerId, String roomId, LocalDateTime startTime, LocalDateTime endTime) {
+        Room room = findRoom(roomId);
+        Event event = eventAtTime(roomId, startTime, endTime);
         event.scheduleSpeaker(speakerId);
 
     }
