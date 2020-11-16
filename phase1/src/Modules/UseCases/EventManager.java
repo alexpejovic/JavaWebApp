@@ -1,6 +1,7 @@
 package Modules.UseCases;
 
 import Modules.Entities.Event;
+import Modules.Entities.Organizer;
 import Modules.Exceptions.EventNotFoundException;
 import Modules.Exceptions.NonUniqueIdException;
 
@@ -20,9 +21,7 @@ public class EventManager {
 
     public EventManager(ArrayList<Event> eventList) {
         this.eventList = new ArrayList<>();
-        for(Event event: eventList){
-            this.eventList.add(event);
-        }
+        this.eventList.addAll(eventList);
     }
 
     /**
@@ -45,6 +44,8 @@ public class EventManager {
         return true;
 
     }
+
+    public ArrayList<Event> getListOfEvents(){return eventList;}
 
     /**
      * Checks if an event can be booked in a specific room, at a specified start and end time
@@ -81,12 +82,12 @@ public class EventManager {
     }
 
     /**
-     * Private helper function that returns the event identified by an event ID. Raises an EventNotFoundException if
+     * Function that returns the event identified by an event ID. Raises an EventNotFoundException if
      * there is no event with the specified event ID
      * @param eventID the unique ID of the event
      * @return The event of the ID
      */
-    private Event getEvent(String eventID) {
+    public Event getEvent(String eventID) {
         for (Event event: this.eventList) {
             if (event.getID().equals(eventID)) {
                 return event;
@@ -144,9 +145,7 @@ public class EventManager {
      */
     public ArrayList<Event> getEventList() {
         ArrayList<Event> copy = new ArrayList<>();
-        for(Event event: this.eventList){
-            copy.add(event);
-        }
+        copy.addAll(this.eventList);
         return copy;
     }
 

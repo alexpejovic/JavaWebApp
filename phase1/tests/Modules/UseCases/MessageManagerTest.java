@@ -1,5 +1,6 @@
 package Modules.UseCases;
 
+import Modules.Entities.Attendee;
 import Modules.Entities.Message;
 import org.junit.Test;
 
@@ -86,6 +87,19 @@ public class MessageManagerTest {
         assertEquals("yo event 2 is lit!", conversation.get(0).getContent());
         assertEquals("never gonna give you up", conversation.get(1).getContent());
         assertEquals("never gonna let you down", conversation.get(2).getContent());
+    }
+
+    @Test
+    public void testSendMessageFirstMessage(){
+        ArrayList<Message> newList = new ArrayList<>();
+        MessageManager mm = new MessageManager(newList);
+        Attendee a1 = new Attendee("Attendee1", "pwd", "101");
+        Attendee a2 = new Attendee("Attendee2", "pwd", "202");
+        a1.addToFriendList("202");
+        a2.addToFriendList("101");
+        mm.sendMessage(a1.getID(), a2.getID(), "Hello Attendee 2!");
+        assertTrue(mm.getUserMessages(a1.getID()).size() == 1);
+        assertTrue(mm.getUserMessages(a2.getID()).size() == 1);
     }
 
 }

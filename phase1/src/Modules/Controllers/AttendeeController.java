@@ -1,9 +1,8 @@
 package Modules.Controllers;
 
-import Modules.Entities.Attendee;
-import Modules.Entities.Event;
-import Modules.Entities.Message;
-import Modules.Entities.User;
+import Modules.Entities.*;
+import Modules.Exceptions.EventNotFoundException;
+import Modules.Exceptions.UserNotFoundException;
 import Modules.Gateways.UserGateway;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.EventManager;
@@ -12,6 +11,7 @@ import Modules.UseCases.MessageManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class AttendeeController {
@@ -29,11 +29,41 @@ public class AttendeeController {
 
 
     /**
+     * Enters Organizer users into the system
+     * @param users list of all user ids in the system
+     */
+    public void inputAttendee(ArrayList<User> users){
+        for(User user : users){
+            String id = user.getID();
+            if (id.startsWith("a")){
+                attendeeManager.addAttendee((Attendee) user);
+            }
+        }
+    }
+
+    /**
      *
      * @return the list of existing events
      */
     public ArrayList<Event> displayEvents(){
         return eventManager.getEventList();
+    }
+
+
+    /** Getter for list of events which attendee is attending
+     *
+     * @return the list of events which this Attendee is attending
+     */
+    public ArrayList<Event> getAttendingEvents() {
+
+         ArrayList<String> eventStrings = attendeeManager.getAttendee(attendeeID).getEventsList();
+         ArrayList<Event> events = new ArrayList<>();
+
+         for(String event: eventStrings){
+             events.add(eventManager.getEvent(event));
+         }
+
+         return events;
     }
 
     /**
@@ -59,13 +89,35 @@ public class AttendeeController {
         return signUpSuccessful;
     }
 
+    /** Cancels attendee's enrollment for one event
+     *
+     * @param eventName Name of event which is wished to be cancelled
+     * @return True if cancellation successful, false otherwise
+     */
+    public boolean cancelEnrollment(String eventName){
+        String eventID = eventManager.getEventID(eventName);
+        //check if user is signed up for event
+        Attendee attendee = attendeeManager.getAttendee(attendeeID);
+        if (attendee.getEventsList().contains(eventID)){
+            eventManager.removeAttendee(eventID, attendeeID);
+            try {
+                attendee.removeEvent(eventID);
+            }catch (EventNotFoundException e){
+                e.printStackTrace();
+            }
+            return true;
+
+        }
+        return false;
+    }
+
     /**
      *
      * @param receiverID the ID of the user that this message is to be sent to
      * @param message the content of the message to be sent
      * @return true if the message was successfully sent, false if the user was not on attendee's friends list
      */
-    public boolean sendMessage(String receiverID, String message){
+    public boolean sendMessage(String receiverID, String message) throws UserNotFoundException{
         if (attendeeManager.getAttendee(attendeeID).getFriendList().contains(receiverID)){
             messageManager.sendMessage(attendeeID, receiverID, message);
             return true;

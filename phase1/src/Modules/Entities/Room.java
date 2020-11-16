@@ -52,6 +52,7 @@ public class Room {
      * If the event id passed in is not scheduled in the room,
      * a error message is printed
      * @param eventId the id of the event we want to add
+     * @throws EventNotFoundException when there is no Event with given eventId in this room
      */
     public void removeEvent(String eventId){
         if(events.contains(eventId)){

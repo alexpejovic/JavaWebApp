@@ -43,11 +43,11 @@ public class Speaker extends User {
      * @return the list of events this Speaker is hosting
      */
     public ArrayList<String> getHostEvents(){
-        ArrayList<String> newHostEvents = new ArrayList<>(hostEvents.size());
-        for(int c = 0; c < hostEvents.size(); c++){
-            newHostEvents.set(c, hostEvents.get(c));
+        ArrayList<String> newArrayList = new ArrayList<>();
+        for(String id: hostEvents){
+            newArrayList.add(id);
         }
-        return newHostEvents;
+        return newArrayList;
     }
 
     /**
