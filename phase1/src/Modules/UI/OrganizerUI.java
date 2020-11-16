@@ -83,7 +83,7 @@ public class OrganizerUI {
                 "2, to create a Speaker Account\n" +
                 "3, to schedule a Speaker to an Event\n" +
                 "4, add a room into the system\n");
-        String numChosen = input.nextLine();
+        int numChosen = this.validSelection();
         runOrganizingSpecifics(numChosen);
     }
 
@@ -96,7 +96,7 @@ public class OrganizerUI {
             "2, send message to all Attendees\n" +
             "3, send message to all Speakers\n" +
             "4, view messages with another user\n");
-        String numChosen = input.nextLine();
+        int numChosen = this.validSelection();
         runMessagingSpecifics(numChosen);
     }
 
@@ -104,24 +104,22 @@ public class OrganizerUI {
      * Private helper that completes the specific messaging operation based on the user input for messaging options
      * @param userInput the messaging option the Organizer has selected
      */
-    private void runMessagingSpecifics(String userInput){
-        if (userInput.equals("1")){ sendMessage(); }
-        else if (userInput.equals("2")){messageAllAttendees();}
-        else if (userInput.equals("3")){messageAllSpeakers();}
-        else if (userInput.equals("4")){seeMessage();}
-        else{}
+    private void runMessagingSpecifics(int userInput){
+        if (userInput == 1){ sendMessage(); }
+        else if (userInput== 2){messageAllAttendees();}
+        else if (userInput== 3){messageAllSpeakers();}
+        else {seeMessage();}
     }
 
     /**
      * Private helper that completes the specific organizational operation based on the user input for organizing options
      * @param userInput the organizing option the Organizer has selected
      */
-    private void runOrganizingSpecifics(String userInput){
-        if (userInput.equals("1")){ scheduleEvent(); }
-        else if (userInput.equals("2")){createSpeakerAccount();}
-        else if (userInput.equals("3")){scheduleSpeaker();}
-        else if (userInput.equals("4")){addNewRoom();}
-        else{}
+    private void runOrganizingSpecifics(int userInput){
+        if (userInput==1){ scheduleEvent(); }
+        else if (userInput==2){createSpeakerAccount();}
+        else if (userInput==3){scheduleSpeaker();}
+        else {addNewRoom();}
     }
 
     /**
@@ -205,7 +203,7 @@ public class OrganizerUI {
         System.out.println("Input which user you want to see conversation with");
         String userName = wantToSeeMessage.nextLine();
         ArrayList<Message> conversation = organizerController.viewMessage(userName);
-        ArrayList<String> fullConversation = messagePresenter.getConversation(conversation);
+        ArrayList<String> fullConversation = messagePresenter.getMessageList(conversation);
 
         for (String message: fullConversation){
             System.out.println(message);

@@ -27,7 +27,9 @@ public class Speaker extends User {
      * @param eventId the Id of the event the Speaker is adding to the list of events they are hosting
      */
     public void addEvent(String eventId){
-        hostEvents.add(eventId);
+        if(!isHosting(eventId)){
+            hostEvents.add(eventId);
+        }
     }
 
     /**
