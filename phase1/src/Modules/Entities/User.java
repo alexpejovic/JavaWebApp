@@ -2,7 +2,7 @@ package Modules.Entities;
 
 import java.util.ArrayList;
 
-public abstract class User implements Identifiable{
+public abstract class User {
 
     private String username;
     private String password;
@@ -24,14 +24,9 @@ public abstract class User implements Identifiable{
         return this.password;
     }
 
-    @Override
+
     public String getID() {
         return this.userId;
-    }
-
-    @Override
-    public void setID(String ID) {
-        this.userId = ID;
     }
 
     public ArrayList<String> getFriendList() {

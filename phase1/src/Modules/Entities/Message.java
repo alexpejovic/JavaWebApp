@@ -2,7 +2,7 @@ package Modules.Entities;
 
 import java.time.LocalDateTime;
 
-public class Message implements Identifiable, Comparable<Message> {
+public class Message implements Comparable<Message> {
     // Message content
     private final String content;
 
@@ -49,17 +49,8 @@ public class Message implements Identifiable, Comparable<Message> {
     /**
      * @return the unique ID of the message
      */
-    @Override
     public String getID() {
         return messageID;
-    }
-
-    /**
-     * @param ID unique message identification token
-     */
-    @Override
-    public void setID(String ID) {
-        messageID = ID;
     }
 
     /**

@@ -3,7 +3,7 @@ package Modules.Entities;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
-public class Event implements Identifiable{
+public class Event{
 
     /** ArrayList that stores the usernames of attendees who are signed up to attend this event**/
     private ArrayList<String> attendeeList;
@@ -79,7 +79,7 @@ public class Event implements Identifiable{
     public LocalDateTime getStartTime(){ return startTime;}
 
     /**
-     * Set the end time for the Event
+     * Set the start time for the Event
      * @param time is the start Time for the Event
      */
     public void setStartTime(LocalDateTime time){this.startTime = time;}
@@ -119,11 +119,7 @@ public class Event implements Identifiable{
         return capacity - attendeeList.size();
     }
 
-    @Override
     public String getID() { return eventId;}
-
-    @Override
-    public void setID(String ID) { eventId = ID;}
 
     /**
      * Removes specific attendee from the Event's list of attendees
