@@ -67,4 +67,26 @@ public class AttendeeManagerTest {
         assertEquals(true, attendeeManager.isUser("username"));
         assertEquals(false, attendeeManager.isUser("username2"));
     }
+
+    @Test
+    public void testValidatePassword(){
+        AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
+        assertEquals(true, attendeeManager.validatePassword("username", "password"));
+        assertEquals(false, attendeeManager.validatePassword("username", "wrongpassword"));
+    }
+
+    @Test
+    public void testGetUserID(){
+        AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
+        assertEquals("a1234", attendeeManager.getUserID("username"));
+    }
+
+    @Test
+    public void testGetAttendee(){
+        AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
+        assertEquals("username", attendeeManager.getAttendee("a1234").getUsername());
+    }
 }
