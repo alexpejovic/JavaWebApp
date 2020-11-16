@@ -48,7 +48,8 @@ public class SpeakerUI {
                     "1. Logout \n" +
                     "2. Exit Program \n" +
                     "3. See list of my events \n" +
-                    "4. Message attendees attending my events \n");
+                    "4. Message a single attendee attending my events \n" +
+                    "5. Message all attendees attending my events \n");
 
              selection = this.validSelection();
 
@@ -56,9 +57,11 @@ public class SpeakerUI {
              if (selection == 3){
                  // See list of talks
                  this.seeListOfTalks();
-             }
-             else if (selection == 4){
-                 // Message attendees
+             } else if (selection == 4){
+                 // Message single attendee
+                 this.messageAttendee();
+             } else if (selection == 5){
+                 // Message all attendees
                  this.messageAllAttendees();
              }
 
@@ -96,6 +99,28 @@ public class SpeakerUI {
     }
 
     /**
+     * private helper that allows speakers to message single attendees that are attending their events
+     */
+    private void messageAttendee(){
+        System.out.println("Please input the recipient's user ID");
+
+        String IdString = input.nextLine();
+
+        System.out.println("Please input a message");
+
+        String messageString = input.nextLine();
+
+        //sending message to attendees with userId = IdString
+        if (speakerController.message(IdString, messageString)){
+            System.out.println("Successfully sent message to " + IdString);
+        }
+        else{
+            System.out.println(IdString + " is not attending any of your events. No message sent.");
+        }
+        System.out.println(); // spacing
+    }
+
+    /**
      * private helper that allows speakers to message all attendees that are attending their events
      */
     private void messageAllAttendees(){
@@ -124,7 +149,7 @@ public class SpeakerUI {
             try{
                 selection = Integer.valueOf(input.nextLine());
 
-                if (!(selection < 1 || selection > 4)){
+                if (!(selection < 1 || selection > 5)){
                     // selection is within Range of options
                     System.out.println();
                     isValidSelection = true;
