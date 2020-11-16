@@ -43,15 +43,17 @@ public class OrganizerController {
      * @param roomNumber the room number of the room where the event will take place
      * @param startTime the time when the event will start
      * @param endTime the time when the event ends
-     * @param eventId the id of the event
      * @return true if the event was scheduled, false if the event was not scheduled
      */
-    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventId){
+    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime){
         //check room is available at this time, doesn't have other event
+        String eventId = organizerManager.eventAtTime(roomNumber, startTime, endTime).getID();
         boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
         //check event not already in another room
         boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
         if (isRoomAvailable && canBook) {
+            //create the Event
+
             organizerManager.addToOrganizedEvents(organizerId, eventId);
             return eventManager.createEvent(roomNumber, startTime, endTime, eventId);
         }
@@ -101,15 +103,16 @@ public class OrganizerController {
 
     /**
      * Schedules speaker to speak at an existing event if speaker, event and room are available
-     * @param speakerId the id of the Speaker being scheduled for the Event
+     * @param username the id of the Speaker being scheduled for the Event
      * @param roomNumber the number of the room where the event will be help and where the speaker will present
      * @param eventId the id of the event taking place in the room
      * @return true if the speaker is able to present at the event
      */
-    public boolean scheduleSpeaker(String speakerId, String roomNumber, String eventId){
+    public boolean scheduleSpeaker(String username, String roomNumber, String eventId){
         //check if speaker is available
         LocalDateTime startTime = eventManager.startTimeOfEvent(eventId);
         LocalDateTime endTime = eventManager.endTimeOfEvent(eventId);
+        String speakerId = speakerManager.getUserID(username);
         boolean isSpeakerAvailable = organizerManager.isSpeakerAvailable(speakerId, startTime, endTime);
         //check if room is available
         boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
@@ -155,8 +158,8 @@ public class OrganizerController {
         messageManager.sendMessage(organizerId, receiverID, message);
     }
 
-    public void viewMessage(String senderID){
-        messageManager.getConversation(organizerId, senderID);
+    public ArrayList<Message> viewMessage(String senderID){
+        return messageManager.getConversation(organizerId, senderID);
     }
 
 
