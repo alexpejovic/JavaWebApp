@@ -4,7 +4,8 @@ import Modules.Exceptions.EventNotFoundException;
 
 import java.util.ArrayList;
 
-/** A class representing a room in a conference
+/**
+ * A class representing a room in a conference
  **/
 public class Room {
     /** list of event ids for the Events that this room is hosting
@@ -40,17 +41,18 @@ public class Room {
 
 
     /**
-     * Adds a event id to the list of events this room is hosting
+     * Adds a eventId to the list of events this room is hosting
+     * if the eventId is not already in the list of events
      * @param eventId the id of the event we want to add
      */
     public void addEvent(String eventId){
-        events.add(eventId);
+        if (!this.isEventInRoom(eventId)){
+            events.add(eventId);
+        }
     }
 
     /**
      * Removes a event id to the list of events this room is hosting
-     * If the event id passed in is not scheduled in the room,
-     * a error message is printed
      * @param eventId the id of the event we want to add
      * @throws EventNotFoundException when there is no Event with given eventId in this room
      */
@@ -66,7 +68,7 @@ public class Room {
 
     /**
      * Returns a list of event ids for all events that occur in this room
-     * @return the list of event ids
+     * @return the list of event ids for events occurring in this room
      */
     public ArrayList<String> getEvents(){
         ArrayList<String> copy = new ArrayList<>();
@@ -79,21 +81,16 @@ public class Room {
     }
 
     /**
-     * Checks if a event is occurring in this room.
+     * Checks if an event is occurring in this room.
      * @param eventId the id of the event that we want to check
-     * @return true iff the event is in the list of events occurring in this room
+     * @return true if and only if the event is in the list of events occurring in this room
      */
     public boolean isEventInRoom(String eventId){
-        for (String eventsId: events){
-            if(eventId.equals(eventsId)){
-                return true;
-            }
-        }
-        return false;
+        return events.contains(eventId);
     }
 
     /**
-     * Returns the maximum people allowed in this room, including Speakers
+     * Returns the maximum people allowed in this room
      * @return maximum number of people allowed in this room
      */
     public int getCapacity() {
@@ -105,9 +102,9 @@ public class Room {
      * Two rooms are equal if they have the same roomNumber (id),
      * capacity, and host the same events
      * @param room2 the other Room object we are checking equality to
-     * @return true iff this Room is equal to room2
+     * @return true if and only if this Room is equal to room2
      */
-    // for testing
+    // Used for testing
     public boolean equals(Room room2){
         //checking capacity and room number (id)
         if (this.capacity != room2.getCapacity() || !this.roomNumber.equals(room2.getRoomNumber()) ){

@@ -4,6 +4,10 @@ import Modules.Exceptions.EventNotFoundException;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents a Attendee user.
+ * Attendees can signup to attend events and message other users.
+ */
 public class Attendee extends User {
     // ids of events Attendee is attending
     /** a list of events that this attendee is attending */
@@ -12,7 +16,7 @@ public class Attendee extends User {
     private RuntimeException EventNotFoundException;
 
     /**
-     *
+     * Constructor for Attendee
      * @param username the username for this attendee
      * @param password the password for this attendee
      * @param userID the unique userID for this attendee
@@ -31,8 +35,9 @@ public class Attendee extends User {
     }
 
     /**
-     * removes the event with ID id from this attendee's events list, if it is in the list
+     * Removes the event with ID id from this attendee's events list, if it is in the list
      * @param id the unique ID of the event to be removed
+     * @throws EventNotFoundException if there is no event with matching ID that this user is attending
      */
     public void removeEvent(String id) throws EventNotFoundException {
         if (!this.alreadyAttendingEvent(id)){
@@ -42,7 +47,7 @@ public class Attendee extends User {
     }
 
     /**
-     *
+     * Returns a shallow copy of this attendee's events list
      * @return a shallow copy of this attendee's events list
      */
     public ArrayList<String> getEventsList() {
@@ -52,7 +57,7 @@ public class Attendee extends User {
     }
 
     /**
-     *
+     * Checks whether this attendee is attending any events or not
      * @return true if this attendee's events list is empty, otherwise return false
      */
     public boolean hasNoEvents(){
@@ -60,7 +65,7 @@ public class Attendee extends User {
     }
 
     /**
-     *
+     * Checks if this attendee is attending a event with eventID id
      * @param id the ID of an event
      * @return true if this attendee is already attending the event with ID id, false otherwise
      */

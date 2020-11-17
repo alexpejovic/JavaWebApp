@@ -1,5 +1,7 @@
 package Modules.Entities;
 
+import Modules.Exceptions.EventNotFoundException;
+
 import java.util.ArrayList;
 
 /**
@@ -35,9 +37,15 @@ public class Speaker extends User {
     /**
      * Removes a particular event from the list of events this Speaker is hosting
      * @param eventId the Id of the event this Speaker is removing from the list of events they are hosting
+     * @throws EventNotFoundException if there is no event with eventId that this Speaker is hosting
      */
     public void removeEvent(String eventId){
-        hostEvents.remove(eventId);
+        if (hostEvents.contains(eventId)){
+            hostEvents.remove(eventId);
+        }
+        else{
+            throw new EventNotFoundException();
+        }
     }
 
     /**

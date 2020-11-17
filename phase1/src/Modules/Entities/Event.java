@@ -1,11 +1,16 @@
 package Modules.Entities;
 
+import Modules.Exceptions.UserNotFoundException;
+
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+/**
+ * A class representing an event in a conference
+ */
 public class Event{
 
-    /** ArrayList that stores the usernames of attendees who are signed up to attend this event**/
+    /** ArrayList that stores the userIDs of attendees who are signed up to attend this event**/
     private ArrayList<String> attendeeList;
 
     /** The maximum number of attendees who can attend the event**/
@@ -30,7 +35,7 @@ public class Event{
     private String speaker = null;
 
     /**
-     * Sets the room capacity and room number for the room where the Event will take place with only Startime
+     * Sets the room capacity and room number for the room where the Event will take place with only StartTime
      * Assumes this event will last 1 hour
      * @param roomNumber the room number the Event will be held
      * @param time the time at which the Event will begin
@@ -50,7 +55,7 @@ public class Event{
      * @param endTime the time at which this Event will end
      * @param eventId the unique id of this Event
      */
-    public Event(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventId ){
+    public Event(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventId){
         this.capacity = 2;
         this.roomNumber = roomNumber;
         this.startTime = startTime;
@@ -60,20 +65,23 @@ public class Event{
     }
 
     /**
-     * @return The room capacity for the Event
+     * Gets the capacity of the event
+     * @return The maximum number of attendees allowed to attend this Event
      */
-    public int getRoomCapacity(){
+    public int getCapacity(){
         return capacity;
     }
 
     /**
-     * @return The room number of the room where the Event will be held
+     * Gets the room number of the room this event is in
+     * @return The room number of the room where this Event will be held
      */
     public String getRoomNumber(){
         return roomNumber;
     }
 
     /**
+     * Gets time that event starts
      * @return The the start time for the Event
      */
     public LocalDateTime getStartTime(){ return startTime;}
@@ -123,10 +131,16 @@ public class Event{
 
     /**
      * Removes specific attendee from the Event's list of attendees
-     * @param userName the username of the attendee being removed from the Event's attendee list
+     * @param userID the unique id of the attendee being removed from the Event's attendee list
+     * @throws UserNotFoundException if there is no attendee user with userID attending this event
      */
-    public void removeAttendee(String userName){
-        attendeeList.remove(userName);
+    public void removeAttendee(String userID){
+        if (attendeeList.contains(userID)){
+            attendeeList.remove(userID);
+        }
+        else{
+            throw new UserNotFoundException();
+        }
     }
 
     /**

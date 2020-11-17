@@ -1,5 +1,7 @@
 package Modules.Entities;
 
+import Modules.Exceptions.EventNotFoundException;
+
 import java.util.ArrayList;
 
 /**
@@ -24,7 +26,8 @@ public class Organizer extends Attendee {
 
     //getters
     /**
-     * @return a soft copy of the Events this Organizer is managing
+     * Returns a shallow copy of the Events this Organizer is managing
+     * @return a shallow copy of the Events this Organizer is managing
      */
     public ArrayList<String> getManagedEvents() {
         return new ArrayList<>(this.managedEvents);
@@ -32,6 +35,7 @@ public class Organizer extends Attendee {
 
     //setters
     /**
+     * Adds a new eventID to the list of events tha this Organizer is managing
      * @param eventID the ID of the new Event this Organizer will manage
      */
     public void addManagedEvent(String eventID) {
@@ -39,13 +43,21 @@ public class Organizer extends Attendee {
     }
 
     /**
+     * Removes a eventID from the list of events that this Organizer is managing
      * @param eventID the ID of the Event this Organizer is no longer manage
+     * @throws EventNotFoundException if there is no event with eventID that this Organizer is managing
      */
     public void removeManagedEvent(String eventID) {
-        this.managedEvents.remove(eventID);
+        if (this.managedEvents.contains(eventID)){
+            this.managedEvents.remove(eventID);
+        }
+        else{
+            throw new EventNotFoundException();
+        }
     }
 
     /**
+     * Checks whether or not this organizer has any events that they are managing
      * @return true if and only if this Organizer is not managing any Events
      */
     public boolean managedEventsIsEmpty() {
