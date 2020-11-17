@@ -85,6 +85,18 @@ public class OrganizerManager extends UserManager {
     }
 
     /**
+     * Returns a shallow copy of all Organizers in this OrganizerManager
+     * @return a shallow copy of all Organizers in this OrganizerManager
+     */
+    public ArrayList<Organizer> getListOfOrganizers() {
+        ArrayList<Organizer> copy = new ArrayList<>();
+        if (!listOfOrganizers.isEmpty()){
+            copy.addAll(listOfOrganizers);
+        }
+        return copy;
+    }
+
+    /**
      * Returns the specific Organizer's userID with username
      *
      * @param username the username we want to check
@@ -118,11 +130,10 @@ public class OrganizerManager extends UserManager {
      * @param password the Organizer's password
      * @param userId   the Organizer's userId
      * @throws NonUniqueIdException if there is already a user with that ID in listOfOrganizers
-     * @throws NonUniqueUsernameException if there is already a user with that username in listOfOrganizers
      */
     public void createOrganizerAccount(String userName, String password, String userId) {
-        // Checking for a unique username and userID
-        if(this.isUniqueIDUsername(this.listOfOrganizers,userName,userId)) {
+        // Checking for a unique userID
+        if(this.isUniqueID(this.listOfOrganizers,userId)) {
             listOfOrganizers.add(new Organizer(userName, password, userId));
         }
     }

@@ -47,21 +47,31 @@ public abstract class UserManager {
     }
 
     /**
-     * Helper method to check if a given username or ID is unique
+     * Helper method to check if a given user ID is unique
      * @param users the list of users of a specific type to check
-     * @param username the username we want to check
-     * @return true if and only if both the userID and username is unique
+     * @return true if and only if the userID is unique
      * @throws NonUniqueIdException if there is already a user with that ID in users
-     * @throws NonUniqueUsernameException if there is already a user with that username in users
      */
-     boolean isUniqueIDUsername(ArrayList users, String username, String userID){
+     boolean isUniqueID(ArrayList users, String userID){
          for (int i = 0; i < users.size(); i++) {
             User user = (User)users.get(i);
-            if (user.getUsername().equals(username)){
-                throw new NonUniqueUsernameException();
-            }
-            else if (user.getID().equals(userID)){
+            if (user.getID().equals(userID)){
                 throw new NonUniqueIdException();
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Helper method for creating accounts to check if a given username is unique
+     * @param users the list of users of a specific type to check
+     * @return true if and only if the userID is unique
+     */
+    public boolean isUniqueUsername(ArrayList users, String username){
+        for (int i = 0; i < users.size(); i++) {
+            User user = (User)users.get(i);
+            if (user.getUsername().equals(username)){
+                return false;
             }
         }
         return true;

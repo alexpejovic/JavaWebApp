@@ -39,11 +39,10 @@ public class AttendeeManager extends UserManager{
      * @param userID the userID for this attendee
      * @param events the list of events this attendee is attending
      * @throws NonUniqueIdException if there is already a user with that ID in attendeeList
-     * @throws NonUniqueUsernameException if there is already a user with that username in attendeeList
      */
     public void addAttendee(String username, String password, String userID, ArrayList<String> events) {
-        // Checking for a unique username and userID
-        if(this.isUniqueIDUsername(this.attendeeList,username,userID)){
+        // Checking for a unique userID
+        if(this.isUniqueID(this.attendeeList,userID)){
             Attendee newAttendee = new Attendee(username, password, userID);
             for (int i = 0; i < events.size(); i++){
                 newAttendee.addEvent(events.get(i));

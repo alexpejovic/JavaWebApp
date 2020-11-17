@@ -2,6 +2,7 @@ package Modules.UseCases;
 
 import Modules.Entities.Speaker;
 import Modules.Entities.User;
+import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
@@ -33,19 +34,24 @@ public class SpeakerManager extends UserManager{
 
     /**
      * Adds a new speaker entity to the speakerList
+     * only if there is not already a speaker with given userID
      * @param username the username being assigned to the new Speaker
      * @param password the password being assigned to the new Speaker
      * @param userId the Id being assigned to the new Speaker
      * @param events the list of events this new Speaker will be hosting
+     * @throws NonUniqueIdException if there is already a speaker with that ID in users
      */
     public void addSpeaker(String username, String password, String userId, ArrayList<String> events){
-        Speaker newSpeaker = new Speaker(username, password, userId);
-        int i = 0;
-        while(i < events.size()){
-            newSpeaker.addEvent(events.get(i));
-            i++;
+        // Checking for a unique userID
+        if (this.isUniqueID(this.speakerList,userId)){
+            Speaker newSpeaker = new Speaker(username, password, userId);
+            int i = 0;
+            while(i < events.size()){
+                newSpeaker.addEvent(events.get(i));
+                i++;
+            }
+            speakerList.add(newSpeaker);
         }
-        speakerList.add(newSpeaker);
     }
 
     /**
@@ -88,7 +94,7 @@ public class SpeakerManager extends UserManager{
     public ArrayList<Speaker> getSpeakers(){
         ArrayList<Speaker> newSpeakerList = new ArrayList<>(speakerList.size());
         for(int c = 0; c < speakerList.size(); c++){
-            newSpeakerList.set(c, speakerList.get(c));
+            newSpeakerList.add(speakerList.get(c));
         }
         return newSpeakerList;
     }

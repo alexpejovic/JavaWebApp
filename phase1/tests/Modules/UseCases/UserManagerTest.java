@@ -31,18 +31,19 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testIsUniqueIDUsername(){
+    public void testIsUniqueID(){
         Attendee attendee0 = new Attendee("at1", "pass", "a0");
         ArrayList<Attendee> attendees = new ArrayList<>();
         attendees.add(attendee0);
 
         AttendeeManager attendeeManager = new AttendeeManager(attendees);
 
-        assertTrue(attendeeManager.isUniqueIDUsername(attendees, "at2", "a1"));
+        assertTrue(attendeeManager.isUniqueID(attendees, "a1"));
+
     }
 
     @Test (expected = NonUniqueIdException.class)
-    public void testIsUniqueIDUsernameNonUniqueID(){
+    public void testIsUniqueIDNonUniqueID(){
         Attendee attendee0 = new Attendee("at1", "pass", "a0");
         ArrayList<Attendee> attendees = new ArrayList<>();
         attendees.add(attendee0);
@@ -50,11 +51,11 @@ public class UserManagerTest {
         AttendeeManager attendeeManager = new AttendeeManager(attendees);
 
         // same id as attendee0
-        attendeeManager.isUniqueIDUsername(attendees, "at2", "a0");
+        attendeeManager.isUniqueID(attendees, "a0");
     }
 
-    @Test (expected = NonUniqueUsernameException.class)
-    public void testIsUniqueIDUsernameNonUniqueUsername(){
+    @Test
+    public void testIsUniqueUsername(){
         Attendee attendee0 = new Attendee("at1", "pass", "a0");
         ArrayList<Attendee> attendees = new ArrayList<>();
         attendees.add(attendee0);
@@ -62,7 +63,9 @@ public class UserManagerTest {
         AttendeeManager attendeeManager = new AttendeeManager(attendees);
 
         // same username as attendee0
-        attendeeManager.isUniqueIDUsername(attendees, "at1", "a1");
+        attendeeManager.isUniqueUsername(attendees, "at1");
+        // unique username
+        assertTrue(attendeeManager.isUniqueUsername(attendees, "at2"));
     }
 
 }
