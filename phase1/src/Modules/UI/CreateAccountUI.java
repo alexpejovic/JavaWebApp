@@ -1,7 +1,9 @@
 package Modules.UI;
 
 import Modules.Controllers.AccountCreator;
+import Modules.Exceptions.NonUniqueUsernameException;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -51,20 +53,22 @@ public class CreateAccountUI {
     }
 
     private boolean createAccount(String num, String username, String password){
-
-        switch (num) {
-            case "1":
-                accountCreator.createAttendeeAccount(username, password, new ArrayList<>());
-                return true;
-            case "2":
-                accountCreator.createSpeakerAccount(username, password, new ArrayList<>());
-                return true;
-            case "3":
-                accountCreator.createOrganizerAccount(username, password);
-                return true;
-            default:
-                System.out.println("Invalid Input, try again");
-                return false;
+        try{
+            switch (num) {
+                case "1":
+                    return accountCreator.createAttendeeAccount(username, password, new ArrayList<>());
+                case "2":
+                    return accountCreator.createSpeakerAccount(username, password, new ArrayList<>());
+                case "3":
+                    return accountCreator.createOrganizerAccount(username, password);
+                default:
+                    System.out.println("Invalid Input, try again");
+                    return false;
+            }
+        }catch(NonUniqueUsernameException e){
+            System.out.println("Sorry, someone else already has that username, please try again");
+            return false;
         }
+
     }
 }

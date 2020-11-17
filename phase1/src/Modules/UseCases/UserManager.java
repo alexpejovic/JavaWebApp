@@ -1,6 +1,8 @@
 package Modules.UseCases;
 
 import Modules.Entities.User;
+import Modules.Exceptions.NonUniqueIdException;
+import Modules.Exceptions.NonUniqueUsernameException;
 
 import java.util.ArrayList;
 
@@ -43,5 +45,27 @@ public abstract class UserManager {
 
         return user1.getFriendList().contains(user2.getID());
     }
+
+    /**
+     * Helper method to check if a given username or ID is unique
+     * @param users the list of users of a specific type to check
+     * @param username the username we want to check
+     * @return true if and only if both the userID and username is unique
+     * @throws NonUniqueIdException if there is already a user with that ID in users
+     * @throws NonUniqueUsernameException if there is already a user with that username in users
+     */
+     boolean isUniqueIDUsername(ArrayList users, String username, String userID){
+         for (int i = 0; i < users.size(); i++) {
+            User user = (User)users.get(i);
+            if (user.getUsername().equals(username)){
+                throw new NonUniqueUsernameException();
+            }
+            else if (user.getID().equals(userID)){
+                throw new NonUniqueIdException();
+            }
+        }
+        return true;
+    }
+
 
 }

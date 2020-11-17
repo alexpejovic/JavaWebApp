@@ -3,12 +3,13 @@ package Modules.UseCases;
 import java.util.ArrayList;
 
 import Modules.Entities.*;
-import Modules.Exceptions.EventNotFoundException;
-import Modules.Exceptions.RoomNotFoundException;
-import Modules.Exceptions.UserNotFoundException;
+import Modules.Exceptions.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * A use case class that performs actions on Organizers and gives important information about all Organizers
+ */
 public class OrganizerManager extends UserManager {
     /**
      * List of all Organizers in the conference
@@ -20,6 +21,14 @@ public class OrganizerManager extends UserManager {
     private AttendeeManager attendeeManager;
     private SpeakerManager speakerManager;
 
+    /**
+     * Constructor for this OrganizerManager
+     * @param eventManager the EventManager for this conference
+     * @param roomManager the roomManager for this conference
+     * @param attendeeManager a ArrayList of all attendees in this conference
+     * @param speakerManager a ArrayList of all speakers in this conference
+     * @param organizers a Arraylist of all organizers in this conference
+     */
     public OrganizerManager(EventManager eventManager, RoomManager roomManager,
                             AttendeeManager attendeeManager, SpeakerManager speakerManager,
                             ArrayList<Organizer> organizers) {
@@ -67,8 +76,12 @@ public class OrganizerManager extends UserManager {
         return false;
     }
 
-    public ArrayList<Organizer> getListOfOrganizers() {
-        return listOfOrganizers;
+    /**
+     * Returns the total number of Organizers in this conference
+     * @return the number Organizers entities stored in this OrganizerManager
+     */
+    public int getNumberOfOrganizers() {
+        return listOfOrganizers.size();
     }
 
     /**
@@ -76,6 +89,7 @@ public class OrganizerManager extends UserManager {
      *
      * @param username the username we want to check
      * @return the userID of the specific Organizer entity that has the given username
+     * @throws UserNotFoundException if there is no organizer with UserID in this conference
      */
     @Override
     public String getUserID(String username) {
@@ -98,13 +112,19 @@ public class OrganizerManager extends UserManager {
 
     /**
      * Creates an Organizer account and adds it to the list of all Organizers
+     * if there is not already an Organizer with the same username or userID
      *
      * @param userName the Organizer's username
      * @param password the Organizer's password
      * @param userId   the Organizer's userId
+     * @throws NonUniqueIdException if there is already a user with that ID in listOfOrganizers
+     * @throws NonUniqueUsernameException if there is already a user with that username in listOfOrganizers
      */
     public void createOrganizerAccount(String userName, String password, String userId) {
-        listOfOrganizers.add(new Organizer(userName, password, userId));
+        // Checking for a unique username and userID
+        if(this.isUniqueIDUsername(this.listOfOrganizers,userName,userId)) {
+            listOfOrganizers.add(new Organizer(userName, password, userId));
+        }
     }
 
     /**
@@ -154,6 +174,10 @@ public class OrganizerManager extends UserManager {
         throw new UserNotFoundException();
     }
 
+    /**
+     * Returns a list of the userIDs of all attendees in this conference
+     * @return a list of all userIDs of all attendees in this conference
+     */
     public ArrayList<String> forMessagingAllAttendees() {
         ArrayList<String> allAttendeeIDs = new ArrayList<>();
         for (Attendee attendee : attendeeManager.getListOfAttendees()) {
@@ -162,6 +186,10 @@ public class OrganizerManager extends UserManager {
         return allAttendeeIDs;
     }
 
+    /**
+     * Returns a list of the userIDs of all speakers in this conference
+     * @return a list of the userIDs of all speakers in this conference
+     */
     public ArrayList<String> forMessagingAllSpeakers() {
         ArrayList<String> allSpeakerIDs = new ArrayList<>();
         for (Speaker speaker : speakerManager.getListOfSpeakers()) {
@@ -257,6 +285,13 @@ public class OrganizerManager extends UserManager {
         organizer.addManagedEvent(eventId);
     }
 
+    /**
+     * Finds a event that is occurring in this room matching the given specifications
+     * @param startTime the startTime of the event
+     * @param endTime the endTime of the event
+     * @param roomNumber the room we want to check
+     * @return The event that matches the specifications, if it exists
+     */
     public Event getEventInRoom(LocalDateTime startTime, LocalDateTime endTime, String roomNumber) {
         Room room = findRoom(roomNumber);
         for (String eventId : room.getEvents()) {

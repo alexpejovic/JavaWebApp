@@ -77,7 +77,7 @@ public class AccountCreator {
         boolean accountCreated = true;
         try{
             // organizer's id starts with a then has the organizer # starting from 0
-            String userId = "o"+ organizerManager.getListOfOrganizers().size();
+            String userId = "o"+ organizerManager.getNumberOfOrganizers();
             organizerManager.createOrganizerAccount(username,password,userId);
         } catch (NonUniqueIdException e){
             accountCreated = false;

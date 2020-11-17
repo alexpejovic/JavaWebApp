@@ -130,6 +130,7 @@ public class SpeakerManager extends UserManager{
      * Returns the specific Speaker's userID with username
      * @param username the username we want to check
      * @return the userID of the specific Speaker entity that has the given username
+     * @throws UserNotFoundException if there is no speaker with UserID in this conference
      */
     @Override
     public String getUserID(String username){

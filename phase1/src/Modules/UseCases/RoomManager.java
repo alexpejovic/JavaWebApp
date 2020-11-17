@@ -114,9 +114,10 @@ public class RoomManager {
     }
 
     /**
-     * Remove eventid to the list of events for a Room in rooms
+     * Remove eventId to the list of events for a Room in rooms
      * @param roomNumber the room number of the Room we want to remove the event to
      * @param eventId the id of the Event that we want to remove from the specified Room
+     * @throws Modules.Exceptions.EventNotFoundException if there is no event in this room with eventID
      */
     public void removeEventFromRoom(String roomNumber, String eventId){
         this.getRoom(roomNumber).removeEvent(eventId);

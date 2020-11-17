@@ -4,17 +4,23 @@ import Modules.Entities.Attendee;
 import Modules.Entities.Event;
 import Modules.Entities.Organizer;
 import Modules.Entities.User;
+import Modules.Exceptions.EventNotFoundException;
+import Modules.Exceptions.NonUniqueIdException;
+import Modules.Exceptions.NonUniqueUsernameException;
 import Modules.Exceptions.UserNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * A use case class that performs actions on Attendees and gives important information about all Attendees
+ */
 public class AttendeeManager extends UserManager{
     /** a list of all existing attendees */
     ArrayList<Attendee> attendeeList;
 
     /**
-     *
+     * Constructor for AttendeeManager
      * @param attendeeList a list of all attendees read from file
      */
     public AttendeeManager(ArrayList<Attendee> attendeeList){
@@ -26,18 +32,24 @@ public class AttendeeManager extends UserManager{
     }
 
     /**
-     * creates a new attendee using the given parameters and adds them to the list of existing attendees
+     * Creates a new attendee using the given parameters and adds them to the list of existing attendees
+     * if there is not already an attendee with the same username or userID
      * @param username the username for this attendee
      * @param password the password for this attendee
      * @param userID the userID for this attendee
      * @param events the list of events this attendee is attending
+     * @throws NonUniqueIdException if there is already a user with that ID in attendeeList
+     * @throws NonUniqueUsernameException if there is already a user with that username in attendeeList
      */
     public void addAttendee(String username, String password, String userID, ArrayList<String> events) {
-        Attendee newAttendee = new Attendee(username, password, userID);
-        for (int i = 0; i < events.size(); i++){
-            newAttendee.addEvent(events.get(i));
+        // Checking for a unique username and userID
+        if(this.isUniqueIDUsername(this.attendeeList,username,userID)){
+            Attendee newAttendee = new Attendee(username, password, userID);
+            for (int i = 0; i < events.size(); i++){
+                newAttendee.addEvent(events.get(i));
+            }
+            attendeeList.add(newAttendee);
         }
-        attendeeList.add(newAttendee);
     }
 
     /**
@@ -48,13 +60,20 @@ public class AttendeeManager extends UserManager{
         attendeeList.add(attendee);
     }
 
+    /**
+     * Returns a exact list of Attendees in this Conference with aliasing
+     * @return the list of attendees in this conference
+     */
+    // aliases
     public ArrayList<Attendee> getListOfAttendees() { return attendeeList; }
 
     /**
-     *
-     * @param attendee the attendee whose availabilty we want to check
+     * Checks if a specific attendee is available in a certain time period
+     * A attendee is considered available if they are not attending any events
+     * during the specified time period
+     * @param attendee the attendee whose availability we want to check
      * @param startTime the beginning of the time period we want to check
-     * @param endTime the end of the tim eperiod we want to check
+     * @param endTime the end of the time period we want to check
      * @param eventManager the current EventManager
      * @return true if attendee is available between startTime and endTime, false otherwise
      */
@@ -79,7 +98,8 @@ public class AttendeeManager extends UserManager{
     }
 
     /**
-     *
+     * Adds the given event's eventID to the given attendee's list of events
+     * that they are attending if they don't already have a event at the same time
      * @param attendee the attendee whose events list we want to alter
      * @param event the event that we want to add to the attendee's events list
      */
@@ -89,13 +109,20 @@ public class AttendeeManager extends UserManager{
         }
     }
 
-    public void removeEvent(String eventID, String attendeeID) throws Exception {
+    /**
+     * Adds the given eventID to the given attendee's list of events that
+     * they are attending if they don't already have a event at the same time
+     * @param attendeeID the userID of the attendee whose events list we want to alter
+     * @param eventID the eventID of the event that we want to add to the attendee's events list
+     * @throws EventNotFoundException if the attendee is not attending the event with eventID
+     */
+    public void removeEvent(String eventID, String attendeeID) {
         Attendee attendee = getAttendee(attendeeID);
         attendee.removeEvent(eventID);
     }
 
     /**
-     *
+     * Returns a shallow copy of the list of existing attendees
      * @return a shallow copy of the list of existing attendees
      */
     public ArrayList<Attendee> getAttendeeList() {
@@ -141,6 +168,7 @@ public class AttendeeManager extends UserManager{
      * Returns the specific Attendee's userID with username
      * @param username the username we want to check
      * @return the userID of the specific Attendee entity that has the given username
+     * @throws UserNotFoundException if there is no attendee with UserID in this conference
      */
     @Override
     public String getUserID(String username){

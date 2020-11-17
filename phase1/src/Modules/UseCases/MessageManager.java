@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import Modules.Entities.Message;
 
+
+/**
+ * A use case that performs actions on Message entities and gives important information about all Messages
+ */
 public class MessageManager {
     // Hashmap to track messages each user has sent or received
     private HashMap<String, ArrayList<Message>> messages = new HashMap<>();

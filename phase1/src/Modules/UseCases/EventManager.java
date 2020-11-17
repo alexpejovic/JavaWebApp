@@ -4,6 +4,7 @@ import Modules.Entities.Event;
 import Modules.Entities.Organizer;
 import Modules.Exceptions.EventNotFoundException;
 import Modules.Exceptions.NonUniqueIdException;
+import Modules.Exceptions.UserNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,6 +20,10 @@ public class EventManager {
      */
     private ArrayList<Event> eventList;
 
+    /**
+     * Constructor for EventManager
+     * @param eventList the list of Event entities in this Conference
+     */
     public EventManager(ArrayList<Event> eventList) {
         this.eventList = new ArrayList<>();
         this.eventList.addAll(eventList);
@@ -45,6 +50,10 @@ public class EventManager {
 
     }
 
+    /**
+     * Returns the list of events in this EventManager
+     * @return the list of events in this EventManager
+     */
     public ArrayList<Event> getListOfEvents(){return eventList;}
 
     /**
@@ -140,7 +149,7 @@ public class EventManager {
     }
 
     /**
-     *
+     * Returns a shallow copy of the events in this conference
      * @return a shallow copy of the existing events in this conference
      */
     public ArrayList<Event> getEventList() {
@@ -172,6 +181,7 @@ public class EventManager {
      * Removes an attendee's userID from the list of attendees attending an event
      * @param eventID the unique ID of the event
      * @param userID the unique userID of the user
+     * @throws UserNotFoundException if there is no user with userID attending the event
      */
     public void removeAttendee(String eventID, String userID) {
         getEvent(eventID).removeAttendee(userID);
