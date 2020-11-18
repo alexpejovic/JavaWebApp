@@ -21,10 +21,7 @@ public class RoomManager {
      * @param rooms the Rooms to be put in this RoomManager
      */
     public RoomManager(ArrayList<Room> rooms){
-        this.rooms = new ArrayList<>();
-        for (Room room: rooms){
-            this.createRoom(room.getRoomNumber(),room.getCapacity());
-        }
+        this.rooms = rooms;
     }
 
     /**

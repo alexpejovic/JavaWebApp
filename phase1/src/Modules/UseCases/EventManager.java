@@ -26,8 +26,7 @@ public class EventManager {
      * @param eventList the list of Event entities in this Conference
      */
     public EventManager(ArrayList<Event> eventList) {
-        this.eventList = new ArrayList<>();
-        this.eventList.addAll(eventList);
+        this.eventList = eventList;
     }
 
     /**
