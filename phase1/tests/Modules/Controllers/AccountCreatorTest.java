@@ -15,9 +15,7 @@ public class AccountCreatorTest {
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
         SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
 
-        OrganizerManager organizerManager = new OrganizerManager(new EventManager(new ArrayList<>()),
-                new RoomManager(new ArrayList<>()), new AttendeeManager(new ArrayList<>()),
-                new SpeakerManager(new ArrayList<>()),new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
 
         AccountCreator accountCreator = new AccountCreator(organizerManager,attendeeManager,speakerManager);
 
@@ -35,9 +33,7 @@ public class AccountCreatorTest {
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
         SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
 
-        OrganizerManager organizerManager = new OrganizerManager(new EventManager(new ArrayList<>()),
-                new RoomManager(new ArrayList<>()), new AttendeeManager(new ArrayList<>()),
-                new SpeakerManager(new ArrayList<>()),new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
         
         AccountCreator accountCreator = new AccountCreator(organizerManager,attendeeManager,speakerManager);
 
@@ -54,9 +50,7 @@ public class AccountCreatorTest {
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
         SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
 
-        OrganizerManager organizerManager = new OrganizerManager(new EventManager(new ArrayList<>()), 
-                new RoomManager(new ArrayList<>()), new AttendeeManager(new ArrayList<>()),
-                new SpeakerManager(new ArrayList<>()),new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
 
         AccountCreator accountCreator = new AccountCreator(organizerManager,attendeeManager,speakerManager);
 

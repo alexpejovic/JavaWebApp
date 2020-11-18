@@ -30,7 +30,7 @@ public class EventCreator {
     public boolean createEvent(LocalDateTime startTime, LocalDateTime endTime, String roomNumber) {
         boolean eventCreated = true;
         try {
-            String eventId = "e" + eventManager.getListOfEvents().size();
+            String eventId = "e" + eventManager.getNumberOfEvents();
             eventManager.createEvent(roomNumber, startTime, endTime, eventId);
         } catch (NonUniqueIdException e) {
             eventCreated = false;

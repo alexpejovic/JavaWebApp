@@ -1,7 +1,5 @@
 package Modules.Controllers;
 import Modules.Entities.*;
-import Modules.Exceptions.EventNotFoundException;
-import Modules.Exceptions.UserNotFoundException;
 import Modules.UseCases.*;
 
 import java.time.LocalDateTime;
@@ -15,16 +13,18 @@ public class OrganizerController {
     private SpeakerManager speakerManager;
     private String organizerId;
     private MessageManager messageManager;
+    private AttendeeManager attendeeManager;
 
     public OrganizerController(OrganizerManager organizerManager, EventManager eventManager,
                                RoomManager roomManager, SpeakerManager speakerManager,
-                               MessageManager messageManager, String organizerId){
+                               MessageManager messageManager, AttendeeManager attendeeManager, String organizerId){
 
         this.organizerManager = organizerManager;
         this.eventManager = eventManager;
         this.roomManager = roomManager;
         this.speakerManager = speakerManager;
         this.messageManager = messageManager;
+        this.attendeeManager = attendeeManager;
         this.organizerId = organizerId;
     }
 
@@ -47,7 +47,7 @@ public class OrganizerController {
      */
     public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime){
         //check room is available at this time, doesn't have other event
-        String eventId = organizerManager.eventAtTime(roomNumber, startTime, endTime).getID();
+        String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
         boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
         //check event not already in another room
         boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
@@ -84,17 +84,20 @@ public class OrganizerController {
      */
     public boolean scheduleSpeaker(String speakerId, String roomNumber, LocalDateTime startTime, LocalDateTime endTime) {
         //check if speaker is available
-        boolean isSpeakerAvailable = organizerManager.isSpeakerAvailable(speakerId, startTime, endTime);
+        boolean isSpeakerAvailable = speakerManager.isSpeakerAvailable(speakerId, startTime, endTime,eventManager);
         //check if room is available
         boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
         //check to find the event at the times given (startTime and endTime)
-        Event eventFound = organizerManager.getEventInRoom(startTime, endTime, roomNumber);
+        Event eventFound = eventManager.getEventInRoom(startTime, endTime, roomNumber);
         //check if event has available speaker
         if (eventFound != null){
             boolean isEventAvailable = eventManager.hasSpeaker(eventFound.getID());
             //schedule the speaker
             if (isSpeakerAvailable && isRoomAvailable && isEventAvailable) {
-                organizerManager.scheduleSpeaker(speakerId, roomNumber, eventFound.getID());
+                // add speaker to event's properties
+                eventManager.setSpeaker(speakerId, eventFound.getID());
+                // add event to speaker's properties
+                speakerManager.addEventToSpeaker(eventFound.getID(),speakerId);
                 return true;
             }
         }
@@ -113,14 +116,17 @@ public class OrganizerController {
         LocalDateTime startTime = eventManager.startTimeOfEvent(eventId);
         LocalDateTime endTime = eventManager.endTimeOfEvent(eventId);
         String speakerId = speakerManager.getUserID(username);
-        boolean isSpeakerAvailable = organizerManager.isSpeakerAvailable(speakerId, startTime, endTime);
+        boolean isSpeakerAvailable = speakerManager.isSpeakerAvailable(speakerId, startTime, endTime, eventManager);
         //check if room is available
         boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
         //check that event doesn't have speakers organized
-        boolean isEventAvailable = eventManager.hasSpeaker(speakerId);
+        boolean isEventAvailable = eventManager.hasSpeaker(eventId);
         //schedule the speaker
         if (isSpeakerAvailable && isRoomAvailable && isEventAvailable){
-            organizerManager.scheduleSpeaker(speakerId, roomNumber, eventId);
+            // add speaker to event's properties
+            eventManager.setSpeaker(speakerId,eventId);
+            // add event to speaker's properties
+            speakerManager.addEventToSpeaker(eventId,speakerId);
             return true;
         }
         //return if speaker was not scheduled
@@ -143,13 +149,13 @@ public class OrganizerController {
 
 
     public void messageAllAttendees(String message){
-        for (String attendeeID: organizerManager.forMessagingAllAttendees()){
+        for (String attendeeID: attendeeManager.getUserIDOfAllAttendees()){
             sendMessage(attendeeID, message);
         }
     }
 
     public void messageAllSpeakers(String message){
-        for (String speakerID: organizerManager.forMessagingAllSpeakers()){
+        for (String speakerID: speakerManager.getUserIDOfAllSpeakers()){
             sendMessage(speakerID, message);
         }
     }
@@ -161,6 +167,8 @@ public class OrganizerController {
     public ArrayList<Message> viewMessage(String senderID){
         return messageManager.getConversation(organizerId, senderID);
     }
+
+
 
 
 }

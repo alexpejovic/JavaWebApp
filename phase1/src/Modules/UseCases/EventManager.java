@@ -2,6 +2,7 @@ package Modules.UseCases;
 
 import Modules.Entities.Event;
 import Modules.Entities.Organizer;
+import Modules.Entities.Room;
 import Modules.Exceptions.EventNotFoundException;
 import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.UserNotFoundException;
@@ -51,10 +52,10 @@ public class EventManager {
     }
 
     /**
-     * Returns the list of events in this EventManager
-     * @return the list of events in this EventManager
+     * Returns the number of events in this EventManager
+     * @return the total number of events in this EventManager
      */
-    public ArrayList<Event> getListOfEvents(){return eventList;}
+    public int getNumberOfEvents(){return eventList.size();}
 
     /**
      * Checks if an event can be booked in a specific room, at a specified start and end time
@@ -105,6 +106,12 @@ public class EventManager {
         throw new EventNotFoundException();
     }
 
+    /**
+     * Returns the event id of the event with eventName
+     * @param eventName the name of the event we want to id for
+     * @return the event id in question
+     * @throws EventNotFoundException if there are no events with eventName
+     */
     public String getEventID(String eventName){
         for(Event event: eventList){
             if (eventName.equals(event.getName())){ return event.getID();}
@@ -237,5 +244,60 @@ public class EventManager {
     public void renameEvent(String eventID, String name) {
         getEvent(eventID).setName(name);
     }
+
+
+    /**
+     * Finds a event that is occurring in this room matching the given specifications
+     * @param startTime the startTime of the event
+     * @param endTime the endTime of the event
+     * @param roomNumber the room we want to check
+     * @return The event that matches the specifications, if it exists
+     */
+    public Event getEventInRoom(LocalDateTime startTime, LocalDateTime endTime, String roomNumber) {
+        for (Event event : this.getEventsInRoom(roomNumber)) {
+            if (event.getStartTime() == startTime && event.getEndTime() == endTime) {
+                return event;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param roomId    The id of the room where the Event is taking place
+     * @param startTime The time at which the Event will start
+     * @param endTime   The time at which the Event will end
+     * @return the Event object of the event that is taking place in a specific Room at a specific time
+     * @throws EventNotFoundException if there is no event in the specified room matching given specifications
+     */
+    public Event eventAtTime(String roomId, LocalDateTime startTime, LocalDateTime endTime) {
+        for (Event event : this.getEventsInRoom(roomId)) {
+            if (event.getStartTime().equals(startTime) && event.getEndTime().equals(endTime)) {
+                return event;
+            }
+        }
+        throw new EventNotFoundException();
+    }
+
+    /**
+     * Checks whether specified event matching eventID is between the specified time period
+     * @param eventID the unique id of the event
+     * @param startTime the start time (inclusive) of the time period
+     * @param endTime the end time (exclusive) of the time period
+     * @return true if and only if the the specified event is in the specified time period
+     */
+    public boolean isEventInTimePeriod(String eventID, LocalDateTime startTime, LocalDateTime endTime){
+        Event event = this.getEvent(eventID);
+        LocalDateTime eventStartTime = event.getStartTime();
+        LocalDateTime eventEndTime = event.getEndTime();
+        if(eventStartTime.isEqual(startTime) ||
+                (eventStartTime.isAfter(startTime) && eventStartTime.isBefore(endTime)) ||
+                (eventEndTime.isAfter(startTime) && eventEndTime.isBefore(endTime)) ) {
+            // the given event is within the specified time period
+            return true;
+        }
+        return false;
+    }
+
+
 
 }

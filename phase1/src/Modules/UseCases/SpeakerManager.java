@@ -1,10 +1,12 @@
 package Modules.UseCases;
 
+import Modules.Entities.Event;
 import Modules.Entities.Speaker;
 import Modules.Entities.User;
 import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.UserNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -162,6 +164,46 @@ public class SpeakerManager extends UserManager{
         throw new UserNotFoundException();
     }
 
+    /**
+     * Returns a list of the userIDs of all speakers in this conference
+     * @return a list of the userIDs of all speakers in this conference
+     */
+    public ArrayList<String> getUserIDOfAllSpeakers() {
+        ArrayList<String> allSpeakerIDs = new ArrayList<>();
+        for (Speaker speaker : this.speakerList) {
+            allSpeakerIDs.add(speaker.getID());
+        }
+        return allSpeakerIDs;
+    }
 
+    /**
+     * Checks if speaker is scheduled for event that is taking place in the room during a specific time
+     *
+     * @param speakerId the speaker id of the Speaker speaking at the Event
+     * @param startTime the time the event starts
+     * @param endTime   the time the event finishes
+     * @return true if speaker is available at the specific time and i.e the speaker
+     * isn't scheduled for any Events at the given time, false otherwise
+     */
+    public boolean isSpeakerAvailable(String speakerId, LocalDateTime startTime, LocalDateTime endTime,
+                                      EventManager eventManager) {
+        Speaker speaker = getSpeaker(speakerId);
+        for (String currEventID : speaker.getHostEvents()) {
+            if(eventManager.isEventInTimePeriod(currEventID,startTime,endTime)){
+                // one of the speaker's events is within the given timer period
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Added specified eventID to the list of events for the given speaker with speakerID
+     * @param eventID the eventID being added
+     * @param speakerID the unique userid of the speaker
+     */
+    public void addEventToSpeaker(String eventID, String speakerID){
+        this.getSpeaker(speakerID).addEvent(eventID);
+    }
 
 }

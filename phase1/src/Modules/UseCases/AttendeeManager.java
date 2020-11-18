@@ -60,13 +60,6 @@ public class AttendeeManager extends UserManager{
     }
 
     /**
-     * Returns a exact list of Attendees in this Conference with aliasing
-     * @return the list of attendees in this conference
-     */
-    // aliases
-    public ArrayList<Attendee> getListOfAttendees() { return attendeeList; }
-
-    /**
      * Checks if a specific attendee is available in a certain time period
      * A attendee is considered available if they are not attending any events
      * during the specified time period
@@ -191,6 +184,18 @@ public class AttendeeManager extends UserManager{
             }
         }
         throw new UserNotFoundException();
+    }
+
+    /**
+     * Returns a list of the userIDs of all attendees in this conference
+     * @return a list of all userIDs of all attendees in this conference
+     */
+    public ArrayList<String> getUserIDOfAllAttendees() {
+        ArrayList<String> allAttendeeIDs = new ArrayList<>();
+        for (Attendee attendee : attendeeList) {
+            allAttendeeIDs.add(attendee.getID());
+        }
+        return allAttendeeIDs;
     }
 
 }
