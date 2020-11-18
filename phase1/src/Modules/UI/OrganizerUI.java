@@ -134,7 +134,7 @@ public class OrganizerUI {
             try {
                 selection = Integer.parseInt(input.nextLine());
 
-                if (selection < 1 || selection > 4) {
+                if (selection >= 1 && selection <= 4) {
                     // selection is within Range of options
                     System.out.println();
                     isValidSelection = true;
