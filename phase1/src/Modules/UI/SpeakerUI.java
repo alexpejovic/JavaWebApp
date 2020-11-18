@@ -3,9 +3,6 @@ package Modules.UI;
 import Modules.Controllers.SpeakerController;
 import Modules.Entities.Event;
 import Modules.Presenters.EventPresenter;
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
-
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
