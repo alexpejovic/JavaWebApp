@@ -13,7 +13,7 @@ public class RoomGateway {
 
     public ArrayList<Room> readSerFile() {
 
-        ArrayList<Room> rooms = null;
+        ArrayList<Room> rooms = new ArrayList<>();
         try {
             FileInputStream file = new FileInputStream(filename);
             ObjectInputStream storedRooms = new ObjectInputStream(file);

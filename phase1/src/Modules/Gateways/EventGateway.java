@@ -13,7 +13,7 @@ public class EventGateway {
 
     public ArrayList<Event> readSerFile() {
 
-        ArrayList<Event> events = null;
+        ArrayList<Event> events = new ArrayList<>();
         try {
             FileInputStream file = new FileInputStream(filename);
             ObjectInputStream storedEvents = new ObjectInputStream(file);

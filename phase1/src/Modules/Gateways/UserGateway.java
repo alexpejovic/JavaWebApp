@@ -13,7 +13,7 @@ public class UserGateway {
 
     public ArrayList<User> readSerFile() {
 
-        ArrayList<User> users = null;
+        ArrayList<User> users = new ArrayList<>();
         try {
             FileInputStream file = new FileInputStream(filename);
             ObjectInputStream storedUsers = new ObjectInputStream(file);

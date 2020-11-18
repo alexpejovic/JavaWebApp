@@ -13,7 +13,7 @@ public class MessageGateway {
 
     public ArrayList<Message> readSerFile() {
 
-        ArrayList<Message> messages = null;
+        ArrayList<Message> messages = new ArrayList<>();
         try {
             FileInputStream file = new FileInputStream(filename);
             ObjectInputStream storedMessages = new ObjectInputStream(file);
