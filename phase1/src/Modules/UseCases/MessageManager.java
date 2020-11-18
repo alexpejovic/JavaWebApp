@@ -43,6 +43,12 @@ public class MessageManager {
      * @return A list of messages sent or received by the user
      */
     public ArrayList<Message> getUserMessages(String user) {
+
+        // to prevent NullPointerException
+        if (messages.get(user)== null){
+            return new ArrayList<Message>();
+        }
+
         ArrayList<Message> userMessages = (ArrayList<Message>) messages.get(user).clone();
 
         Collections.sort(userMessages);

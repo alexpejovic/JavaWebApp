@@ -6,6 +6,7 @@ import Modules.Entities.Event;
 import Modules.Entities.Message;
 import Modules.Entities.Speaker;
 import Modules.Presenters.EventPresenter;
+import Modules.Presenters.MessagePresenter;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.EventManager;
 import Modules.UseCases.MessageManager;
@@ -41,6 +42,7 @@ public class SpeakerUITest {
         attendees.add(attendee0);
         attendee0.addEvent(event0.getID());
         attendees.add(attendee1);
+        attendee1.addEvent(event0.getID());
         AttendeeManager attendeeManager = new AttendeeManager(attendees);
 
         Speaker speaker = new Speaker("username", "pass","s0");
@@ -60,11 +62,27 @@ public class SpeakerUITest {
 
         System.out.println(speakerUI.run());
 
+        MessagePresenter messagePresenter = new MessagePresenter();
+
         // testing that messages are sent to attendee0
         ArrayList<Message> msgs = messageManager.getUserMessages("a0");
         System.out.println("Messages for attendee 0 : ");
-        for (Message message: msgs){
-            System.out.println(message.getContent());
+        for (String msg: messagePresenter.getMessageList(msgs)){
+            System.out.println(msg);
+        }
+
+        // testing that messages are sent to attendee1
+        ArrayList<Message> msgs2 = messageManager.getUserMessages("a1");
+        System.out.println("Messages for attendee 1 : ");
+        for (String msg: messagePresenter.getMessageList(msgs2)){
+            System.out.println(msg);
+        }
+
+        // testing that messages are sent to attendee1
+        ArrayList<Message> msgs3 = messageManager.getUserMessages("s0");
+        System.out.println("Messages for speaker0 : ");
+        for (String msg: messagePresenter.getMessageList(msgs3)){
+            System.out.println(msg);
         }
     }
 

@@ -13,8 +13,8 @@ public class MessagePresenter {
         for(Message message: messages){
 
             conversation.add("Sender ID : " + message.getSenderID() +
-            "\nReceiver ID: " + message.getReceiverID() +
-            "\n\n" + message.getContent());
+            "\t\tReceiver ID: " + message.getReceiverID() +
+            "\t\t\t" + message.getContent()) ;
         }
 
         return conversation;

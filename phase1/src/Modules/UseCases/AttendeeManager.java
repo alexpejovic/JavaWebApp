@@ -72,18 +72,9 @@ public class AttendeeManager extends UserManager{
     public boolean timeAvailable(Attendee attendee, LocalDateTime startTime, LocalDateTime endTime,
                                  EventManager eventManager){
         ArrayList<String> attendeeEventList = attendee.getEventsList();
-        ArrayList<Event> allEventsList = eventManager.getEventList();
         for (String id : attendeeEventList) {
-            for (Event event : allEventsList) {
-                if (id.equals(event.getID())) {
-                    if (event.getStartTime().equals(startTime) || event.getEndTime().equals(endTime)) {
-                        return false;
-                    }else if (event.getStartTime().isAfter(startTime) && event.getStartTime().isBefore(endTime)){
-                        return false;
-                    }else if (event.getEndTime().isAfter(startTime) && event.getEndTime().isBefore(endTime)){
-                        return false;
-                    }
-                }
+            if(eventManager.isEventInTimePeriod(id,startTime,endTime)){
+                return false;
             }
         }
         return true;

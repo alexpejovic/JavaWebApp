@@ -143,19 +143,11 @@ public class RoomManager {
                                    EventManager eventManager){
         ArrayList<String> eventList = this.getRoom(roomNumber).getEvents();
         for (String eventId: eventList){
-            LocalDateTime eventStartTime = eventManager.startTimeOfEvent(eventId);
-            LocalDateTime eventEndTime = eventManager.endTimeOfEvent(eventId);
-            if(eventStartTime.isEqual(startTime) ||
-                    (eventStartTime.isAfter(startTime) && eventStartTime.isBefore(endTime)) ||
-                    (eventEndTime.isAfter(startTime) && eventEndTime.isBefore(endTime)) ) {
+            if(eventManager.isEventInTimePeriod(eventId,startTime,endTime)){
                 return false;
             }
         }
         return true;
-    }
-
-    public ArrayList<Room> getListOfRooms() {
-        return rooms;
     }
 
 }
