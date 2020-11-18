@@ -14,7 +14,7 @@ public class AttendeeUI {
     private MessagePresenter messagePresenter;
     private AttendeeController attendeeController;
 
-    AttendeeUI(AttendeeController attendeeController, EventPresenter eventPresenter, MessagePresenter messagePresenter){
+    public AttendeeUI(AttendeeController attendeeController, EventPresenter eventPresenter, MessagePresenter messagePresenter){
         this.attendeeController = attendeeController;
         this.eventPresenter = eventPresenter;
         this.messagePresenter = messagePresenter;

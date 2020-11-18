@@ -13,7 +13,7 @@ public class LogInUI {
      *
      * @param loginController Controller which handles user inputs regarding logging-in
      */
-    LogInUI(LoginController loginController) {
+    public LogInUI(LoginController loginController) {
         this.loginController = loginController;
     }
 

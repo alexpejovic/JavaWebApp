@@ -17,7 +17,7 @@ public class CreateAccountUI {
      *
      * @param accountCreator Controller which handles user inputs regarding logging-in
      */
-    CreateAccountUI(AccountCreator accountCreator) {
+    public CreateAccountUI(AccountCreator accountCreator) {
         this.accountCreator = accountCreator;
     }
 
