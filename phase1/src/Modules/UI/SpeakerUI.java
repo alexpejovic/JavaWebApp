@@ -45,7 +45,7 @@ public class SpeakerUI {
         do{
 
             //menu of options for the user
-            System.out.println("\nEnter: \n" +
+            System.out.println("Enter: \n" +
                     "1. to logout \n" +
                     "2. to exit Program \n" +
                     "3. to see a list of my events \n" +
@@ -67,7 +67,7 @@ public class SpeakerUI {
                  this.messageAllAttendees();
              } else if (selection == 6){
                 // see messages
-                this.seeMesssages();
+                this.seeMessages();
              }
 
         }while (!(selection==1) && !(selection==2)); // loop stops if user wants to logout or exit
@@ -96,10 +96,16 @@ public class SpeakerUI {
         ArrayList<String> eventStrings = eventPresenter.getEventList(events);
 
         // printing events to screen
-        System.out.println("List of events that you are speaking at: ");
-        for(String eventString: eventStrings){
-            System.out.println(eventString);
+        if (eventStrings.isEmpty()){
+            System.out.println("You have currently have no events you are speaking at");
         }
+        else{
+            System.out.println("List of events that you are speaking at: ");
+            for(String eventString: eventStrings){
+                System.out.println(eventString);
+            }
+        }
+
         System.out.println(); // spacing
     }
 
@@ -146,17 +152,18 @@ public class SpeakerUI {
     /**
      * private helper to display all messages that this speaker has sent/ recieved
      */
-    private void seeMesssages(){
+    private void seeMessages(){
         ArrayList<String> msgs = messagePresenter.getMessageList( speakerController.getAllMessages());
         if (msgs.isEmpty()){
             System.out.println("You have no messages.");
         }
         else{
             System.out.println("Here are your messages:");
+            for (String msg: msgs){
+                System.out.println(msg);
+            }
         }
-        for (String msg: msgs){
-            System.out.println(msg);
-        }
+        System.out.println(); // spacing
     }
 
 

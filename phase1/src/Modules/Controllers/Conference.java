@@ -3,6 +3,7 @@ package Modules.Controllers;
 import Modules.Controllers.*;
 import Modules.Entities.*;
 import Modules.Gateways.EventGateway;
+import Modules.Gateways.MessageGateway;
 import Modules.Gateways.RoomGateway;
 import Modules.Gateways.UserGateway;
 import Modules.Presenters.EventPresenter;
@@ -26,14 +27,15 @@ public class Conference {
     AccountCreator accountCreator;
 
     public Conference() {
-        // Init event and room managers
+        // Init event, message, and room managers
         eventManager = new EventManager(readEvents());
         roomManager = new RoomManager(readRooms());
+        messageManager = new MessageManager(readMessages());
 
         // Init user managers
-        AttendeeManager attendeeManager = new AttendeeManager(readAttendees());
-        OrganizerManager organizerManager = new OrganizerManager(readOrganizers());
-        SpeakerManager speakerManager = new SpeakerManager(readSpeakers());
+        this.attendeeManager = new AttendeeManager(readAttendees());
+        this.organizerManager = new OrganizerManager(readOrganizers());
+        this.speakerManager = new SpeakerManager(readSpeakers());
 
         // Init controllers
         accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager);
@@ -47,6 +49,13 @@ public class Conference {
     private ArrayList<Event> readEvents() {
         EventGateway eventGateway = new EventGateway();
         return eventGateway.readSerFile();
+    }
+    /**
+     * @return an arraylist of Message entities
+     */
+    private ArrayList<Message> readMessages() {
+        MessageGateway messageGateway = new MessageGateway();
+        return messageGateway.readSerFile();
     }
 
     /**
