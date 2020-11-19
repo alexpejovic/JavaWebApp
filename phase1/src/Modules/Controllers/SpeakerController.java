@@ -1,7 +1,7 @@
 package Modules.Controllers;
 
-import Modules.Entities.Event;
 import Modules.Entities.Attendee;
+import Modules.Entities.Message;
 import Modules.UseCases.AttendeeManager;
 import Modules.UseCases.EventManager;
 import Modules.UseCases.MessageManager;
@@ -37,18 +37,19 @@ public class SpeakerController {
     }
 
     /**
-     * Return a list of events that this speaker(the speaker with id = speakerId) is hosting
-     * @return a list of events that this speaker(the speaker with id = speakerId) is hosting
+     * Return a list of eventIDs of events that this speaker(the speaker with id = speakerId) is hosting
+     * @return a list of eventIDs of events that this speaker(the speaker with id = speakerId) is hosting
      */
-    public ArrayList<Event> showEvents(){
-        ArrayList<Event> allEvents = eventManager.getEventList();
-        ArrayList<Event> myEvents = new ArrayList<>();
-        for(Event event: allEvents){
-            if(speakerManager.getSpeaker(speakerId).getHostEvents().contains(event.getID())){
-                myEvents.add(event);
-            }
-        }
-        return myEvents;
+    public ArrayList<String> showEvents(){
+        return speakerManager.getSpeaker(speakerId).getHostEvents();
+//        ArrayList<Event> allEvents = eventManager.getEventList();
+//        ArrayList<Event> myEvents = new ArrayList<>();
+//        for(Event event: allEvents){
+//            if(speakerManager.getSpeaker(speakerId).getHostEvents().contains(event.getID())){
+//                myEvents.add(event);
+//            }
+//        }
+//        return myEvents;
     }
 
     /**
@@ -101,4 +102,13 @@ public class SpeakerController {
         }
         return false;
     }
+
+    /**
+     * Returns all the messages that the speaker specified by the stored speakerID has sent or received
+     * @return an ArrayList of all messages that the speaker sent or received
+     */
+    public ArrayList<Message> getAllMessages(){
+        return messageManager.getUserMessages(speakerId);
+    }
+
 }

@@ -115,7 +115,7 @@ public class Conference {
 
     public boolean initUserSession() {
         String userID = login.getLoggedUser();
-        EventPresenter eventPresenter = new EventPresenter();
+        EventPresenter eventPresenter = new EventPresenter(eventManager);
         MessagePresenter messagePresenter = new MessagePresenter();
         boolean logout = false;
 
@@ -133,7 +133,7 @@ public class Conference {
         else if (userID.startsWith("s")) {
             SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager, attendeeManager, messageManager);
             // TODO: call speaker UI with speakerController
-            SpeakerUI speakerUI = new SpeakerUI(speakerController, eventPresenter);
+            SpeakerUI speakerUI = new SpeakerUI(speakerController, eventPresenter,messagePresenter);
             logout = speakerUI.run();
         }
         return logout;

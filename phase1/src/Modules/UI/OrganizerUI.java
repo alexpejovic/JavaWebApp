@@ -67,8 +67,8 @@ public class OrganizerUI {
      */
     private int initialOpening(int userInput){
         System.out.println("Enter, \n" +
-                "1, To Logout\n" + "2, To Exit the Program" +
-                "3, To get to work and do some organizing!" +
+                "1, To Logout\n" + "2, To Exit the Program\n" +
+                "3, To get to work and do some organizing!\n" +
                 "4, To chat and message other users\n");
         userInput = this.validSelection();
         return userInput;

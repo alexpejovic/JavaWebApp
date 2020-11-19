@@ -1,6 +1,6 @@
 package Modules.Presenters;
 
-import Modules.Entities.Event;
+import Modules.UseCases.EventManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,27 +10,34 @@ import java.util.ArrayList;
  *
  */
 public class EventPresenter {
+    private EventManager eventManager;
+
+    public EventPresenter(EventManager eventManager){
+        this.eventManager = eventManager;
+    }
 
     /** Reformats a list of events into a list of Strings which each describe the event
      *
-     * @param events The list of Events to be reformatted
-     * @return A list of Events in String form: 'EventIndex'. 'EventName' Remaining Seats: 'RemainingSeats' Start Time: 'StartTime'
+     * @param eventIDs The list of eventIDs of the Events to be reformatted
+     * @return A list of Events in String form:
+     *          'EventIndex'. 'EventName' Remaining Seats: 'RemainingSeats' Start Time: 'StartTime' End Time: 'EndTime'
      */
-    public ArrayList<String> getEventList(ArrayList<Event> events){
+    public ArrayList<String> getEventList(ArrayList<String> eventIDs){
 
         ArrayList<String> eventList = new ArrayList<>();
         int i = 1;
 
-        for(Event event: events){
-            String eventName = event.getName();
+        for(String eventID: eventIDs){
+            String eventName = eventManager.getName(eventID);
             if (eventName== null){
                 eventName = "unnamed event";
             }
 
-            String eventString = i + ".   " + eventName + "   Remaining Seats: " + event.getAvailableSeats()
-                    + "   Room: " + event.getRoomNumber()
-                    + "   Start Time: " + event.getStartTime().toString()
-                    + "   End Time: " + event.getEndTime().toString();
+            String eventString = i + ".   " + eventName +
+                    "   Remaining Seats: " + eventManager.getRemainingSeats(eventID)
+                    + "   Room: " + eventManager.getRoomNumberOfEvent(eventID)
+                    + "   Start Time: " + eventManager.startTimeOfEvent(eventID)
+                    + "   End Time: " + eventManager.endTimeOfEvent(eventID);
 
             eventList.add(eventString);
             i ++;
@@ -42,15 +49,15 @@ public class EventPresenter {
 
     /** Reformats a list of events into a list of event names
      *
-     * @param events List of events
+     * @param eventIDs List of eventIDs
      * @return List of names of events
      */
-    public ArrayList<String> getEventNames(ArrayList<Event> events){
+    public ArrayList<String> getEventNames(ArrayList<String> eventIDs){
 
         ArrayList<String> eventList = new ArrayList<>();
 
-        for(Event event: events){
-            eventList.add(event.getName());
+        for(String eventID: eventIDs){
+            eventList.add(eventManager.getName(eventID));
         }
 
         return eventList;
@@ -58,16 +65,17 @@ public class EventPresenter {
 
     /** Reformats list of events into a list of event names with respective dates
      *
-     * @param events List of events
+     * @param eventIDs List of events
      * @return List of names of events along with dates
      */
-    public ArrayList<String> getEventDates(ArrayList<Event> events){
+    public ArrayList<String> getEventDates(ArrayList<String> eventIDs){
 
         ArrayList<String> eventList = new ArrayList<>();
 
-        for(Event event: events){
-            eventList.add(event.getName() + " Start Time: " + event.getStartTime().toString() + "" +
-                    " End Time: " + event.getEndTime().toString());
+        for(String eventID: eventIDs){
+            eventList.add(eventManager.getName(eventID) + " Start Time: "
+                    + eventManager.startTimeOfEvent(eventID).toString() + "" +
+                    " End Time: " + eventManager.endTimeOfEvent(eventID));
         }
 
         return eventList;

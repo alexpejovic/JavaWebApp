@@ -33,7 +33,7 @@ public class AttendeeControllerTest {
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234");
-        assertEquals("e1234", attendeeController.displayEvents().get(0).getID());
+        assertEquals("e1234", attendeeController.displayEvents().get(0));
     }
 
     @Test
