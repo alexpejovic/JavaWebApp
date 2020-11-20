@@ -52,7 +52,12 @@ public class OrganizerUI {
                 runOrganizing();
             } else if (userInput == 4) {
                 runMessaging();
+            } else if (userInput == 5){
+                seeListOfEvents();
+            } else if (userInput ==6){
+                manageEventsAttending();
             }
+
         }while(userInput != 1 && userInput != 2);
         input.close();
 
@@ -69,7 +74,9 @@ public class OrganizerUI {
         System.out.println("Enter, \n" +
                 "1, To Logout\n" + "2, To Exit the Program\n" +
                 "3, To get to work and do some organizing!\n" +
-                "4, To chat and message other users\n");
+                "4, To chat and message other users\n," +
+                "5, See total list of Events\n," +
+                "6, Manage the Events you are attending\n");
         userInput = this.validSelection();
         return userInput;
     }
@@ -231,6 +238,11 @@ public class OrganizerUI {
         //either your time, speaker or room is unavailable please try again
         System.out.println("Input the room number of the room where you wish to schedule your Event to take place");
         String roomNumber = input.nextLine();
+        while (!organizerController.roomExists(roomNumber)){
+            System.out.println("Oops! It looks like the room you have selected doesn't exist.\n" +
+                    "Please select an existing room.");
+            roomNumber = input.nextLine();
+        }
         System.out.println("Input the time you wish your event to begin\n"+
                 "in the form of yyyy-MM-dd: HH:mm");
         ArrayList<LocalDateTime> dates = dateTimeFormatter(input, roomNumber);
@@ -281,6 +293,60 @@ public class OrganizerUI {
     }
 
     /**
+     * Private helper that enables Organizer to see the list of all events in the system and their description
+     */
+    private void seeListOfEvents() {
+        for (String eventId : eventPresenter.getEventList(eventCreator.listOfEvents())) {
+            System.out.println(eventId);
+        }
+    }
+
+    /**
+     * Private helper that allows organizer to decide if they want to attend or cancel an event for attendance
+     */
+    private void manageEventsAttending(){
+        System.out.println("Would you like to: \n," +
+                "1, Attend a new Event?," +
+                "2, Cancel your spot in an event you are scheduled for?");
+        String choice = input.nextLine();
+        while (!choice.equals("1") && !choice.equals("2")){
+            System.out.println("Please select a valid option");
+            choice = input.nextLine();
+        }
+        if (choice.equals("1")){attendEvent();}
+        cancelAttendanceForEvent();
+    }
+
+    /**
+     * Private helper that allows Organizers to attend an event
+     */
+    private void attendEvent(){
+        System.out.println("Please indicate which Event you would like to attend");
+        String eventName = input.nextLine();
+        while(!organizerController.attendEvent(eventName)){
+            System.out.println("Oh no! Unfortunately you are unable to attend this event!\n," +
+                    "Don't take it personally. Simply pick a different Event");
+            eventName = input.nextLine();
+        }
+        organizerController.attendEvent(eventName);
+        System.out.println("You are scheduled to attend the following Event: " + eventName);
+    }
+
+    /**
+     * Private helper that enable Organizer to cancel their attendance for an event
+     */
+    private void cancelAttendanceForEvent(){
+        System.out.println("Please indicate the Event you would like to ");
+        String eventName = input.nextLine();
+        while(!organizerController.cancelEnrollment(eventName).equals("Your Cancellation was successful")){
+            System.out.println(organizerController.cancelEnrollment(eventName));
+            eventName = input.nextLine();
+        }
+        System.out.println(organizerController.cancelEnrollment(eventName));
+
+    }
+
+    /**
      * Private helper that enables Organizer to schedule a Speaker for an event
      */
     private void scheduleSpeaker(){
@@ -290,13 +356,19 @@ public class OrganizerUI {
         String roomNumber = input.nextLine();
 
         ArrayList<LocalDateTime> dates = dateTimeFormatter(input, roomNumber);
+        System.out.println("Input the name of the Event you wish for the speaker to speak at");
+        String eventName = input.nextLine();
+        while (!organizerController.isCorrectEvent(eventName, roomNumber)){
+            System.out.println("Oops it seems there is no event under the name " +eventName + " in the room you have " +
+                            "selected. \n" + "Please select an existing event and its corresponding room number");
+            eventName = input.nextLine();
+        }
 
-        while(!organizerController.scheduleSpeaker(speakerUserName, roomNumber, dates.get(0), dates.get(1))){
-            System.out.println("I'm sorry but you are not able to organize this speaker at this time.\n" +
-                    "Please select another time to schedule the speaker or a different room");
+        while(!organizerController.scheduleSpeaker(speakerUserName, roomNumber, eventName)){
+            System.out.println("I'm sorry but you are not able to schedule this speaker for this event.\n" +
+                    "Please select a different room");
             System.out.println("Input the room number where " + speakerUserName + " will present");
             roomNumber = input.nextLine();
-            dates = dateTimeFormatter(input, roomNumber);
         }
         System.out.println(speakerUserName +" has been scheduled");
     }
