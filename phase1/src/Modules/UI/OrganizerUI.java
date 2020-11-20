@@ -234,11 +234,13 @@ public class OrganizerUI {
         System.out.println("Input the time you wish your event to begin\n"+
                 "in the form of yyyy-MM-dd: HH:mm");
         ArrayList<LocalDateTime> dates = dateTimeFormatter(input, roomNumber);
-        while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1))){
+        System.out.println("What is the name of the Event?");
+        String name = input.nextLine();
+        while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1), name)){
             System.out.println("I'm sorry, but either the room you have chosen is not available at this time.\n " +
                     "Please select a different room or a different time");
         }
-        System.out.println("The Event was successfully added to the program and scheduled to the " +
+        System.out.println("The Event " + name + " was successfully added to the program and scheduled to the " +
                 "room with room number " + roomNumber);
 
     }
