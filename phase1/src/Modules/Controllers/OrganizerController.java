@@ -1,5 +1,7 @@
 package Modules.Controllers;
 import Modules.Entities.*;
+import Modules.Exceptions.EventNotFoundException;
+import Modules.Exceptions.NonUniqueIdException;
 import Modules.UseCases.*;
 
 import java.time.LocalDateTime;
@@ -14,10 +16,13 @@ public class OrganizerController {
     private String organizerId;
     private MessageManager messageManager;
     private AttendeeManager attendeeManager;
+    private EventCreator eventCreator;
+    private AccountCreator accountCreator;
 
     public OrganizerController(OrganizerManager organizerManager, EventManager eventManager,
                                RoomManager roomManager, SpeakerManager speakerManager,
-                               MessageManager messageManager, AttendeeManager attendeeManager, String organizerId){
+                               MessageManager messageManager, AttendeeManager attendeeManager, EventCreator eventCreator,
+                               AccountCreator accountCreator, String organizerId){
 
         this.organizerManager = organizerManager;
         this.eventManager = eventManager;
@@ -25,6 +30,8 @@ public class OrganizerController {
         this.speakerManager = speakerManager;
         this.messageManager = messageManager;
         this.attendeeManager = attendeeManager;
+        this.eventCreator = eventCreator;
+        this.accountCreator = accountCreator;
         this.organizerId = organizerId;
     }
 
@@ -45,17 +52,25 @@ public class OrganizerController {
      * @param endTime the time when the event ends
      * @return true if the event was scheduled, false if the event was not scheduled
      */
-    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime){
+    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName){
         //check room is available at this time, doesn't have other event
-        String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
         boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
         //check event not already in another room
         boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
         if (isRoomAvailable && canBook) {
             //create the Event
-
-            organizerManager.addToOrganizedEvents(organizerId, eventId);
-            return eventManager.createEvent(roomNumber, startTime, endTime, eventId);
+            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber);
+            if (created){
+                try {
+                    String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
+                    eventManager.renameEvent(eventId, eventName);
+                    organizerManager.addToOrganizedEvents(organizerId, eventId);
+                    return true;
+                }
+                catch(EventNotFoundException e){
+                    return false;
+                }
+            }
         }
         return false;
     }
@@ -64,11 +79,11 @@ public class OrganizerController {
      * Creates a new speaker account and passes/adds it into the program
      * @param userName the username of the Speaker account
      * @param password the password of the Speaker account
-     * @param userId the userID of the speaker account
+     * @return true if the speaker account was created and added into the system
      */
-    public void createSpeakerAccount(String userName, String password, String userId){
-        ArrayList<String> listOfEvents = new ArrayList<>();
-        speakerManager.addSpeaker(userName, password, userId,listOfEvents);
+    public boolean createSpeakerAccount(String userName, String password){
+        ArrayList<String> listOfEvents = eventManager.getAllEventIDs();
+        return accountCreator.createSpeakerAccount(userName, password, listOfEvents);
     }
 
     /**

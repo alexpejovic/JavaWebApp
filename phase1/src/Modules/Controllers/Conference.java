@@ -134,8 +134,9 @@ public class Conference {
             attendeeUI.run();
         }
         else if (userID.startsWith("o")) {
-            OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager, speakerManager, messageManager, attendeeManager, userID);
             EventCreator eventCreator = new EventCreator(eventManager);
+            AccountCreator accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager);
+            OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager, speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID);
             OrganizerUI organizerUI = new OrganizerUI(organizerController, messagePresenter, eventPresenter, eventCreator, accountCreator);
             logout = organizerUI.run();
         }
