@@ -17,7 +17,7 @@ public class ReaderWriterTest {
     public void testWriteSerFile() {
         LocalDateTime e1Time = LocalDateTime.of(2020, 11, 5, 11, 0, 0);
         LocalDateTime e2Time = LocalDateTime.of(2020, 11, 6, 11, 0, 0);
-        Event e1 = new Event("2", e1Time);
-        Event e2 = new Event("3", e2Time);
+        Event e1 = new Event("2", e1Time, "e1");
+        Event e2 = new Event("3", e2Time, "e2");
     }
 }

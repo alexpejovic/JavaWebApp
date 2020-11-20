@@ -45,6 +45,7 @@ public class Event{
         this.roomNumber = roomNumber;
         this.startTime = time;
         this.endTime = time.plusHours(1);
+        this.eventId = eventId;
         attendeeList = new ArrayList<>();
     }
 
