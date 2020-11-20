@@ -3,6 +3,7 @@ package Modules.Controllers;
 import Modules.Entities.Attendee;
 import Modules.Entities.Organizer;
 import Modules.Entities.Speaker;
+import Modules.Entities.User;
 import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.UserNotFoundException;
 import Modules.UseCases.*;
@@ -88,7 +89,123 @@ public class OrganizerControllerTest{
         assertTrue(speakerManager.isUser("John Doe"));
         assertFalse(speakerManager.isUser("Al Pacino"));
     }
-    
+
+    @Test
+    public void testIsCorrectEvent(){
+        Organizer organizer = new Organizer("Michael Scott", "Dundermifflin", "o123");
+        organizerManager.addOrganizer(organizer);
+        organizerController.addNewRoom("21", 5);
+        organizerController.addNewRoom("19", 5);
+        organizerController.addNewRoom("20", 5);
+        LocalDateTime startTime = LocalDateTime.of(2020, 11, 7, 5, 30);
+        LocalDateTime endTime = LocalDateTime.of(2020, 11, 7,7,0);
+        organizerController.scheduleEvent("20", startTime, endTime, "Fitness");
+        assertTrue(organizerController.isCorrectEvent("Fitness", "20"));
+        assertFalse(organizerController.isCorrectEvent("Eating", "20"));
+    }
+
+    @Test
+    public void testScheduleSpeaker(){
+        Organizer organizer = new Organizer("Michael Scott", "Dundermifflin", "o123");
+        organizerManager.addOrganizer(organizer);
+        organizerController.addNewRoom("21", 5);
+        organizerController.addNewRoom("19", 5);
+        organizerController.addNewRoom("20", 5);
+        LocalDateTime startTime = LocalDateTime.of(2020, 11, 7, 10, 30);
+        LocalDateTime endTime = LocalDateTime.of(2020, 11, 7,11,30);
+        assertTrue(organizerController.scheduleEvent("20", startTime, endTime, "Fitness"));
+        assertTrue(organizerController.scheduleEvent("21", startTime, endTime, "Cooking"));
+        Speaker speaker = new Speaker("Jessica",  "1234", "s123");
+        Speaker speaker2 = new Speaker("Jim",  "1234", "s124");
+        assertFalse(organizerController.scheduleSpeaker("Jessica", "25", "Fitness"));
+        assertFalse(organizerController.roomExists("25"));
+        speakerManager.addSpeaker(speaker);
+        speakerManager.addSpeaker(speaker2);
+        assertTrue(organizerController.scheduleSpeaker("Jessica", "20", "Fitness"));
+        assertFalse(organizerController.scheduleSpeaker("Jessica", "21", "Cooking"));
+        assertTrue(organizerController.scheduleEvent("21", startTime.plusHours(2), endTime.plusHours(2), "Drawing"));
+        assertTrue(organizerController.scheduleSpeaker("Jessica", "21", "Drawing"));
+        assertFalse(organizerController.scheduleSpeaker("Jim", "21", "Drawing"));
+    }
+
+    @Test
+    public void testInputOrganizer(){
+        Organizer organizer1 = new Organizer("Michael Scott", "Dundermifflin", "o123");
+        Organizer organizer2 = new Organizer("Jim Halpert", "beets", "o124");
+        Organizer organizer3 = new Organizer("Pam Beasley", "artSchool", "o125");
+
+        assertEquals(0, organizerManager.getNumberOfOrganizers());
+        ArrayList<User> organizerList = new ArrayList<>();
+        organizerList.add(organizer1);
+        organizerList.add(organizer2);
+        organizerList.add(organizer3);
+        organizerController.inputOrganizer(organizerList);
+
+        assertEquals(3, organizerManager.getNumberOfOrganizers());
+
+    }
+
+    @Test
+    public void testMessageAllAttendeesAndSpeaker(){
+        Attendee a1 = new Attendee("Jim Halpert", "1234", "a1");
+        Attendee a2 = new Attendee("Pam Beesley", "1234", "a2");
+        Attendee a3 = new Attendee("Dwight Schrute", "1234", "a3");
+        Attendee a4 = new Attendee("Stanley", "1234", "a4");
+
+        attendeeManager.addAttendee(a1);
+        attendeeManager.addAttendee(a2);
+        attendeeManager.addAttendee(a3);
+        attendeeManager.addAttendee(a4);
+
+
+        organizerController.messageAllAttendees("Meeting in the Conference Room");
+        for (String attendeeId:attendeeManager.getUserIDOfAllAttendees()) {
+            assertEquals("Meeting in the Conference Room", messageManager.getUserMessages(attendeeId).get(0).getContent());
+            assertEquals("o123", messageManager.getUserMessages(attendeeId).get(0).getSenderID());
+        }
+
+        Speaker s1 = new Speaker("Jim Halpert", "1234", "s1");
+        Speaker s2 = new Speaker("Pam Beesley", "1234", "s2");
+        Speaker s3 = new Speaker("Dwight Schrute", "1234", "s3");
+
+        speakerManager.addSpeaker(s1);
+        speakerManager.addSpeaker(s2);
+        speakerManager.addSpeaker(s3);
+
+        organizerController.messageAllSpeakers("Birthday Party");
+        for (String speakerId:speakerManager.getUserIDOfAllSpeakers()){
+            assertEquals("Birthday Party", messageManager.getUserMessages(speakerId).get(0).getContent());
+            assertEquals("o123", messageManager.getUserMessages(speakerId).get(0).getSenderID());
+        }
+    }
+
+    @Test
+    public void testSendMessageAndViewMessage(){
+        Speaker s1 = new Speaker("Jim Halpert", "1234", "s1");
+        Attendee a1 = new Attendee("Jim Halpert", "1234", "a1");
+        organizerController.sendMessage("s1", "yoooooo");
+        organizerController.sendMessage("a1", "yooooooo");
+
+        attendeeManager.addAttendee(a1);
+        speakerManager.addSpeaker(s1);
+
+        assertEquals("yoooooo", messageManager.getUserMessages("s1").get(0).getContent());
+        assertEquals("o123", messageManager.getUserMessages("a1").get(0).getSenderID());
+        assertEquals("o123", messageManager.getUserMessages("s1").get(0).getSenderID());
+        assertEquals("yooooooo", messageManager.getUserMessages("a1").get(0).getContent());
+
+        organizerController.messageAllSpeakers("Birthday Party");
+        organizerController.messageAllAttendees("Meeting in the Conference Room");
+
+        assertEquals("Birthday Party", messageManager.getUserMessages("s1").get(1).getContent());
+        assertEquals("o123", messageManager.getUserMessages("a1").get(1).getSenderID());
+        assertEquals("o123", messageManager.getUserMessages("s1").get(1).getSenderID());
+        assertEquals("Meeting in the Conference Room", messageManager.getUserMessages("a1").get(1).getContent());
+
+
+    }
+
+
 
 
 }
