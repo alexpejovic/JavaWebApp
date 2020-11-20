@@ -40,7 +40,7 @@ public class Event{
      * @param roomNumber the room number the Event will be held
      * @param time the time at which the Event will begin
      */
-    public Event(String roomNumber, LocalDateTime time){
+    public Event(String roomNumber, LocalDateTime time, String eventId){
         this.capacity = 2;
         this.roomNumber = roomNumber;
         this.startTime = time;
