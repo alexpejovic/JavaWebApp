@@ -11,6 +11,9 @@ public class RoomGateway {
 
     private final String filename = "res/rooms.ser";
 
+    //To run the unit test, this filename must be used
+    //private final String filename = "roomsTest.ser";
+
     public ArrayList<Room> readSerFile() {
 
         ArrayList<Room> rooms = new ArrayList<>();
@@ -22,8 +25,6 @@ public class RoomGateway {
 
             storedRooms.close();
             file.close();
-
-            System.out.println("Successfully read Rooms");
 
             return rooms;
 
@@ -50,8 +51,6 @@ public class RoomGateway {
 
             writer.close();
             file.close();
-
-            System.out.println("successfully stored Rooms");
 
         } catch (FileNotFoundException e) {
             System.out.println(filename + " not found");

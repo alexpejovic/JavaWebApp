@@ -2,13 +2,14 @@ package Modules.Entities;
 
 import Modules.Exceptions.UserNotFoundException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 /**
  * A class representing an event in a conference
  */
-public class Event{
+public class Event implements Serializable {
 
     /** ArrayList that stores the userIDs of attendees who are signed up to attend this event**/
     private ArrayList<String> attendeeList;
@@ -45,6 +46,7 @@ public class Event{
         this.roomNumber = roomNumber;
         this.startTime = time;
         this.endTime = time.plusHours(1);
+        this.eventId = eventId;
         attendeeList = new ArrayList<>();
     }
 

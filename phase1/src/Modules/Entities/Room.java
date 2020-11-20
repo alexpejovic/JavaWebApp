@@ -2,12 +2,13 @@ package Modules.Entities;
 
 import Modules.Exceptions.EventNotFoundException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * A class representing a room in a conference
  **/
-public class Room {
+public class Room implements Serializable {
     /** list of event ids for the Events that this room is hosting
     rooms can only host one event at a time **/
     private ArrayList<String> events;
