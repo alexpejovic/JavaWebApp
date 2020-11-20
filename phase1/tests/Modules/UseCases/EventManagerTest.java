@@ -56,6 +56,8 @@ public class EventManagerTest {
         assertTrue(manager.canBook("1", eventDate5, eventDate1.plusMinutes(120)));
         assertFalse(manager.canBook("2", eventDate2.minusHours(1), eventDate2.plusMinutes(1)));
         assertTrue(manager.canBook("2", eventDate2.minusHours(1), eventDate2.minusMinutes(1)));
+        assertTrue(manager.canBook("1", eventDate1.minusHours(1), eventDate1));
+        assertTrue(manager.canBook("1", eventDate1.plusHours(1), eventDate1.plusHours(2)));
     }
 
     @Test
