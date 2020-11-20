@@ -64,8 +64,8 @@ public class EventManager {
      */
     public boolean canBook(String roomNumber, LocalDateTime startTime, LocalDateTime endTime) {
         for (Event event: getEventsInRoom(roomNumber)) {
-            if (!(endTime.isBefore(event.getStartTime()) || startTime.isAfter(event.getEndTime()))) {
-                // Note that false is returned if endTime is equal to an event's startTime
+            if (!(endTime.isBefore(event.getStartTime()) || startTime.isAfter(event.getEndTime())) &&
+                    !endTime.equals(event.getStartTime()) && !startTime.equals(event.getEndTime())) {
                 return false;
             }
         }
