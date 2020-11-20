@@ -43,27 +43,28 @@ public class AttendeeController {
 
     /**
      *
-     * @return the list of existing events
+     * @return the list ids for of existing events
      */
-    public ArrayList<Event> displayEvents(){
-        return eventManager.getEventList();
+    public ArrayList<String> displayEvents(){
+        return eventManager.getAllEventIDs();
     }
 
 
-    /** Getter for list of events which attendee is attending
+    /** Getter for list of ids of the events which attendee is attending
      *
-     * @return the list of events which this Attendee is attending
+     * @return the list of ids of the events which this Attendee is attending
      */
-    public ArrayList<Event> getAttendingEvents() {
+    public ArrayList<String> getAttendingEvents() {
 
-         ArrayList<String> eventStrings = attendeeManager.getAttendee(attendeeID).getEventsList();
-         ArrayList<Event> events = new ArrayList<>();
-
-         for(String event: eventStrings){
-             events.add(eventManager.getEvent(event));
-         }
-
-         return events;
+         return attendeeManager.getAttendee(attendeeID).getEventsList();
+//         ArrayList<String> eventStrings = attendeeManager.getAttendee(attendeeID).getEventsList();
+//         ArrayList<Event> events = new ArrayList<>();
+//
+//         for(String event: eventStrings){
+//             events.add(eventManager.getEvent(event));
+//         }
+//
+//         return events;
     }
 
     /**

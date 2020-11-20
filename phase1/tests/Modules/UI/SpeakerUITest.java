@@ -26,15 +26,18 @@ public class SpeakerUITest {
     // only for informal testing with keyboard inputs
 
     public static void main(String[] args) {
-        EventPresenter eventPresenter = new EventPresenter();
+
 
         // setting up speakerController
         Event event0 = new Event("r0", LocalDateTime.of(2020,11,15,1,0),
                 LocalDateTime.of(2020,11,15,2,0), "e0");
-
+        event0.addAttendee("a0");
+        event0.addAttendee("a1");
         ArrayList<Event> events = new ArrayList<>();
         events.add(event0);
         EventManager eventManager = new EventManager(events);
+
+        EventPresenter eventPresenter = new EventPresenter(eventManager);
 
         Attendee attendee0 = new Attendee("at0", "pass", "a0");
         Attendee attendee1 = new Attendee("at1", "pass", "a1");
@@ -56,13 +59,13 @@ public class SpeakerUITest {
 
         SpeakerController speakerController = new SpeakerController("s0",eventManager,speakerManager,
                 attendeeManager, messageManager);
+        MessagePresenter messagePresenter = new MessagePresenter();
 
-        SpeakerUI speakerUI = new SpeakerUI(speakerController,eventPresenter);
+        SpeakerUI speakerUI = new SpeakerUI(speakerController,eventPresenter, messagePresenter);
 
 
         System.out.println(speakerUI.run());
 
-        MessagePresenter messagePresenter = new MessagePresenter();
 
         // testing that messages are sent to attendee0
         ArrayList<Message> msgs = messageManager.getUserMessages("a0");

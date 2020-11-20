@@ -1,8 +1,6 @@
 package Modules.UseCases;
 
 import Modules.Entities.Event;
-import Modules.Entities.Organizer;
-import Modules.Entities.Room;
 import Modules.Exceptions.EventNotFoundException;
 import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.UserNotFoundException;
@@ -66,8 +64,8 @@ public class EventManager {
      */
     public boolean canBook(String roomNumber, LocalDateTime startTime, LocalDateTime endTime) {
         for (Event event: getEventsInRoom(roomNumber)) {
-            if (!(endTime.isBefore(event.getStartTime()) || startTime.isAfter(event.getEndTime()))) {
-                // Note that false is returned if endTime is equal to an event's startTime
+            if (!(endTime.isBefore(event.getStartTime()) || startTime.isAfter(event.getEndTime())) &&
+                    !endTime.equals(event.getStartTime()) && !startTime.equals(event.getEndTime())) {
                 return false;
             }
         }
@@ -297,6 +295,34 @@ public class EventManager {
         return false;
     }
 
+    /**
+     * Returns the total number of seats remaining for the event specified by eventID
+     * @param eventID the unique id of the event in question
+     * @return the number of seats
+     */
+    public int getRemainingSeats(String eventID){
+        return this.getEvent(eventID).getAvailableSeats();
+    }
 
+    /**
+     * Returns the room number for the event specified by eventID
+     * @param eventID the unique id of the event in question
+     * @return the room number of the room that this event is held in
+     */
+    public String getRoomNumberOfEvent(String eventID){
+        return this.getEvent(eventID).getRoomNumber();
+    }
+
+    /**
+     * Returns the event ids of all events in this EventManager
+     * @return an Arraylist of the event ids of all events in this EventManager
+     */
+    public ArrayList<String> getAllEventIDs(){
+        ArrayList<String> eventIDs = new ArrayList<>();
+        for (Event event: eventList){
+            eventIDs.add(event.getID());
+        }
+        return eventIDs;
+    }
 
 }
