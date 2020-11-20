@@ -26,7 +26,7 @@ public class OrganizerManager extends UserManager {
     }
 
     /**
-     * Returns if there is a attendee with a specific username
+     * Returns if there is a Organizer with a specific username
      *
      * @param username the username entered by user
      * @return true if there exists a organizer account with this username, false otherwise

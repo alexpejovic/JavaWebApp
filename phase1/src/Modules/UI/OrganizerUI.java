@@ -187,7 +187,7 @@ public class OrganizerUI {
         System.out.println("Input to whom you wish to send the message");
         String userName = message.nextLine();
 
-        System.out.println("Input the message you wish to send to all Speakers");
+        System.out.println("Input the message you wish to send to "+ userName);
         String messageContent = message.nextLine();
 
         organizerController.sendMessage(userName,messageContent);
@@ -239,7 +239,7 @@ public class OrganizerUI {
         System.out.println("Input the room number of the room where you wish to schedule your Event to take place");
         String roomNumber = event.nextLine();
         System.out.println("Input the time you wish your event to begin\n"+
-                "in the form of yyyy-MM-dd: HH:mm");
+                "in the form of yyyy-MM-dd HH:mm");
         ArrayList<LocalDateTime> dates = dateTimeFormatter(event, roomNumber);
         while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1))){
             System.out.println("I'm sorry, but either the room you have chosen is not available at this time.\n " +
