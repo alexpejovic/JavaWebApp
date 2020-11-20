@@ -32,7 +32,7 @@ public class Event{
     /** The name of the Event **/
     private String name;
     /** The Speaker who will present at the Event **/
-    private String speaker = null;
+    private String speaker = "";
 
     /**
      * Sets the room capacity and room number for the room where the Event will take place with only StartTime
@@ -100,7 +100,9 @@ public class Event{
     /** Checks if there is a speaker presenting at the Event
      * @return true if the event has a speaker scheduled, false if not
      */
-    public boolean hasSpeaker(){return this.speaker != null;}
+    public boolean hasSpeaker(){
+        return !this.speaker.equals("");
+    }
 
     /** Gets the name of the Event
      *
