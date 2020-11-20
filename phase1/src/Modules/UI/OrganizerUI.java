@@ -154,54 +154,49 @@ public class OrganizerUI {
      * Private helper that enables Organizer to message all Attendees currently using the program
      */
     private void messageAllAttendees(){
-        Scanner message = new Scanner(System.in);
+
         System.out.println("Input the message you wish to send to all Attendees");
 
-        String messageContent = message.nextLine();
+        String messageContent = input.nextLine();
 
 
         organizerController.messageAllAttendees(messageContent);
         System.out.println("Message was sent to all Attendees");
-        message.close();
     }
 
     /**
      * Private helper that enables Organizer to message all Speakers currently using the program
      */
     private void messageAllSpeakers(){
-        Scanner message = new Scanner(System.in);
+
         System.out.println("Input the message you wish to send to all Speakers");
 
-        String messageContent = message.nextLine();
+        String messageContent = input.nextLine();
 
         organizerController.messageAllSpeakers(messageContent);
         System.out.println("Message was sent to all Speakers");
-        message.close();
     }
 
     /**
      * Private helper that enable Organizer to send a message to their desired recipient
      */
     private void sendMessage(){
-        Scanner message = new Scanner(System.in);
         System.out.println("Input to whom you wish to send the message");
-        String userName = message.nextLine();
+        String userName = input.nextLine();
 
         System.out.println("Input the message you wish to send to all Speakers");
-        String messageContent = message.nextLine();
+        String messageContent = input.nextLine();
 
         organizerController.sendMessage(userName,messageContent);
         System.out.println("Message was sent to" + userName);
-        message.close();
     }
 
     /**
      * Private helper that enables Organizer to view a message that they have received from a specific sender
      */
     private void seeMessage(){
-        Scanner wantToSeeMessage = new Scanner(System.in);
         System.out.println("Input which user you want to see conversation with");
-        String userName = wantToSeeMessage.nextLine();
+        String userName = input.nextLine();
         ArrayList<Message> conversation = organizerController.viewMessage(userName);
         ArrayList<String> fullConversation = messagePresenter.getMessageList(conversation);
 
@@ -214,11 +209,10 @@ public class OrganizerUI {
      * Private helper that enables organizer to add a new room into the system
      */
     private void addNewRoom(){
-        Scanner room = new Scanner(System.in);
         System.out.println("The roomNumber of the room you wish to create");
-        String roomNumber = room.nextLine();
+        String roomNumber = input.nextLine();
         System.out.println("The maximum capacity of the room");
-        String capacity = room.nextLine();
+        String capacity = input.nextLine();
         try{
             organizerController.addNewRoom(roomNumber, Integer.parseInt(capacity));
             System.out.println("A new room with room number" + capacity + "was successfully created");
@@ -235,12 +229,11 @@ public class OrganizerUI {
      */
     private void scheduleEvent(){
         //either your time, speaker or room is unavailable please try again
-        Scanner event = new Scanner(System.in);
         System.out.println("Input the room number of the room where you wish to schedule your Event to take place");
-        String roomNumber = event.nextLine();
+        String roomNumber = input.nextLine();
         System.out.println("Input the time you wish your event to begin\n"+
                 "in the form of yyyy-MM-dd: HH:mm");
-        ArrayList<LocalDateTime> dates = dateTimeFormatter(event, roomNumber);
+        ArrayList<LocalDateTime> dates = dateTimeFormatter(input, roomNumber);
         while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1))){
             System.out.println("I'm sorry, but either the room you have chosen is not available at this time.\n " +
                     "Please select a different room or a different time");
@@ -276,11 +269,11 @@ public class OrganizerUI {
      * Private helper that enables Organizer to create a Speaker account and add it to the system
      */
     private void createSpeakerAccount(){
-        Scanner speaker = new Scanner(System.in);
+
         System.out.println("Input the username of the Speaker you wish to create");
-        String speakerUserName = speaker.nextLine();
+        String speakerUserName = input.nextLine();
         System.out.println("Input the password of the Speaker you wish to create");
-        String speakerPassword = speaker.nextLine();
+        String speakerPassword = input.nextLine();
         accountCreator.createSpeakerAccount(speakerUserName, speakerPassword, new ArrayList<>());
         System.out.println("The Speaker account has successfully been created");
     }
@@ -289,20 +282,19 @@ public class OrganizerUI {
      * Private helper that enables Organizer to schedule a Speaker for an event
      */
     private void scheduleSpeaker(){
-        Scanner speaker = new Scanner(System.in);
         System.out.println("Input the username of the Speaker you wish to schedule to present");
-        String speakerUserName = speaker.nextLine();
+        String speakerUserName = input.nextLine();
         System.out.println("Input the room number where " + speakerUserName + " will present");
-        String roomNumber = speaker.nextLine();
+        String roomNumber = input.nextLine();
 
-        ArrayList<LocalDateTime> dates = dateTimeFormatter(speaker, roomNumber);
+        ArrayList<LocalDateTime> dates = dateTimeFormatter(input, roomNumber);
 
         while(!organizerController.scheduleSpeaker(speakerUserName, roomNumber, dates.get(0), dates.get(1))){
             System.out.println("I'm sorry but you are not able to organize this speaker at this time.\n" +
                     "Please select another time to schedule the speaker or a different room");
             System.out.println("Input the room number where " + speakerUserName + " will present");
-            roomNumber = speaker.nextLine();
-            dates = dateTimeFormatter(speaker, roomNumber);
+            roomNumber = input.nextLine();
+            dates = dateTimeFormatter(input, roomNumber);
         }
         System.out.println(speakerUserName +" has been scheduled");
     }
