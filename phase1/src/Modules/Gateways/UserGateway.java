@@ -11,6 +11,9 @@ public class UserGateway {
 
     private final String filename = "res/users.ser";
 
+    //To run the unit test, this filename must be used
+    //private final String filename = "usersTest.ser";
+
     public ArrayList<User> readSerFile() {
 
         ArrayList<User> users = new ArrayList<>();
@@ -22,8 +25,6 @@ public class UserGateway {
 
             storedUsers.close();
             file.close();
-
-            System.out.println("successfully read Users");
 
             return users;
 
@@ -49,8 +50,6 @@ public class UserGateway {
 
             writer.close();
             file.close();
-
-            System.out.println("successfully stored Users");
 
         } catch (FileNotFoundException e) {
             System.out.println(filename + " not found");

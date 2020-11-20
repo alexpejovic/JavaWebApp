@@ -11,6 +11,9 @@ public class EventGateway {
 
     private final String filename = "res/events.ser";
 
+    //To run the unit test, this filename must be used
+    //private final String filename = "eventsTest.ser";
+
     public ArrayList<Event> readSerFile() {
 
         ArrayList<Event> events = new ArrayList<>();
@@ -22,8 +25,6 @@ public class EventGateway {
 
             storedEvents.close();
             file.close();
-
-            System.out.println("Successfully read Events");
 
             return events;
 
@@ -49,8 +50,6 @@ public class EventGateway {
 
             writer.close();
             file.close();
-
-            System.out.println("successfully stored Events");
 
         } catch (FileNotFoundException e) {
             System.out.println(filename + " not found");

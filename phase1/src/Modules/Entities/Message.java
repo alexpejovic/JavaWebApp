@@ -1,11 +1,12 @@
 package Modules.Entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * A class representing a message that contains a sender, recipient, and date
  */
-public class Message implements Comparable<Message> {
+public class Message implements Comparable<Message>, Serializable {
     // Message content
     private final String content;
 

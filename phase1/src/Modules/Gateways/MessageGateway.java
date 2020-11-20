@@ -11,6 +11,9 @@ public class MessageGateway {
 
     private final String filename = "res/messages.ser";
 
+    //To run the unit test, this filename must be used
+    //private final String filename = "messagesTest.ser";
+
     public ArrayList<Message> readSerFile() {
 
         ArrayList<Message> messages = new ArrayList<>();
@@ -22,8 +25,6 @@ public class MessageGateway {
 
             storedMessages.close();
             file.close();
-
-            System.out.println("Successfully read Messages");
 
             return messages;
 
@@ -49,8 +50,6 @@ public class MessageGateway {
 
             writer.close();
             file.close();
-
-            System.out.println("successfully stored Messages");
 
         } catch (FileNotFoundException e) {
             System.out.println(filename + " not found");
