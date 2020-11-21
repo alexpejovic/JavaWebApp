@@ -247,8 +247,9 @@ public class OrganizerUI {
         System.out.println("What is the name of the Event?");
         String name = input.nextLine();
         while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1), name)){
-            System.out.println("I'm sorry, but either the room you have chosen is not available at this time.\n " +
-                    "Please select a different room or a different time");
+            System.out.println("I'm sorry, but the room you have chosen is not available at this time.\n " +
+                    "Please select a different time");
+            dates = dateTimeFormatter(input, roomNumber);
         }
         System.out.println("The Event " + name + " was successfully added to the program and scheduled to the " +
                 "room with room number " + roomNumber);
