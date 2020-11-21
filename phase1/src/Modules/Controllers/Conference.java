@@ -10,6 +10,7 @@ import Modules.Presenters.MessagePresenter;
 import Modules.UI.*;
 import Modules.UseCases.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -24,6 +25,7 @@ public class Conference {
     RoomManager roomManager;
     MessageManager messageManager;
     AccountCreator accountCreator;
+    EventCreator eventCreator;
 
     public Conference() {
         // Init event, message, and room managers
@@ -93,32 +95,37 @@ public class Conference {
     }
 
     public void run() {
-        if (createNewAccount()) {
-            CreateAccountUI createAccountUI = new CreateAccountUI(accountCreator);
-            createAccountUI.run();
+        boolean exitSession = false;
+        while (!exitSession) {
+            if (createNewAccount()) {
+                CreateAccountUI createAccountUI = new CreateAccountUI(accountCreator);
+                createAccountUI.run();
+            }
+            LogInUI loginUI = new LogInUI(login);
+            boolean userLogin = loginUI.run();
+            if (userLogin) {
+                exitSession = initUserSession();
+            }
         }
-        LogInUI loginUI = new LogInUI(login);
-        boolean userLogin = loginUI.run();
 
-        if (userLogin) {
-            boolean sessionOutcome = initUserSession();
-        }
+        // Write all data to .ser files
+        writeData();
     }
 
     public boolean initUserSession() {
         String userID = login.getLoggedUser();
         EventPresenter eventPresenter = new EventPresenter(eventManager);
         MessagePresenter messagePresenter = new MessagePresenter();
-        boolean logout = false;
+        boolean logout = true;
 
         if (userID.startsWith("a")) {
             AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID, messageManager);
             AttendeeUI attendeeUI = new AttendeeUI(attendeeController, eventPresenter, messagePresenter);
-            attendeeUI.run();
+            logout = attendeeUI.run();
         }
         else if (userID.startsWith("o")) {
-            EventCreator eventCreator = new EventCreator(eventManager);
-            AccountCreator accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager);
+            eventCreator = new EventCreator(eventManager);
+            accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager);
             OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager, speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID);
             OrganizerUI organizerUI = new OrganizerUI(organizerController, messagePresenter, eventPresenter, eventCreator, accountCreator);
             logout = organizerUI.run();
@@ -128,7 +135,33 @@ public class Conference {
             SpeakerUI speakerUI = new SpeakerUI(speakerController, eventPresenter,messagePresenter);
             logout = speakerUI.run();
         }
-        return logout;
+        // Returns true is user wants to log out and false if user wants to exit the program
+        return !logout;
+    }
+
+    private void writeData() {
+        EventGateway eventGateway = new EventGateway();
+        RoomGateway roomGateway = new RoomGateway();
+        MessageGateway messageGateway = new MessageGateway();
+        UserGateway userGateway = new UserGateway();
+
+        try {
+            eventGateway.writeSerFile(eventManager.getEventList());
+            roomGateway.writeSerFile(roomManager.getRooms());
+            messageGateway.writeSerFile(messageManager.getAllMessages());
+
+            // Create an arraylist of User objects before writing to file.
+            ArrayList<User> userList = new ArrayList<>();
+
+            userList.addAll(attendeeManager.getAttendeeList());
+            userList.addAll(organizerManager.getListOfOrganizers());
+            userList.addAll(speakerManager.getListOfSpeakers());
+
+            userGateway.writeSerFile(userList);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private ArrayList<Organizer> getOrganizersFromUsers(ArrayList<User> users) {
