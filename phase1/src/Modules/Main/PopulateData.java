@@ -24,12 +24,22 @@ public class PopulateData {
     private static UserGateway userGateway = new UserGateway();
 
     public static void main(String[] args) throws IOException {
+//        eventGateway.setFilename("testres/eventstest.ser");
+//        messageGateway.setFilename("testres/messagestest.ser");
+//        roomGateway.setFilename("testres/rooms.ser");
+//        userGateway.setFilename("testres/users.ser");
+
+        eventGateway.setFilename("res/events.ser");
+        messageGateway.setFilename("res/messages.ser");
+        roomGateway.setFilename("res/rooms.ser");
+        userGateway.setFilename("res/users.ser");
+
         eventGateway.writeSerFile(getEvents());
         roomGateway.writeSerFile(getRooms());
         userGateway.writeSerFile(getUsers());
         messageGateway.writeSerFile(getMessages());
 
-        // to start a new conference with no sample data uncomment this block
+//         //to start a new conference with no sample data uncomment this block
 //        eventGateway.writeSerFile(new ArrayList<>());
 //        messageGateway.writeSerFile(new ArrayList<>());
 //        roomGateway.writeSerFile(new ArrayList<>());
@@ -185,15 +195,15 @@ public class PopulateData {
     private static ArrayList<Message> getMessages(){
         ArrayList<Message> messages = new ArrayList<>();
 
-        Message message0 = new Message("a0","o0", "woof");
+        Message message0 = new Message("woof","a0","o0");
         messages.add(message0);
-        Message message1 = new Message("o0","a0", "wuff");
+        Message message1 = new Message("wuff","o0","a0");
         messages.add(message1);
-        Message message2 = new Message("a1","a2", "chirp");
+        Message message2 = new Message("chirp","a1","a2");
         messages.add(message2);
-        Message message3 = new Message("a2","s1", "meow");
+        Message message3 = new Message("meow","a2","s1");
         messages.add(message3);
-        Message message4 = new Message("s2","a1", "bark");
+        Message message4 = new Message("bark", "s2","a1" );
         messages.add(message4);
 
         return messages;
