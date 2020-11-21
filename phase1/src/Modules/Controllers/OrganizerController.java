@@ -1,7 +1,7 @@
 package Modules.Controllers;
 import Modules.Entities.*;
 import Modules.Exceptions.EventNotFoundException;
-import Modules.Exceptions.NonUniqueIdException;
+import Modules.Exceptions.UserNotFoundException;
 import Modules.UseCases.*;
 
 import java.time.LocalDateTime;
@@ -59,11 +59,12 @@ public class OrganizerController {
         boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
         if (isRoomAvailable && canBook) {
             //create the Event
-            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber);
+            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName);
             if (created){
                 try {
                     String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
                     eventManager.renameEvent(eventId, eventName);
+                    roomManager.addEventToRoom(roomNumber, eventId);
                     organizerManager.addToOrganizedEvents(organizerId, eventId);
                     return true;
                 }
@@ -79,65 +80,49 @@ public class OrganizerController {
      * Creates a new speaker account and passes/adds it into the program
      * @param userName the username of the Speaker account
      * @param password the password of the Speaker account
-     * @return true if the speaker account was created and added into the system
      */
-    public boolean createSpeakerAccount(String userName, String password){
+    public void createSpeakerAccount(String userName, String password){
         ArrayList<String> listOfEvents = eventManager.getAllEventIDs();
-        return accountCreator.createSpeakerAccount(userName, password, listOfEvents);
+        accountCreator.createSpeakerAccount(userName, password, listOfEvents);
     }
 
     /**
-     * Schedules speaker to speak at a specific time in a specific room
-     * Checks if an event exists in the room at the specific time
-     * Checks if the room is available at the specific time
-     * Checks speaker is available at the specific time
-     * @param speakerId the id of the speaker who is presenting
-     * @param roomNumber the number of room where the speaker will host the event
-     * @param startTime the time the event will start
-     * @param endTime the time the event will end
-     * @return true if the speaker is able to speak at the event and has been scheduled to the room
+     * Checks if the event with the event name is in the room with room number
+     * @param eventName the name of the event in question
+     * @param roomNumber the room number of the room
+     * @return true if the room contains the event with eventName, false if it is not
      */
-    public boolean scheduleSpeaker(String speakerId, String roomNumber, LocalDateTime startTime, LocalDateTime endTime) {
-        //check if speaker is available
-        boolean isSpeakerAvailable = speakerManager.isSpeakerAvailable(speakerId, startTime, endTime,eventManager);
-        //check if room is available
-        boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
-        //check to find the event at the times given (startTime and endTime)
-        Event eventFound = eventManager.getEventInRoom(startTime, endTime, roomNumber);
-        //check if event has available speaker
-        if (eventFound != null){
-            boolean isEventAvailable = eventManager.hasSpeaker(eventFound.getID());
-            //schedule the speaker
-            if (isSpeakerAvailable && isRoomAvailable && isEventAvailable) {
-                // add speaker to event's properties
-                eventManager.setSpeaker(speakerId, eventFound.getID());
-                // add event to speaker's properties
-                speakerManager.addEventToSpeaker(eventFound.getID(),speakerId);
-                return true;
-            }
+    public boolean isCorrectEvent(String eventName, String roomNumber){
+        try {
+            String eventId = eventManager.getEventID(eventName);
+            return roomManager.isEventInRoom(roomNumber, eventId);
         }
-        return false;
+        catch (EventNotFoundException e) {
+            return false;
+        }
     }
 
     /**
      * Schedules speaker to speak at an existing event if speaker, event and room are available
      * @param username the id of the Speaker being scheduled for the Event
      * @param roomNumber the number of the room where the event will be help and where the speaker will present
-     * @param eventId the id of the event taking place in the room
+     * @param eventName the name of the event taking place in the room
      * @return true if the speaker is able to present at the event
+     * precondition: the event with eventName is an existing event
      */
-    public boolean scheduleSpeaker(String username, String roomNumber, String eventId){
+    public boolean scheduleSpeaker(String username, String roomNumber, String eventName){
         //check if speaker is available
+        if (!roomExists(roomNumber)) {return false;}
+        String eventId = eventManager.getEventID(eventName);
+        if (!roomManager.getEventsInRoom(roomNumber).contains(eventId)){return false;}
         LocalDateTime startTime = eventManager.startTimeOfEvent(eventId);
         LocalDateTime endTime = eventManager.endTimeOfEvent(eventId);
         String speakerId = speakerManager.getUserID(username);
         boolean isSpeakerAvailable = speakerManager.isSpeakerAvailable(speakerId, startTime, endTime, eventManager);
         //check if room is available
-        boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
-        //check that event doesn't have speakers organized
-        boolean isEventAvailable = eventManager.hasSpeaker(eventId);
+        boolean isEventAvailable = !eventManager.hasSpeaker(eventId);
         //schedule the speaker
-        if (isSpeakerAvailable && isRoomAvailable && isEventAvailable){
+        if (isSpeakerAvailable && isEventAvailable){
             // add speaker to event's properties
             eventManager.setSpeaker(speakerId,eventId);
             // add event to speaker's properties
@@ -146,12 +131,27 @@ public class OrganizerController {
         }
         //return if speaker was not scheduled
         return false;
+    }
 
+    /**
+     * Checks the system to see if the room exists
+     * @param roomNumber the number of the room being searched for
+     * @return true if the room is in the system, false if the room doesn't exists
+     */
+    public boolean roomExists(String roomNumber){
+        boolean roomExists = false;
+        for (Room room: roomManager.getRooms()){
+            if (room.getRoomNumber().equals(roomNumber)) {
+                roomExists = true;
+                break;
+            }
+        }
+        return roomExists;
     }
 
     /**
      * Enters Organizer users into the system
-     * @param users list of all user ids in the system
+     * @param users list of all user ids in the system, each organizer in the list is a unique user (i.e has a unique id)
      */
     public void inputOrganizer(ArrayList<User> users){
         for(User user : users){
@@ -162,28 +162,83 @@ public class OrganizerController {
         }
     }
 
-
+    /**
+     * Sends a singular message to all attendees in the program
+     * @param message the content of the message being sent
+     */
     public void messageAllAttendees(String message){
         for (String attendeeID: attendeeManager.getUserIDOfAllAttendees()){
-            sendMessage(attendeeID, message);
+            messageManager.sendMessage(organizerId, attendeeID, message);
         }
     }
 
+    /**
+     * Sends a singular message to all speakers in the program
+     * @param message the content of the message being sent
+     */
     public void messageAllSpeakers(String message){
         for (String speakerID: speakerManager.getUserIDOfAllSpeakers()){
             sendMessage(speakerID, message);
         }
     }
 
+    /**
+     * Send message to another user
+     * @param receiverID the userId of the user the organizer is sending the message to
+     * @param message the content of the message being sent
+     */
     public void sendMessage(String receiverID, String message){
         messageManager.sendMessage(organizerId, receiverID, message);
     }
 
+    /**
+     * Shows all messages exchanged with other user (i.e the entire conversation)
+     * @param senderID the userId of the user whom the organizer shared the conversation
+     * @return an ArrayList where each element is a message exchanged in the conversation
+     */
     public ArrayList<Message> viewMessage(String senderID){
         return messageManager.getConversation(organizerId, senderID);
     }
 
+    /**
+     * Schedules organizer to attend event
+     * @param eventName the name of the event the Organizer will attend, if that event exists or has
+     *                  available seating
+     * @return true if the organizer has been scheduled, false if not
+     */
+    public boolean attendEvent(String eventName){
+        try {
+            String eventId = eventManager.getEventID(eventName);
+            if (eventManager.canAttend(eventId)){
+                eventManager.addAttendee(eventId, organizerId);
+                return true;
+            }
+            return false;
+        }
+        catch(EventNotFoundException e){
+            return false;
+        }
+    }
 
-
+    /**
+     * Organizer cancels their enrollment to attend an event
+     * @param eventName the name of the event the organizer will no longer attend,
+     *                  if event exists and the organizer is already attending the event
+     * @return a string that indicates the status of the organizer, if they were able to cancel their enrollment
+     * this will be displayed on the screen for user to see
+     */
+    public String cancelEnrollment(String eventName){
+        try{
+            String eventId = eventManager.getEventID(eventName);
+            eventManager.removeAttendee(eventId, organizerId);
+            return "Your Cancellation was successful";
+        }
+        catch(UserNotFoundException e){
+            return "You were never signed up for this event. Please select another event.";
+        }
+        catch(EventNotFoundException e){
+            return "This event doesn't exist. Please select a new existing event.";
+        }
+    }
 
 }

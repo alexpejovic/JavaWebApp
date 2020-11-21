@@ -4,6 +4,7 @@ import Modules.Exceptions.NonUniqueIdException;
 import Modules.UseCases.EventManager;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * A controller that creates new Events
@@ -27,15 +28,24 @@ public class EventCreator {
      * @param roomNumber the room number where the event will take place
      * @return true if the event was successfully created and entered into the system, false if it wasn't
      */
-    public boolean createEvent(LocalDateTime startTime, LocalDateTime endTime, String roomNumber) {
+    public boolean createEvent(LocalDateTime startTime, LocalDateTime endTime, String roomNumber, String eventName) {
         boolean eventCreated = true;
         try {
             String eventId = "e" + eventManager.getNumberOfEvents();
             eventManager.createEvent(roomNumber, startTime, endTime, eventId);
+            eventManager.getEvent(eventId).setName(eventName);
         } catch (NonUniqueIdException e) {
             eventCreated = false;
         }
         return eventCreated;
 
+    }
+
+    /**
+     * Retrieves a list of all the events in the system
+     * @return list of all event ids of the events in the system
+     */
+    public ArrayList<String> listOfEvents(){
+        return eventManager.getAllEventIDs();
     }
 }
