@@ -73,8 +73,8 @@ public class OrganizerUI {
         System.out.println("Enter, \n" +
                 "1, To Logout\n" + "2, To Exit the Program\n" +
                 "3, To get to work and do some organizing!\n" +
-                "4, To chat and message other users\n," +
-                "5, See total list of Events\n," +
+                "4, To chat and message other users\n" +
+                "5, See total list of Events\n" +
                 "6, Manage the Events you are attending\n");
         return this.validSelection(6);
     }
