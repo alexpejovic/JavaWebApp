@@ -9,7 +9,7 @@ import java.io.*;
  */
 public class MessageGateway {
 
-    private final String filename = "res/messages.ser";
+    private String filename = "res/messages.ser";
 
     //To run the unit test, this filename must be used
     //private final String filename = "messagesTest.ser";
@@ -54,5 +54,9 @@ public class MessageGateway {
         } catch (FileNotFoundException e) {
             System.out.println(filename + " not found");
         }
+    }
+
+    public void setFilename(String newFilename) {
+        filename = newFilename;
     }
 }
