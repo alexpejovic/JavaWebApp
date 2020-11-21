@@ -62,7 +62,6 @@ public class OrganizerUI {
         input.close();
 
         return userInput == 1;
-
     }
 
     /**
@@ -248,7 +247,8 @@ public class OrganizerUI {
         String name = input.nextLine();
         while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1), name)){
             System.out.println("I'm sorry, but either the room you have chosen is not available at this time.\n " +
-                    "Please select a different room or a different time");
+                    "Please select a different room");
+            name = input.nextLine();
         }
         System.out.println("The Event " + name + " was successfully added to the program and scheduled to the " +
                 "room with room number " + roomNumber);
@@ -270,6 +270,11 @@ public class OrganizerUI {
         System.out.println("Input the time you wish your event to end\n"+
                 "in the form of YYYY-MM-dd HH:mm");
         LocalDateTime endTime = LocalDateTime.parse(event.nextLine(), formatter);
+
+        while(endTime.compareTo(startTime) <= 0){
+            System.out.println("Pick a time at least one hour after the start time you have selected");
+            endTime = LocalDateTime.parse(event.nextLine(), formatter);
+        }
 
         ArrayList<LocalDateTime> dates = new ArrayList<>();
         dates.add(startTime);
