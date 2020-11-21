@@ -1,7 +1,6 @@
 package Modules.Controllers;
 import Modules.Entities.*;
 import Modules.Exceptions.EventNotFoundException;
-import Modules.Exceptions.NonUniqueIdException;
 import Modules.Exceptions.UserNotFoundException;
 import Modules.UseCases.*;
 
@@ -81,11 +80,10 @@ public class OrganizerController {
      * Creates a new speaker account and passes/adds it into the program
      * @param userName the username of the Speaker account
      * @param password the password of the Speaker account
-     * @return true if the speaker account was created and added into the system
      */
-    public boolean createSpeakerAccount(String userName, String password){
+    public void createSpeakerAccount(String userName, String password){
         ArrayList<String> listOfEvents = eventManager.getAllEventIDs();
-        return accountCreator.createSpeakerAccount(userName, password, listOfEvents);
+        accountCreator.createSpeakerAccount(userName, password, listOfEvents);
     }
 
     /**

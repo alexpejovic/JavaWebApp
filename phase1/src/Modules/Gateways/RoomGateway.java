@@ -9,7 +9,7 @@ import java.util.ArrayList;
 */
 public class RoomGateway {
 
-    private final String filename = "res/rooms.ser";
+    private String filename = "res/rooms.ser";
 
     //To run the unit test, this filename must be used
     //private final String filename = "roomsTest.ser";
@@ -55,5 +55,9 @@ public class RoomGateway {
         } catch (FileNotFoundException e) {
             System.out.println(filename + " not found");
         }
+    }
+
+    public void setFilename(String newFilename) {
+        filename = newFilename;
     }
 }

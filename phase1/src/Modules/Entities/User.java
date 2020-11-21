@@ -2,12 +2,13 @@ package Modules.Entities;
 
 import Modules.Exceptions.UserNotFoundException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * An abstract class that all the types of user entities inherit from
  */
-public abstract class User {
+public abstract class User implements Serializable {
 
     private String username;
     private String password;

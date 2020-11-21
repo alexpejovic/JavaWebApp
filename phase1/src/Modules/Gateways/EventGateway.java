@@ -9,7 +9,7 @@ import java.io.*;
  */
 public class EventGateway {
 
-    private final String filename = "res/events.ser";
+    private String filename = "res/events.ser";
 
     //To run the unit test, this filename must be used
     //private final String filename = "eventsTest.ser";
@@ -54,5 +54,9 @@ public class EventGateway {
         } catch (FileNotFoundException e) {
             System.out.println(filename + " not found");
         }
+    }
+
+    public void setFilename(String newFilename) {
+        filename = newFilename;
     }
 }
