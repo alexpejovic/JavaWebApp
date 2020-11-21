@@ -32,11 +32,12 @@ public class AttendeeUI {
         System.out.println("---Main Menu---\n");
 
         while(true){
-
+            System.out.println(); // for spacing
             System.out.println("Enter 1 if you'd like to sign up to an event\n" +
                     "Enter 2 if you'd like to view the list of events you are currently signed up for\n" +
                     "Enter 3 if you'd like to cancel your enrollment into attending an event\n" +
                     "Enter 4 if you'd like to view/send messages to another user\n" +
+                    "Enter 5 if you'd like to add a user to your friend list\n"+
                     "Enter l to logout\n" +
                     "Enter q to exit");
 
@@ -52,6 +53,9 @@ public class AttendeeUI {
                     break;
                 case "4":
                     runMessageSystem();
+                    break;
+                case "5":
+                    addFriend();
                     break;
                 case "l":
                     return true;
@@ -78,7 +82,7 @@ public class AttendeeUI {
 
         if(userId.matches("[sa][0-9]+")){
 
-            System.out.println("---Messages with User with userID" + userId + "---\n");
+            System.out.println("---Messages with User with userID " + userId + "---\n");
             for(String message: messagePresenter.getMessageList(attendeeController.seeMessage(userId))){
                 System.out.println(message);
             }
@@ -87,7 +91,12 @@ public class AttendeeUI {
 
             if(!message.equals("")){
                 try {
-                    attendeeController.sendMessage(userId, message);
+                    if(attendeeController.sendMessage(userId, message)){
+                        System.out.println("Message sent.");
+                    }
+                    else{
+                        System.out.println("Sorry, that person is not on your friend list. Message not sent");
+                    }
                 }
                 catch (UserNotFoundException e){
                     System.out.println("There is no user with that ID");
@@ -174,5 +183,22 @@ public class AttendeeUI {
             return false;
         }
     }
+
+    private void addFriend(){
+        Scanner input = new Scanner(System.in);
+        System.out.println("Type the ID of the attendee of whom which you'd like to add as a friend");
+        try{
+            if(attendeeController.addUserToFriendList(input.nextLine())){
+                System.out.println("Successfully added to friend list");
+            }
+            else{
+                System.out.println("That user is already in your friend list!");
+            }
+        }catch (UserNotFoundException e){
+            System.out.println("There is no attendee with that ID");
+        }
+    }
+
+
 
 }
