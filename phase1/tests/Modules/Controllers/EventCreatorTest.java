@@ -37,5 +37,8 @@ public class EventCreatorTest {
         assertTrue(eventCreator.createEvent(startTime, endTime, "21", "New Event"));
         assertEquals(1, eventManager.getNumberOfEvents());
         assertEquals("e0", eventManager.getEventList().get(0).getID());
+
+        assertEquals("e0", eventCreator.listOfEvents().get(0));
+        assertEquals(1, eventCreator.listOfEvents().size());
     }
 }

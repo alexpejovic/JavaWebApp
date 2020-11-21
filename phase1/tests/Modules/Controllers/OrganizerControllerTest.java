@@ -130,7 +130,7 @@ public class OrganizerControllerTest{
 
     @Test
     public void testInputOrganizer(){
-        Organizer organizer1 = new Organizer("Michael Scott", "Dundermifflin", "o123");
+        Organizer organizer1 = new Organizer("Michael Scott", "1234", "o123");
         Organizer organizer2 = new Organizer("Jim Halpert", "beets", "o124");
         Organizer organizer3 = new Organizer("Pam Beasley", "artSchool", "o125");
 
@@ -142,6 +142,8 @@ public class OrganizerControllerTest{
         organizerController.inputOrganizer(organizerList);
 
         assertEquals(3, organizerManager.getNumberOfOrganizers());
+        assertTrue(organizerManager.isUser("Michael Scott"));
+        assertTrue(organizerManager.validatePassword("Michael Scott", "1234"));
 
     }
 
