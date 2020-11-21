@@ -12,7 +12,7 @@ public class RoomGateway {
     private String filename = "res/rooms.ser";
 
     //To run the unit test, this filename must be used
-    //private final String filename = "roomsTest.ser";
+    //private String filename = "roomsTest.ser";
 
     public ArrayList<Room> readSerFile() {
 
