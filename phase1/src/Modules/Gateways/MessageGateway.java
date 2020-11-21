@@ -12,7 +12,7 @@ public class MessageGateway {
     private String filename = "res/messages.ser";
 
     //To run the unit test, this filename must be used
-    //private final String filename = "messagesTest.ser";
+    //private String filename = "messagesTest.ser";
 
     public ArrayList<Message> readSerFile() {
 

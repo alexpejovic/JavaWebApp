@@ -66,7 +66,7 @@ public class CreateAccountUI {
                     return false;
             }
         }catch(NonUniqueUsernameException e){
-            System.out.println("Sorry, someone else already has that username, please try again");
+            System.out.println("Sorry, someone else already has that username, please re-run the program");
             return false;
         }
 
