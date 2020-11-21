@@ -73,8 +73,8 @@ public class OrganizerUI {
         System.out.println("Enter, \n" +
                 "1, To Logout\n" + "2, To Exit the Program\n" +
                 "3, To get to work and do some organizing!\n" +
-                "4, To chat and message other users\n," +
-                "5, See total list of Events\n," +
+                "4, To chat and message other users\n" +
+                "5, See total list of Events\n" +
                 "6, Manage the Events you are attending\n");
         return this.validSelection(6);
     }
@@ -242,7 +242,7 @@ public class OrganizerUI {
             roomNumber = input.nextLine();
         }
         System.out.println("Input the time you wish your event to begin\n"+
-                "in the form of yyyy-MM-dd: HH:mm");
+                "in the form of yyyy-MM-dd HH:mm");
         ArrayList<LocalDateTime> dates = dateTimeFormatter(input, roomNumber);
         System.out.println("What is the name of the Event?");
         String name = input.nextLine();
@@ -268,7 +268,7 @@ public class OrganizerUI {
         LocalDateTime startTime = LocalDateTime.parse(event.nextLine(), formatter);
 
         System.out.println("Input the time you wish your event to end\n"+
-                "in the form of year-month-day: hour:minute:second");
+                "in the form of YYYY-MM-dd HH:mm");
         LocalDateTime endTime = LocalDateTime.parse(event.nextLine(), formatter);
 
         ArrayList<LocalDateTime> dates = new ArrayList<>();
