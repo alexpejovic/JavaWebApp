@@ -45,9 +45,9 @@ public class OrganizerUI {
      * @return true if the Organizer user wants to sign out, return false if the user wants to exit the program
      */
     public boolean run() {
-        int userInput = 0;
+        int userInput;
         do{
-            userInput = initialOpening(userInput);
+            userInput = initialOpening();
             if (userInput == 3) {
                 runOrganizing();
             } else if (userInput == 4) {
@@ -67,18 +67,16 @@ public class OrganizerUI {
 
     /**
      * Gives Organizer it's initial prompt for usage
-     * @param userInput the input number the Organizer inputs corresponding to their desired operation
      * @return the next input number they select for further usage
      */
-    private int initialOpening(int userInput){
+    private int initialOpening(){
         System.out.println("Enter, \n" +
                 "1, To Logout\n" + "2, To Exit the Program\n" +
                 "3, To get to work and do some organizing!\n" +
                 "4, To chat and message other users\n," +
                 "5, See total list of Events\n," +
                 "6, Manage the Events you are attending\n");
-        userInput = this.validSelection();
-        return userInput;
+        return this.validSelection(6);
     }
 
     /**
@@ -90,7 +88,7 @@ public class OrganizerUI {
                 "2, to create a Speaker Account\n" +
                 "3, to schedule a Speaker to an Event\n" +
                 "4, add a room into the system\n");
-        int numChosen = this.validSelection();
+        int numChosen = this.validSelection(4);
         runOrganizingSpecifics(numChosen);
     }
 
@@ -103,7 +101,7 @@ public class OrganizerUI {
             "2, send message to all Attendees\n" +
             "3, send message to all Speakers\n" +
             "4, view messages with another user\n");
-        int numChosen = this.validSelection();
+        int numChosen = this.validSelection(4);
         runMessagingSpecifics(numChosen);
     }
 
@@ -133,7 +131,7 @@ public class OrganizerUI {
      * Private helper that makes sure that user input is valid selection and returns the user input as an integer type
      * for method convenience
      */
-    private int validSelection() {
+    private int validSelection(int num) {
         int selection = 0;
 
         boolean isValidSelection = false;
@@ -141,7 +139,7 @@ public class OrganizerUI {
             try {
                 selection = Integer.parseInt(input.nextLine());
 
-                if (selection >= 1 && selection <= 4) {
+                if (selection >= 1 && selection <= num) {
                     // selection is within Range of options
                     System.out.println();
                     isValidSelection = true;
