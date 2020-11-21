@@ -22,7 +22,6 @@ public class OrganizerUI {
     private EventPresenter eventPresenter;
     private EventCreator eventCreator;
     private AccountCreator accountCreator;
-    private Scanner input = new Scanner(System.in);
 
     /**
      * Constructor for OrganizerUI
@@ -59,7 +58,6 @@ public class OrganizerUI {
             }
 
         }while(userInput != 1 && userInput != 2);
-        input.close();
 
         return userInput == 1;
     }
@@ -131,6 +129,7 @@ public class OrganizerUI {
      * for method convenience
      */
     private int validSelection(int num) {
+        Scanner input = new Scanner(System.in);
         int selection = 0;
 
         boolean isValidSelection = false;
@@ -158,6 +157,7 @@ public class OrganizerUI {
      * Private helper that enables Organizer to message all Attendees currently using the program
      */
     private void messageAllAttendees(){
+        Scanner input = new Scanner(System.in);
 
         System.out.println("Input the message you wish to send to all Attendees");
 
@@ -172,6 +172,7 @@ public class OrganizerUI {
      * Private helper that enables Organizer to message all Speakers currently using the program
      */
     private void messageAllSpeakers(){
+        Scanner input = new Scanner(System.in);
 
         System.out.println("Input the message you wish to send to all Speakers");
 
@@ -185,6 +186,7 @@ public class OrganizerUI {
      * Private helper that enable Organizer to send a message to their desired recipient
      */
     private void sendMessage(){
+        Scanner input = new Scanner(System.in);
         System.out.println("Input to whom you wish to send the message");
         String userName = input.nextLine();
 
@@ -199,6 +201,7 @@ public class OrganizerUI {
      * Private helper that enables Organizer to view a message that they have received from a specific sender
      */
     private void seeMessage(){
+        Scanner input = new Scanner(System.in);
         System.out.println("Input which user you want to see conversation with");
         String userName = input.nextLine();
         ArrayList<Message> conversation = organizerController.viewMessage(userName);
@@ -213,6 +216,7 @@ public class OrganizerUI {
      * Private helper that enables organizer to add a new room into the system
      */
     private void addNewRoom(){
+        Scanner input = new Scanner(System.in);
         System.out.println("The roomNumber of the room you wish to create");
         String roomNumber = input.nextLine();
         System.out.println("The maximum capacity of the room");
@@ -232,6 +236,7 @@ public class OrganizerUI {
      * Private helper that enables Organizer schedule a new event into the system
      */
     private void scheduleEvent(){
+        Scanner input = new Scanner(System.in);
         //either your time, speaker or room is unavailable please try again
         System.out.println("Input the room number of the room where you wish to schedule your Event to take place");
         String roomNumber = input.nextLine();
@@ -288,6 +293,7 @@ public class OrganizerUI {
      * Private helper that enables Organizer to create a Speaker account and add it to the system
      */
     private void createSpeakerAccount(){
+        Scanner input = new Scanner(System.in);
 
         System.out.println("Input the username of the Speaker you wish to create");
         String speakerUserName = input.nextLine();
@@ -310,9 +316,10 @@ public class OrganizerUI {
      * Private helper that allows organizer to decide if they want to attend or cancel an event for attendance
      */
     private void manageEventsAttending(){
-        System.out.println("Would you like to: \n" +
-                "1, Attend a new Event?\n" +
-                "2, Cancel your spot in an event you are scheduled for?\n");
+        Scanner input = new Scanner(System.in);
+        System.out.println("Would you like to: \n," +
+                "1, Attend a new Event?," +
+                "2, Cancel your spot in an event you are scheduled for?");
         String choice = input.nextLine();
         while (!choice.equals("1") && !choice.equals("2")){
             System.out.println("Please select a valid option");
@@ -326,6 +333,7 @@ public class OrganizerUI {
      * Private helper that allows Organizers to attend an event
      */
     private void attendEvent(){
+        Scanner input = new Scanner(System.in);
         System.out.println("Please indicate which Event you would like to attend");
         String eventName = input.nextLine();
         while(!organizerController.attendEvent(eventName)){
@@ -341,6 +349,7 @@ public class OrganizerUI {
      * Private helper that enable Organizer to cancel their attendance for an event
      */
     private void cancelAttendanceForEvent(){
+        Scanner input = new Scanner(System.in);
         System.out.println("Please indicate the Event you would like to attend");
         String eventName = input.nextLine();
         while(!organizerController.cancelEnrollment(eventName).equals("Your Cancellation was successful")){
@@ -355,6 +364,7 @@ public class OrganizerUI {
      * Private helper that enables Organizer to schedule a Speaker for an event
      */
     private void scheduleSpeaker(){
+        Scanner input = new Scanner(System.in);
         System.out.println("Input the username of the Speaker you wish to schedule to present");
         String speakerUserName = input.nextLine();
         while (!organizerController.isSpeakerInProgram(speakerUserName)){

@@ -18,7 +18,6 @@ public class SpeakerUI {
     private EventPresenter eventPresenter;
     private MessagePresenter messagePresenter;
 
-    private Scanner input = new Scanner(System.in);
 
 
     /**
@@ -72,7 +71,6 @@ public class SpeakerUI {
 
         }while (!(selection==1) && !(selection==2)); // loop stops if user wants to logout or exit
 
-        input.close(); // closing Scanner
 
         if (selection == 1){
             // Logout
@@ -113,6 +111,7 @@ public class SpeakerUI {
      * private helper that allows speakers to message single attendees that are attending their events
      */
     private void messageAttendee(){
+        Scanner input = new Scanner(System.in);
         System.out.println("Please input the recipient's user ID");
 
         String IdString = input.nextLine();
@@ -135,6 +134,7 @@ public class SpeakerUI {
      * private helper that allows speakers to message all attendees that are attending their events
      */
     private void messageAllAttendees(){
+        Scanner input = new Scanner(System.in);
         System.out.println("Please input a message");
 
         String messageString = input.nextLine();
@@ -171,6 +171,7 @@ public class SpeakerUI {
      * private helper that makes sure that user input is valid selection and returns the
      */
     private int validSelection(){
+        Scanner input = new Scanner(System.in);
         int selection = 0;
 
         boolean isValidSelection = false;
