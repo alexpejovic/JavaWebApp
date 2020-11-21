@@ -12,7 +12,7 @@ public class UserGateway {
     private String filename = "res/users.ser";
 
     //To run the unit test, this filename must be used
-    //private final String filename = "usersTest.ser";
+    //private String filename = "usersTest.ser";
 
     public ArrayList<User> readSerFile() {
 

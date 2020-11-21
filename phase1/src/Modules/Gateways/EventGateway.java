@@ -12,7 +12,7 @@ public class EventGateway {
     private String filename = "res/events.ser";
 
     //To run the unit test, this filename must be used
-    //private final String filename = "eventsTest.ser";
+    //private String filename = "eventsTest.ser";
 
     public ArrayList<Event> readSerFile() {
 
