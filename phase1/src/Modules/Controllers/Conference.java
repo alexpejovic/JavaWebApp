@@ -1,6 +1,5 @@
 package Modules.Controllers;
 
-import Modules.Controllers.*;
 import Modules.Entities.*;
 import Modules.Gateways.EventGateway;
 import Modules.Gateways.MessageGateway;
@@ -72,12 +71,7 @@ public class Conference {
     private ArrayList<Attendee> readAttendees() {
         UserGateway userGateway = new UserGateway();
         ArrayList<User> users = userGateway.readSerFile();
-        try {
             return getAttendeesFromUsers(users);
-        }
-        catch (NullPointerException e) {
-            return new ArrayList<Attendee>();
-        }
     }
 
     /**
@@ -86,40 +80,29 @@ public class Conference {
     private ArrayList<Organizer> readOrganizers() {
         UserGateway userGateway = new UserGateway();
         ArrayList<User> users = userGateway.readSerFile();
-        try {
             return getOrganizersFromUsers(users);
-        }
-        catch (NullPointerException e) {
-            return new ArrayList<Organizer>();
-        }
     }
 
+    /**
+     * @return an arraylist of Speaker entities
+     */
     private ArrayList<Speaker> readSpeakers() {
         UserGateway userGateway = new UserGateway();
         ArrayList<User> users = userGateway.readSerFile();
-        try {
             return getSpeakersFromUsers(users);
-        }
-        catch (NullPointerException e) {
-            return new ArrayList<Speaker>();
-        }
     }
 
     public void run() {
         if (createNewAccount()) {
             CreateAccountUI createAccountUI = new CreateAccountUI(accountCreator);
-//            System.out.println("Create Account UI!");
             createAccountUI.run();
         }
-//        else {
         LogInUI loginUI = new LogInUI(login);
         boolean userLogin = loginUI.run();
 
-        // Run login UI and get logged-in user type
         if (userLogin) {
             boolean sessionOutcome = initUserSession();
         }
-//        }
     }
 
     public boolean initUserSession() {
@@ -142,7 +125,6 @@ public class Conference {
         }
         else if (userID.startsWith("s")) {
             SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager, attendeeManager, messageManager);
-            // TODO: call speaker UI with speakerController
             SpeakerUI speakerUI = new SpeakerUI(speakerController, eventPresenter,messagePresenter);
             logout = speakerUI.run();
         }
