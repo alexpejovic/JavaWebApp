@@ -12,4 +12,4 @@ If you wish to reset the data back to the sample data, run the class PopulateDat
 If you wish to test an empty conference with no data, uncomment the specified block in PopulateData to write empty ArrayLists to the .ser files
 
 
-Please be careful to note if the prompt is asking for a name (username, event name) or id.
+Please be careful to note if the prompt is asking for a name like username, event name(for the organizer options) or id.(for the speaker and attendee options)
