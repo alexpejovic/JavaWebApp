@@ -103,6 +103,15 @@ public class OrganizerController {
     }
 
     /**
+     * Checks if the speaker with the given username is in the system
+     * @param username the username of the speaker
+     * @return if the speaker exists in the system
+     */
+    public boolean isSpeakerInProgram(String username){
+        return speakerManager.isUser(username);
+    }
+
+    /**
      * Schedules speaker to speak at an existing event if speaker, event and room are available
      * @param username the id of the Speaker being scheduled for the Event
      * @param roomNumber the number of the room where the event will be help and where the speaker will present

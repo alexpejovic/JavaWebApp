@@ -188,11 +188,11 @@ public class OrganizerUI {
         System.out.println("Input to whom you wish to send the message");
         String userName = input.nextLine();
 
-        System.out.println("Input the message you wish to send to all Speakers");
+        System.out.println("Input the message you wish to send");
         String messageContent = input.nextLine();
 
         organizerController.sendMessage(userName,messageContent);
-        System.out.println("Message was sent to" + userName);
+        System.out.println("Message was sent to " + userName);
     }
 
     /**
@@ -247,8 +247,10 @@ public class OrganizerUI {
         String name = input.nextLine();
         while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1), name)){
             System.out.println("I'm sorry, but either the room you have chosen is not available at this time.\n " +
-                    "Please select a different room");
-            name = input.nextLine();
+                    "Please select a different time");
+            System.out.println("Input the time you wish your event to begin\n"+
+                    "in the form of yyyy-MM-dd HH:mm");
+            dates = dateTimeFormatter(input, roomNumber);
         }
         System.out.println("The Event " + name + " was successfully added to the program and scheduled to the " +
                 "room with room number " + roomNumber);
@@ -308,9 +310,9 @@ public class OrganizerUI {
      * Private helper that allows organizer to decide if they want to attend or cancel an event for attendance
      */
     private void manageEventsAttending(){
-        System.out.println("Would you like to: \n," +
-                "1, Attend a new Event?," +
-                "2, Cancel your spot in an event you are scheduled for?");
+        System.out.println("Would you like to: \n" +
+                "1, Attend a new Event?\n" +
+                "2, Cancel your spot in an event you are scheduled for?\n");
         String choice = input.nextLine();
         while (!choice.equals("1") && !choice.equals("2")){
             System.out.println("Please select a valid option");
@@ -327,11 +329,11 @@ public class OrganizerUI {
         System.out.println("Please indicate which Event you would like to attend");
         String eventName = input.nextLine();
         while(!organizerController.attendEvent(eventName)){
-            System.out.println("Oh no! Unfortunately you are unable to attend this event!\n," +
+            System.out.println("Oh no! Unfortunately you are unable to attend this event!\n" +
                     "Don't take it personally. Simply pick a different Event");
             eventName = input.nextLine();
         }
-        organizerController.attendEvent(eventName);
+        //organizerController.attendEvent(eventName);
         System.out.println("You are scheduled to attend the following Event: " + eventName);
     }
 
@@ -339,7 +341,7 @@ public class OrganizerUI {
      * Private helper that enable Organizer to cancel their attendance for an event
      */
     private void cancelAttendanceForEvent(){
-        System.out.println("Please indicate the Event you would like to ");
+        System.out.println("Please indicate the Event you would like to attend");
         String eventName = input.nextLine();
         while(!organizerController.cancelEnrollment(eventName).equals("Your Cancellation was successful")){
             System.out.println(organizerController.cancelEnrollment(eventName));
@@ -355,9 +357,19 @@ public class OrganizerUI {
     private void scheduleSpeaker(){
         System.out.println("Input the username of the Speaker you wish to schedule to present");
         String speakerUserName = input.nextLine();
+        while (!organizerController.isSpeakerInProgram(speakerUserName)){
+            System.out.println("The speaker with username "+ speakerUserName+ " doesn't exist, please select and existing speaker");
+            speakerUserName = input.nextLine();
+        }
         System.out.println("Input the room number where " + speakerUserName + " will present");
         String roomNumber = input.nextLine();
+        while(!organizerController.roomExists(roomNumber)){
+            System.out.println("Oops the room you have selected doesn't exist. Please select and existing room");
+            roomNumber = input.nextLine();
+        }
 
+        System.out.println("Input the time you wish your event to begin\n"+
+                "in the form of yyyy-MM-dd HH:mm");
         ArrayList<LocalDateTime> dates = dateTimeFormatter(input, roomNumber);
         System.out.println("Input the name of the Event you wish for the speaker to speak at");
         String eventName = input.nextLine();
