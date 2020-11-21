@@ -1,6 +1,7 @@
 package Modules.UseCases;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import Modules.Entities.Message;
@@ -104,5 +105,25 @@ public class MessageManager {
 
         Collections.sort(conversation);
         return conversation;
+    }
+
+    /**
+     * Return a list of all unique messages, sorted by date, that are stored in the <messages> hashmap
+     * @return an arraylist of Message entities
+     */
+    public ArrayList<Message> getAllMessages() {
+        Collection<ArrayList<Message>> allUserMessages = messages.values();
+        ArrayList<Message> allMessages = new ArrayList<>();
+
+        for (ArrayList<Message> list : allUserMessages) {
+            for (Message message : list) {
+                if (!allMessages.contains(message)) {
+                    allMessages.add(message);
+                }
+            }
+        }
+
+        Collections.sort(allMessages);
+        return allMessages;
     }
 }

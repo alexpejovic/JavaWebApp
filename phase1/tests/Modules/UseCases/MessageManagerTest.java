@@ -102,4 +102,29 @@ public class MessageManagerTest {
         assertTrue(mm.getUserMessages(a2.getID()).size() == 1);
     }
 
+    @Test
+    public void testGetAllMessages() {
+        ArrayList<Message> messages = new ArrayList<>();
+        messages.add(message3);
+        messages.add(message1);
+        messages.add(message2);
+
+        MessageManager mm = new MessageManager(messages);
+        ArrayList<Message> allMessages = mm.getAllMessages();
+
+        assertEquals(message1, allMessages.get(0));
+        assertEquals(message2, allMessages.get(1));
+        assertEquals(message3, allMessages.get(2));
+
+        mm.sendMessage("user1", "user3", "this is a new message");
+        mm.sendMessage("user3", "user1", "bro what are you talking about?");
+
+        allMessages = mm.getAllMessages();
+        int len = allMessages.size();
+
+        assertEquals(message1, allMessages.get(0));
+        assertEquals("bro what are you talking about?", allMessages.get(len - 1).getContent());
+        assertEquals("user3", allMessages.get(len - 2).getReceiverID());
+    }
+
 }

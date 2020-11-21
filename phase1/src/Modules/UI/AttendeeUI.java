@@ -25,7 +25,7 @@ public class AttendeeUI {
      * wishes to quit menu.
      *
      */
-    public void run(){
+    public boolean run(){
 
         Scanner input = new Scanner(System.in);
 
@@ -37,19 +37,26 @@ public class AttendeeUI {
                     "Enter 2 if you'd like to view the list of events you are currently signed up for\n" +
                     "Enter 3 if you'd like to cancel your enrollment into attending an event\n" +
                     "Enter 4 if you'd like to view/send messages to another user\n" +
+                    "Enter l to logout\n" +
                     "Enter q to exit");
 
             switch (input.nextLine()){
                 case "1":
                     runSignUp();
+                    break;
                 case "2":
                     displayEventList();
+                    break;
                 case "3":
                     runEnrollmentCancellation();
+                    break;
                 case "4":
                     runMessageSystem();
+                    break;
+                case "l":
+                    return true;
                 case "q":
-                    return;
+                    return false;
                 default:
                     System.out.println("Improper input, try again");
             }
