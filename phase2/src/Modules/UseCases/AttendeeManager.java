@@ -63,14 +63,15 @@ public class AttendeeManager extends UserManager{
      * Checks if a specific attendee is available in a certain time period
      * A attendee is considered available if they are not attending any events
      * during the specified time period
-     * @param attendee the attendee whose availability we want to check
+     * @param attendeeID the ID of the attendee whose availability we want to check
      * @param startTime the beginning of the time period we want to check
      * @param endTime the end of the time period we want to check
      * @param eventManager the current EventManager
      * @return true if attendee is available between startTime and endTime, false otherwise
      */
-    public boolean timeAvailable(Attendee attendee, LocalDateTime startTime, LocalDateTime endTime,
+    public boolean timeAvailable(String attendeeID, LocalDateTime startTime, LocalDateTime endTime,
                                  EventManager eventManager){
+        Attendee attendee = getAttendee(attendeeID);
         ArrayList<String> attendeeEventList = attendee.getEventsList();
         for (String id : attendeeEventList) {
             if(eventManager.isEventInTimePeriod(id,startTime,endTime)){
@@ -83,11 +84,12 @@ public class AttendeeManager extends UserManager{
     /**
      * Adds the given event's eventID to the given attendee's list of events
      * that they are attending if they don't already have a event at the same time
-     * @param attendee the attendee whose events list we want to alter
+     * @param attendeeID the ID of the attendee whose events list we want to alter
      * @param event the event that we want to add to the attendee's events list
      */
-    public void addEventToAttendee(Attendee attendee, Event event, EventManager eventManager){
-        if (timeAvailable(attendee, event.getStartTime(), event.getEndTime(), eventManager)){
+    public void addEventToAttendee(String attendeeID, Event event, EventManager eventManager){
+        Attendee attendee = getAttendee(attendeeID);
+        if (timeAvailable(attendeeID, event.getStartTime(), event.getEndTime(), eventManager)){
             attendee.addEvent(event.getID());
         }
     }
@@ -187,6 +189,36 @@ public class AttendeeManager extends UserManager{
             allAttendeeIDs.add(attendee.getID());
         }
         return allAttendeeIDs;
+    }
+
+    /**
+     * Adds a new user ID to an attendee's friends list
+     * @param thisUserID the ID of attendee whose friends list is being changed
+     * @param newFriendID the ID that is being added to the friends list
+     */
+    public void addToFriendList(String thisUserID, String newFriendID){
+        Attendee attendee = getAttendee(thisUserID);
+        attendee.addToFriendList(newFriendID);
+    }
+
+    /**
+     * Return a shallow copy of the friend list of the attendee with ID attendeeID
+     * @param attendeeID the ID of the attendee whose friend list we want to return
+     * @return a shallow copy of the friend list of the specified attendee
+     */
+    public ArrayList<String> getFriendList(String attendeeID){
+        Attendee attendee = getAttendee(attendeeID);
+        return attendee.getFriendList();
+    }
+
+    /**
+     * Return a shallow copy of the attendee with ID attendeeID events list
+     * @param attendeeID the ID of the attendee whose events list we want to return
+     * @return the a shallow copy of the events list of the specfied attendee
+     */
+    public ArrayList<String> getEventsList(String attendeeID){
+        Attendee attendee = getAttendee(attendeeID);
+        return attendee.getEventsList();
     }
 
 }
