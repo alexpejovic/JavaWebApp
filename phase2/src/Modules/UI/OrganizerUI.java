@@ -204,7 +204,7 @@ public class OrganizerUI {
         Scanner input = new Scanner(System.in);
         System.out.println("Input which user you want to see conversation with");
         String userName = input.nextLine();
-        ArrayList<Message> conversation = organizerController.viewMessage(userName);
+        ArrayList<String> conversation = organizerController.viewMessage(userName);
         ArrayList<String> fullConversation = messagePresenter.getMessageList(conversation);
 
         for (String message: fullConversation){

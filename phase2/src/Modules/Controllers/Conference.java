@@ -115,7 +115,7 @@ public class Conference {
     public boolean initUserSession() {
         String userID = login.getLoggedUser();
         EventPresenter eventPresenter = new EventPresenter(eventManager);
-        MessagePresenter messagePresenter = new MessagePresenter();
+        MessagePresenter messagePresenter = new MessagePresenter(messageManager);
         boolean logout = true;
 
         if (userID.startsWith("a")) {

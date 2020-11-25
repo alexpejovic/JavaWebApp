@@ -104,10 +104,10 @@ public class SpeakerController {
     }
 
     /**
-     * Returns all the messages that the speaker specified by the stored speakerID has sent or received
-     * @return an ArrayList of all messages that the speaker sent or received
+     * Returns the ids of all the messages that the speaker specified by the stored speakerID has sent or received
+     * @return an ArrayList of messageIDs of all messages that the speaker sent or received
      */
-    public ArrayList<Message> getAllMessages(){
+    public ArrayList<String> getAllMessages(){
         return messageManager.getUserMessages(speakerId);
     }
 

@@ -1,20 +1,27 @@
 package Modules.Presenters;
 
 import Modules.Entities.Message;
+import Modules.UseCases.MessageManager;
 
 import java.util.ArrayList;
 
 public class MessagePresenter {
+    MessageManager messageManager;
 
-    public ArrayList<String> getMessageList(ArrayList<Message> messages){
+    public MessagePresenter(MessageManager messageManager){
+        this.messageManager = messageManager;
+    }
+
+
+    public ArrayList<String> getMessageList(ArrayList<String> messages){
 
         ArrayList<String> conversation = new ArrayList<>();
 
-        for(Message message: messages){
+        for(String messageID: messages){
 
-            conversation.add("Sender ID : " + message.getSenderID() +
-            "\t\tReceiver ID: " + message.getReceiverID() +
-            "\t\t\t" + message.getContent()) ;
+            conversation.add("Sender ID : " + messageManager.getSenderIDOfMessage(messageID) +
+            "\t\tReceiver ID: " + messageManager.getReceiverIDOfMessage(messageID)  +
+            "\t\t\t" + messageManager.getContentOfMessage(messageID));
         }
 
         return conversation;

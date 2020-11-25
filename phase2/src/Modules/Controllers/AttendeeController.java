@@ -140,11 +140,11 @@ public class AttendeeController {
     }
 
     /**
-     * Returns the message received by user and the full conversation between the receiver and sender
+     * Returns the messageIDs of messages received by user and the full conversation between the receiver and sender
      * @param senderId the id of the user who sends the message
-     * @return array list of messages that correspond to the sorted conversation between sender and receiver
+     * @return array list of messageIDs of messages that correspond to the sorted conversation between sender and receiver
      */
-    public ArrayList<Message> seeMessage(String senderId){
+    public ArrayList<String> seeMessage(String senderId){
         return messageManager.getConversation(attendeeID, senderId);
     }
 

@@ -1,10 +1,12 @@
 package Modules.UseCases;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import Modules.Entities.Message;
+import Modules.Exceptions.MessageNotFoundException;
 
 
 /**
@@ -39,22 +41,30 @@ public class MessageManager {
     }
 
     /**
-     * Return an ArrayList of messages sent or received by the user with the given ID
+     * Return an ArrayList of IDs of messages sent or received by the user with the given ID
      * @param user The ID string of the user
-     * @return A list of messages sent or received by the user
+     * @return A list of messageIDs of messages sent or received by the user
      */
-    public ArrayList<Message> getUserMessages(String user) {
+    public ArrayList<String> getUserMessages(String user) {
+        ArrayList<Message> userMessages = new ArrayList<>();
+        ArrayList<String> userMessageIDs = new ArrayList<>();
 
         // to prevent NullPointerException
         if (messages.get(user)== null){
-            return new ArrayList<Message>();
+            return userMessageIDs;
         }
 
-        ArrayList<Message> userMessages = (ArrayList<Message>) messages.get(user).clone();
+        for(Message message: messages.get(user)){
+            userMessages.add(message);
+        }
 
         Collections.sort(userMessages);
 
-        return userMessages;
+        for (Message message: userMessages){
+            userMessageIDs.add(message.getID());
+        }
+
+        return userMessageIDs;
     }
 
     /**
@@ -85,12 +95,12 @@ public class MessageManager {
     }
 
     /**
-     * Return an ArrayList of messages between two users sorted by date
+     * Return an messageIDs of ArrayList of messages between two users sorted by date
      * @param user1 The ID string of the first user
      * @param user2 The ID string of the second user
-     * @return An ArrayList of messages between two users sorted by date
+     * @return An ArrayList of messageIDs of messages between two users sorted by date
      */
-    public ArrayList<Message> getConversation(String user1, String user2) {
+    public ArrayList<String> getConversation(String user1, String user2) {
         ArrayList<Message> conversation = new ArrayList<>();
         for (Message message : messages.get(user1)) {
             if (message.getReceiverID().equals(user2)) {
@@ -104,7 +114,11 @@ public class MessageManager {
         }
 
         Collections.sort(conversation);
-        return conversation;
+        ArrayList<String> conversationIDs = new ArrayList<>();
+        for (Message message: conversation){
+            conversationIDs.add(message.getID());
+        }
+        return conversationIDs;
     }
 
     /**
@@ -125,5 +139,64 @@ public class MessageManager {
 
         Collections.sort(allMessages);
         return allMessages;
+    }
+
+    /**
+     * private helper to return Message in this MessageManager matching given messageID
+     * Precondition: Message with messageID exists
+     * other wise throws MessageNotFound exception
+     */
+    private Message getMessage(String messageID){
+        for (ArrayList<Message> msgs:  messages.values()){
+            for(Message message: msgs){
+                if (message.getID().equals(messageID))
+                    return message;
+            }
+        }
+        throw new MessageNotFoundException();
+    }
+
+    /**
+     * Returns the senderID of the Message matching given message ID
+     * @param messageID the unique ID of the Message in question
+     * @return  the senderID of the Message matching given message ID
+     * @throws MessageNotFoundException if there is no message with messsageID
+     */
+    public String getSenderIDOfMessage(String messageID){
+        Message message = this.getMessage(messageID);
+        return message.getSenderID();
+    }
+
+    /**
+     * Returns the receiverID of the Message matching given message ID
+     * @param messageID the unique ID of the Message in question
+     * @return  the receiverID of the Message matching given message ID
+     * @throws MessageNotFoundException if there is no message with messsageID
+     */
+    public String getReceiverIDOfMessage(String messageID){
+        Message message = this.getMessage(messageID);
+        return message.getReceiverID();
+    }
+
+    /**
+     * Returns the content of the Message matching given message ID
+     * @param messageID the unique ID of the Message in question
+     * @return  the content of the Message matching given message ID
+     * @throws MessageNotFoundException if there is no message with messsageID
+     */
+    public String getContentOfMessage(String messageID){
+        Message message = this.getMessage(messageID);
+        return message.getContent();
+    }
+
+    /**
+     * Returns the time of the Message matching given message ID
+     * @param messageID the unique id of the Message in question
+     * @return  the date time of the Message matching given message ID
+     * @throws MessageNotFoundException if there is no message with messsageID
+     */
+    public LocalDateTime getTimeOfMessage(String messageID){
+        Message message = this.getMessage(messageID);
+        return message.getDateTime();
     }
 }

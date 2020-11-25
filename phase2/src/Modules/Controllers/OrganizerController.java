@@ -203,9 +203,9 @@ public class OrganizerController {
     /**
      * Shows all messages exchanged with other user (i.e the entire conversation)
      * @param senderID the userId of the user whom the organizer shared the conversation
-     * @return an ArrayList where each element is a message exchanged in the conversation
+     * @return an ArrayList where each element is a messageID of message exchanged in the conversation
      */
-    public ArrayList<Message> viewMessage(String senderID){
+    public ArrayList<String> viewMessage(String senderID){
         return messageManager.getConversation(organizerId, senderID);
     }
 

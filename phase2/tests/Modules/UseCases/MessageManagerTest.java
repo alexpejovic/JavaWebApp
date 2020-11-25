@@ -38,9 +38,9 @@ public class MessageManagerTest {
         messages.add(message2);
         messages.add(message3);
         MessageManager manager = new MessageManager(messages);
-        ArrayList<Message> userMessages = manager.getUserMessages("user1");
-        assertEquals(message1, userMessages.get(0));
-        assertEquals(message3, userMessages.get(1));
+        ArrayList<String> userMessages = manager.getUserMessages("user1");
+        assertEquals(message1.getID(), userMessages.get(0));
+        assertEquals(message3.getID(), userMessages.get(1));
     }
 
     // Test sendMessage
@@ -52,8 +52,8 @@ public class MessageManagerTest {
         messages.add(message3);
         MessageManager manager = new MessageManager(messages);
 
-        ArrayList<Message> user1Messages = manager.getUserMessages("user1");
-        ArrayList<Message> user2Messages = manager.getUserMessages("user2");
+        ArrayList<String> user1Messages = manager.getUserMessages("user1");
+        ArrayList<String> user2Messages = manager.getUserMessages("user2");
 
         assertEquals(2, user1Messages.size());
         assertEquals(2, user2Messages.size());
@@ -63,6 +63,9 @@ public class MessageManagerTest {
         user2Messages = manager.getUserMessages("user2");
         assertEquals(3, user1Messages.size());
         assertEquals(3, user2Messages.size());
+
+        System.out.println(user1Messages);
+        System.out.println(user2Messages);
 
         assertEquals(user1Messages.get(2), user2Messages.get(2));
     }
@@ -78,15 +81,15 @@ public class MessageManagerTest {
         manager.sendMessage("user1", "user2", "never gonna give you up");
         manager.sendMessage("user2", "user1", "never gonna let you down");
 
-        ArrayList<Message> conversation = manager.getConversation("user1", "user2");
+        ArrayList<String> conversation = manager.getConversation("user1", "user2");
 
-        assertEquals("user1", conversation.get(0).getSenderID());
-        assertEquals("user1", conversation.get(1).getSenderID());
-        assertEquals("user2", conversation.get(2).getSenderID());
+        assertEquals("user1", manager.getSenderIDOfMessage(conversation.get(0)));
+        assertEquals("user1", manager.getSenderIDOfMessage(conversation.get(1)));
+        assertEquals("user2", manager.getSenderIDOfMessage(conversation.get(2)));
 
-        assertEquals("yo event 2 is lit!", conversation.get(0).getContent());
-        assertEquals("never gonna give you up", conversation.get(1).getContent());
-        assertEquals("never gonna let you down", conversation.get(2).getContent());
+        assertEquals("yo event 2 is lit!",  manager.getContentOfMessage(conversation.get(0)));
+        assertEquals("never gonna give you up", manager.getContentOfMessage(conversation.get(1)));
+        assertEquals("never gonna let you down", manager.getContentOfMessage(conversation.get(2)));
     }
 
     @Test

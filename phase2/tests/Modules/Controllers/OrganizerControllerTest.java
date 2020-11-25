@@ -162,8 +162,10 @@ public class OrganizerControllerTest{
 
         organizerController.messageAllAttendees("Meeting in the Conference Room");
         for (String attendeeId:attendeeManager.getUserIDOfAllAttendees()) {
-            assertEquals("Meeting in the Conference Room", messageManager.getUserMessages(attendeeId).get(0).getContent());
-            assertEquals("o123", messageManager.getUserMessages(attendeeId).get(0).getSenderID());
+            assertEquals("Meeting in the Conference Room",
+                    messageManager.getContentOfMessage( messageManager.getUserMessages(attendeeId).get(0)));
+            assertEquals("o123",
+                    messageManager.getSenderIDOfMessage(messageManager.getUserMessages(attendeeId).get(0)));
         }
 
         Speaker s1 = new Speaker("Jim Halpert", "1234", "s1");
@@ -176,8 +178,10 @@ public class OrganizerControllerTest{
 
         organizerController.messageAllSpeakers("Birthday Party");
         for (String speakerId:speakerManager.getUserIDOfAllSpeakers()){
-            assertEquals("Birthday Party", messageManager.getUserMessages(speakerId).get(0).getContent());
-            assertEquals("o123", messageManager.getUserMessages(speakerId).get(0).getSenderID());
+            assertEquals("Birthday Party",
+                    messageManager.getContentOfMessage( messageManager.getUserMessages(speakerId).get(0)));
+            assertEquals("o123",
+                    messageManager.getSenderIDOfMessage(messageManager.getUserMessages(speakerId).get(0)));
         }
     }
 
@@ -191,18 +195,20 @@ public class OrganizerControllerTest{
         attendeeManager.addAttendee(a1);
         speakerManager.addSpeaker(s1);
 
-        assertEquals("yoooooo", messageManager.getUserMessages("s1").get(0).getContent());
-        assertEquals("o123", messageManager.getUserMessages("a1").get(0).getSenderID());
-        assertEquals("o123", messageManager.getUserMessages("s1").get(0).getSenderID());
-        assertEquals("yooooooo", messageManager.getUserMessages("a1").get(0).getContent());
+        assertEquals("yoooooo",messageManager.getContentOfMessage( messageManager.getUserMessages("s1").get(0)));
+        assertEquals("o123", messageManager.getSenderIDOfMessage(messageManager.getUserMessages("a1").get(0)));
+        assertEquals("o123", messageManager.getSenderIDOfMessage(messageManager.getUserMessages("s1").get(0)));
+        assertEquals("yooooooo", messageManager.getContentOfMessage(messageManager.getUserMessages("a1").get(0)));
 
         organizerController.messageAllSpeakers("Birthday Party");
         organizerController.messageAllAttendees("Meeting in the Conference Room");
 
-        assertEquals("Birthday Party", messageManager.getUserMessages("s1").get(1).getContent());
-        assertEquals("o123", messageManager.getUserMessages("a1").get(1).getSenderID());
-        assertEquals("o123", messageManager.getUserMessages("s1").get(1).getSenderID());
-        assertEquals("Meeting in the Conference Room", messageManager.getUserMessages("a1").get(1).getContent());
+        assertEquals("Birthday Party", messageManager.getContentOfMessage(messageManager.getUserMessages("s1").get(1)));
+        assertEquals("o123",  messageManager.getSenderIDOfMessage(messageManager.getUserMessages("a1").get(1)));
+        assertEquals("o123", messageManager.getSenderIDOfMessage(messageManager.getUserMessages("s1").get(1)));
+        assertEquals("Meeting in the Conference Room", messageManager.getContentOfMessage(messageManager.getUserMessages("a1").get(1)));
+
+
 
 
     }

@@ -118,6 +118,6 @@ public class AttendeeControllerTest {
         AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
                 messageManager);
         boolean result = attendeeController.sendMessage("a2345", "heyyyy");
-        assertEquals("heyyyy", attendeeController.seeMessage("a1234").get(0).getContent());
+        assertEquals("heyyyy", messageManager.getContentOfMessage(attendeeController.seeMessage("a1234").get(0)));
     }
 }

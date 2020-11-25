@@ -59,7 +59,7 @@ public class SpeakerUITest {
 
         SpeakerController speakerController = new SpeakerController("s0",eventManager,speakerManager,
                 attendeeManager, messageManager);
-        MessagePresenter messagePresenter = new MessagePresenter();
+        MessagePresenter messagePresenter = new MessagePresenter(messageManager);
 
         SpeakerUI speakerUI = new SpeakerUI(speakerController,eventPresenter, messagePresenter);
 
@@ -67,26 +67,7 @@ public class SpeakerUITest {
         System.out.println(speakerUI.run());
 
 
-        // testing that messages are sent to attendee0
-        ArrayList<Message> msgs = messageManager.getUserMessages("a0");
-        System.out.println("Messages for attendee 0 : ");
-        for (String msg: messagePresenter.getMessageList(msgs)){
-            System.out.println(msg);
-        }
 
-        // testing that messages are sent to attendee1
-        ArrayList<Message> msgs2 = messageManager.getUserMessages("a1");
-        System.out.println("Messages for attendee 1 : ");
-        for (String msg: messagePresenter.getMessageList(msgs2)){
-            System.out.println(msg);
-        }
-
-        // testing that messages are sent to attendee1
-        ArrayList<Message> msgs3 = messageManager.getUserMessages("s0");
-        System.out.println("Messages for speaker0 : ");
-        for (String msg: messagePresenter.getMessageList(msgs3)){
-            System.out.println(msg);
-        }
     }
 
 
