@@ -8,6 +8,7 @@ import Modules.Exceptions.NonUniqueIdException;
 import Modules.Presenters.EventPresenter;
 import Modules.Presenters.MessagePresenter;
 
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -250,12 +251,34 @@ public class OrganizerUI {
         ArrayList<LocalDateTime> dates = dateTimeFormatter(input, roomNumber);
         System.out.println("What is the name of the Event?");
         String name = input.nextLine();
-        while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1), name)){
+        System.out.println("What is the capacity of the event?");
+        String capacityStr = input.nextLine();
+        int capacity = -1;
+        // checking that capacity is int and is less than or equal to room capacity
+        boolean isInt = false;
+        while(!isInt){
+            try{
+                capacity = Integer.valueOf(capacityStr);
+                if (organizerController.isRoomCapacityEnough(roomNumber,capacity)){
+                    isInt = true;
+                }
+                else{
+                    System.out.println("The capacity you inputted is too high for the room you selected \n"+
+                            "Please input a new capacity");
+                    capacityStr = input.nextLine();
+                }
+            }catch (NumberFormatException e) {
+                System.out.println("Please input an integer: ");
+                capacityStr = input.nextLine();
+            }
+        }
+        while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1), name, capacity)){
             System.out.println("I'm sorry, but either the room you have chosen is not available at this time.\n " +
                     "Please select a different time");
             System.out.println("Input the time you wish your event to begin\n"+
                     "in the form of yyyy-MM-dd HH:mm");
             dates = dateTimeFormatter(input, roomNumber);
+
         }
         System.out.println("The Event " + name + " was successfully added to the program and scheduled to the " +
                 "room with room number " + roomNumber);

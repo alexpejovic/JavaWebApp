@@ -50,16 +50,19 @@ public class OrganizerController {
      * @param roomNumber the room number of the room where the event will take place
      * @param startTime the time when the event will start
      * @param endTime the time when the event ends
+     * @param capacity the maximum number of attendees allowed in the event
      * @return true if the event was scheduled, false if the event was not scheduled
      */
-    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName){
+    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName, int capacity){
         //check room is available at this time, doesn't have other event
         boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
         //check event not already in another room
         boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
-        if (isRoomAvailable && canBook) {
+        //check that room capacity can handle the capacity of the event
+        boolean canRoomHold = this.isRoomCapacityEnough(roomNumber,capacity);
+        if (isRoomAvailable && canBook && canRoomHold) {
             //create the Event
-            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName);
+            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName,capacity);
             if (created){
                 try {
                     String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
@@ -75,6 +78,18 @@ public class OrganizerController {
         }
         return false;
     }
+
+    /**
+     * Checks whether the Room specified by roomNumber has a capacity
+     * greater than or equal to the given capacity
+     * @param roomNumber the roomNumber of the room being checked
+     * @param capacity the capacity being checked
+     * @return true if and only if the specified Room has at least a capacity of capacity
+     */
+    public boolean isRoomCapacityEnough(String roomNumber, int capacity){
+        return roomManager.getCapacityOfRoom(roomNumber) >= capacity;
+    }
+
 
     /**
      * Creates a new speaker account and passes/adds it into the program
@@ -113,8 +128,9 @@ public class OrganizerController {
 
     /**
      * Schedules speaker to speak at an existing event if speaker, event and room are available
+     * and if the speaker is not already speaking at the specified event
      * @param username the id of the Speaker being scheduled for the Event
-     * @param roomNumber the number of the room where the event will be help and where the speaker will present
+     * @param roomNumber the number of the room where the event will be held and where the speaker will present
      * @param eventName the name of the event taking place in the room
      * @return true if the speaker is able to present at the event
      * precondition: the event with eventName is an existing event
@@ -130,8 +146,10 @@ public class OrganizerController {
         boolean isSpeakerAvailable = speakerManager.isSpeakerAvailable(speakerId, startTime, endTime, eventManager);
         //check if room is available
         boolean isEventAvailable = !eventManager.hasSpeaker(eventId);
+        //check if speaker is already speaking at event
+        boolean isSpeakerSpeakingAtEvent = eventManager.isSpeakerSpeakingAtEvent(eventId,speakerId);
         //schedule the speaker
-        if (isSpeakerAvailable && isEventAvailable){
+        if (isSpeakerAvailable && isEventAvailable && !isSpeakerSpeakingAtEvent){
             // add speaker to event's properties
             eventManager.setSpeaker(speakerId,eventId);
             // add event to speaker's properties
@@ -141,6 +159,29 @@ public class OrganizerController {
         //return if speaker was not scheduled
         return false;
     }
+
+    /**
+     * Removes the specified speaker from the specified event
+     * @param username the username of the Speaker being scheduled for the Event
+     * @param eventName the name of the event in question
+     * @return true if the speaker is removed from the event, false if the speaker was not speaking at the event
+     * precondition: the event with eventName is an existing event
+     */
+    public boolean removeSpeakerFromEvent(String username, String eventName){
+        String eventId = eventManager.getEventID(eventName);
+        String speakerId = speakerManager.getUserID(username);
+        //checking that the speaker is speaking at the given event
+        if (eventManager.isSpeakerSpeakingAtEvent(eventId,speakerId)){
+            //remove speaker from event
+            eventManager.removeSpeakerFromEvent(eventId,speakerId);
+            //remove event from speaker
+            speakerManager.removeEventFromSpeaker(eventId, speakerId);
+            return true;
+        }
+        //speaker was not speaking at event
+        return false;
+    }
+
 
     /**
      * Checks the system to see if the room exists

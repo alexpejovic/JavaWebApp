@@ -25,10 +25,10 @@ public class EventManagerTest {
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
 
-        assertTrue(manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1"));
-        assertTrue(manager.createEvent("2", eventDate1, eventDate1.plusHours(1), "event2"));
-        assertTrue(manager.createEvent("1", eventDate2, eventDate2.plusHours(1), "event3"));
-        assertTrue(manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event4"));
+        assertTrue(manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1",2));
+        assertTrue(manager.createEvent("2", eventDate1, eventDate1.plusHours(1), "event2",2));
+        assertTrue(manager.createEvent("1", eventDate2, eventDate2.plusHours(1), "event3",2));
+        assertTrue(manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event4",2));
 
         manager.renameEvent("event2", "How 2 Do Good at Something");
         assertEquals("How 2 Do Good at Something", manager.getName("event2"));
@@ -45,9 +45,9 @@ public class EventManagerTest {
         LocalDateTime eventDate4 = LocalDateTime.of(2020, 10, 3, 11, 11);
         LocalDateTime eventDate5 = LocalDateTime.of(2021, 11, 3, 11, 11);
 
-        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1");
-        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2");
-        manager.createEvent("1", eventDate3, eventDate3.plusHours(1), "event3");
+        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1",2);
+        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2",2);
+        manager.createEvent("1", eventDate3, eventDate3.plusHours(1), "event3",2);
 
         assertFalse(manager.canBook("1", eventDate1, eventDate1.plusMinutes(10)));
         assertFalse(manager.canBook("1", eventDate1, eventDate1.plusHours(10)));
@@ -68,9 +68,9 @@ public class EventManagerTest {
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
 
-        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1");
-        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2");
-        manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event3");
+        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1",2);
+        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2",2);
+        manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event3",2);
     }
 
     @Test
@@ -81,9 +81,9 @@ public class EventManagerTest {
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
 
-        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1");
-        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2");
-        manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event3");
+        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1",2);
+        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2",2);
+        manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event3",2);
 
         LocalDateTime eventDate4 = LocalDateTime.of(2020, 11, 3, 11, 12);
         LocalDateTime eventDate5 = LocalDateTime.of(2021, 12, 3, 10, 11);
@@ -103,9 +103,9 @@ public class EventManagerTest {
         LocalDateTime eventDate2 = LocalDateTime.of(2020, 12, 3, 10, 11);
         LocalDateTime eventDate3 = LocalDateTime.of(2020, 11, 4, 11, 0);
 
-        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1");
-        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2");
-        manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event3");
+        manager.createEvent("1", eventDate1, eventDate1.plusHours(1), "event1",2);
+        manager.createEvent("2", eventDate2, eventDate2.plusHours(1), "event2",2);
+        manager.createEvent("3", eventDate3, eventDate3.plusHours(1), "event3",2);
 
         assertTrue(manager.canAttend("event1"));
         assertTrue(manager.canAttend("event2"));

@@ -19,7 +19,7 @@ public class EventTest {
     }
     //Example Event Entity with Start and End Time
     public Event testEvent(LocalDateTime startTime, LocalDateTime endTime){
-        return new Event("21", startTime, endTime, "e123");
+        return new Event("21", startTime, endTime, "e123",2);
     }
 
     //Example Start Time for Event

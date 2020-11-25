@@ -54,7 +54,7 @@ public class PopulateData {
         Event event0 = new Event("r0",
                 LocalDateTime.of(2020,11,20,9,0), //start time
                 LocalDateTime.of(2020,11,20,10,0), // end time
-                "e0");
+                "e0",2);
         event0.setName("Welcome event");
         event0.scheduleSpeaker("s0");
         event0.addAttendee("a1");
@@ -63,7 +63,7 @@ public class PopulateData {
         Event event1 = new Event("r0",
                 LocalDateTime.of(2020,11,20,16,0), //start time
                 LocalDateTime.of(2020,11,20,17,0), // end time
-                "e1");
+                "e1",2);
         event1.setName("Wrap up");
         event1.scheduleSpeaker("s0");
         events.add(event1);
@@ -71,7 +71,7 @@ public class PopulateData {
         Event event2 = new Event("r1",
                 LocalDateTime.of(2020,11,20,11,0), //start time
                 LocalDateTime.of(2020,11,20,12,0), // end time
-                "e2");
+                "e2",2);
         event2.setName("Therapy dog");
         event2.scheduleSpeaker("s2");
         event2.addAttendee("oO");
@@ -80,7 +80,7 @@ public class PopulateData {
         Event event3 = new Event("r1",
                 LocalDateTime.of(2020,11,20,14,0), //start time
                 LocalDateTime.of(2020,11,20,15,0), // end time
-                "e3");
+                "e3",2);
         event3.setName("Pet Sparky");
         event3.scheduleSpeaker("s2");
         event3.addAttendee("a1");
@@ -89,7 +89,7 @@ public class PopulateData {
         Event event4 = new Event("r1",
                 LocalDateTime.of(2020,11,20,16,0), //start time
                 LocalDateTime.of(2020,11,20,17,0), // end time
-                "e4");
+                "e4",2);
         event4.setName("how to convince your owner to go on a walk");
         event4.scheduleSpeaker("s2");
         event4.addAttendee("a1");
@@ -99,7 +99,7 @@ public class PopulateData {
         Event event5 = new Event("r2",
                 LocalDateTime.of(2020,11,20,16,0), //start time
                 LocalDateTime.of(2020,11,20,17,0), // end time
-                "e5");
+                "e5",2);
         event5.setName("top 10 reasons why vets should be illegal");
         event5.scheduleSpeaker("s1");
         event5.addAttendee("o0");

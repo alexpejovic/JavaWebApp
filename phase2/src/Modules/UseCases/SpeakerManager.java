@@ -206,4 +206,13 @@ public class SpeakerManager extends UserManager{
         this.getSpeaker(speakerID).addEvent(eventID);
     }
 
+    /**
+     * Removes specified eventID from the list of events for the given speaker with speakerID
+     * @param eventID the eventID being added
+     * @param speakerID the unique userid of the speaker
+     */
+    public void removeEventFromSpeaker(String eventID, String speakerID){
+        this.getSpeaker(speakerID).removeEvent(eventID);
+    }
+
 }

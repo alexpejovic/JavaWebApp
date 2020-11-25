@@ -19,7 +19,7 @@ public class SpeakerManagerTest {
     @Test
     public void testGetListOfSpeakers(){
         Speaker s = new Speaker("Tim", "Squire", "s101");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         ArrayList<Speaker> list = new ArrayList<>();
         SpeakerManager sm = new SpeakerManager(list);
         assertTrue(sm.getListOfSpeakers().size() == 0);
@@ -33,7 +33,7 @@ public class SpeakerManagerTest {
     @Test
     public void testNumSpeakers(){
         Speaker s = new Speaker("Tim", "Squire", "s101");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         ArrayList<Speaker> list = new ArrayList<>();
         SpeakerManager sm = new SpeakerManager(list);
         assertEquals(sm.NumSpeakers(), 0);
@@ -49,7 +49,7 @@ public class SpeakerManagerTest {
     @Test
     public void testValidatePassword(){
         Speaker s = new Speaker("Tim", "Squire", "s101");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         ArrayList<Speaker> list = new ArrayList<>();
         SpeakerManager sm = new SpeakerManager(list);
         assertTrue(sm.getListOfSpeakers().size() == 0);
@@ -61,7 +61,7 @@ public class SpeakerManagerTest {
     @Test
     public void testGetUserId(){
         Speaker s = new Speaker("Tim", "Squire", "s101");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         ArrayList<Speaker> list = new ArrayList<>();
         SpeakerManager sm = new SpeakerManager(list);
         assertTrue(sm.getListOfSpeakers().size() == 0);
@@ -72,7 +72,7 @@ public class SpeakerManagerTest {
     @Test(expected = UserNotFoundException.class)
     public void testGetUserIdFail(){
         Speaker s = new Speaker("Tim", "Squire", "s101");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         ArrayList<Speaker> list = new ArrayList<>();
         SpeakerManager sm = new SpeakerManager(list);
         assertTrue(sm.getListOfSpeakers().size() == 0);
@@ -83,7 +83,7 @@ public class SpeakerManagerTest {
     @Test
     public void testGetSpeaker(){
         Speaker s = new Speaker("Tim", "Squire", "s101");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         ArrayList<Speaker> list = new ArrayList<>();
         SpeakerManager sm = new SpeakerManager(list);
         assertTrue(sm.getListOfSpeakers().size() == 0);
@@ -94,7 +94,7 @@ public class SpeakerManagerTest {
     @Test(expected = UserNotFoundException.class)
     public void testGetSpeakerFail(){
         Speaker s = new Speaker("Tim", "Squire", "s101");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         ArrayList<Speaker> list = new ArrayList<>();
         SpeakerManager sm = new SpeakerManager(list);
         assertTrue(sm.getListOfSpeakers().size() == 0);

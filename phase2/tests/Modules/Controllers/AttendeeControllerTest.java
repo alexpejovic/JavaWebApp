@@ -32,7 +32,7 @@ public class AttendeeControllerTest {
                 messageManager);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
-        eventManager.createEvent("1", time1, time2, "e1234");
+        eventManager.createEvent("1", time1, time2, "e1234",2);
         assertEquals("e1234", attendeeController.displayEvents().get(0));
     }
 
@@ -46,7 +46,7 @@ public class AttendeeControllerTest {
                 messageManager);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
-        eventManager.createEvent("1", time1, time2, "e1234");
+        eventManager.createEvent("1", time1, time2, "e1234",2);
         eventManager.renameEvent("e1234", "name");
         boolean result = attendeeController.signUp("name");
         assertEquals(true, result);
@@ -64,7 +64,7 @@ public class AttendeeControllerTest {
                 messageManager);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
-        eventManager.createEvent("1", time1, time2, "e1234");
+        eventManager.createEvent("1", time1, time2, "e1234",2);
         eventManager.renameEvent("e1234", "name");
         attendeeController.signUp("name");
         boolean result = attendeeController.cancelEnrollment("name");

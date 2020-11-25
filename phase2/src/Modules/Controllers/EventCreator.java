@@ -28,11 +28,11 @@ public class EventCreator {
      * @param roomNumber the room number where the event will take place
      * @return true if the event was successfully created and entered into the system, false if it wasn't
      */
-    public boolean createEvent(LocalDateTime startTime, LocalDateTime endTime, String roomNumber, String eventName) {
+    public boolean createEvent(LocalDateTime startTime, LocalDateTime endTime, String roomNumber, String eventName, int capacity) {
         boolean eventCreated = true;
         try {
             String eventId = "e" + eventManager.getNumberOfEvents();
-            eventManager.createEvent(roomNumber, startTime, endTime, eventId);
+            eventManager.createEvent(roomNumber, startTime, endTime, eventId, capacity);
             eventManager.getEvent(eventId).setName(eventName);
         } catch (NonUniqueIdException e) {
             eventCreated = false;

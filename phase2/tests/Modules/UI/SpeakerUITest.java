@@ -30,7 +30,7 @@ public class SpeakerUITest {
 
         // setting up speakerController
         Event event0 = new Event("r0", LocalDateTime.of(2020,11,15,1,0),
-                LocalDateTime.of(2020,11,15,2,0), "e0");
+                LocalDateTime.of(2020,11,15,2,0), "e0",2);
         event0.addAttendee("a0");
         event0.addAttendee("a1");
         ArrayList<Event> events = new ArrayList<>();

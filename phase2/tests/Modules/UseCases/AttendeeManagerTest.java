@@ -35,7 +35,7 @@ public class AttendeeManagerTest {
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         assertEquals(true, attendeeManager.timeAvailable(attendee.getID(), time1, time2, eventManager));
-        eventManager.createEvent("1", time1, time2, "e1234");
+        eventManager.createEvent("1", time1, time2, "e1234",2);
         attendee.addEvent("e1234");
         assertEquals(false, attendeeManager.timeAvailable(attendee.getID(), time1, time2, eventManager));
     }
@@ -48,7 +48,7 @@ public class AttendeeManagerTest {
         Attendee attendee = new Attendee("username", "password", "a1234");
         attendeeManager.addAttendee(attendee);
         EventManager eventManager = new EventManager(new ArrayList<>());
-        eventManager.createEvent("1", time1, time2, "e1234");
+        eventManager.createEvent("1", time1, time2, "e1234",2);
         attendeeManager.addEventToAttendee(attendee.getID(), eventManager.getEventList().get(0), eventManager);
         assertEquals("e1234", attendee.getEventsList().get(0));
     }

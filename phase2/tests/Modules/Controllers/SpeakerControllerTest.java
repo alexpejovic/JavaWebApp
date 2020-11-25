@@ -18,7 +18,7 @@ public class SpeakerControllerTest {
     @Test
     public void testMessageValidAttendee(){
         Speaker s = new Speaker("Lebron", "James", "s23");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         Attendee a = new Attendee("Steph", "Curry", "a30");
         Message m = new Message("Blew a 3-1 lead", s.getID(), a.getID(), "m123", LocalDateTime.now());
         ArrayList<Speaker> speakerArray = new ArrayList<>();
@@ -42,7 +42,7 @@ public class SpeakerControllerTest {
     @Test
     public void testMessageInvalidAttendee(){
         Speaker s = new Speaker("Lebron", "James", "s23");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         Attendee a = new Attendee("Steph", "Curry", "a30");
         Message m = new Message("Blew a 3-1 lead", s.getID(), a.getID(), "m123", LocalDateTime.now());
         ArrayList<Speaker> speakerArray = new ArrayList<>();
@@ -64,7 +64,7 @@ public class SpeakerControllerTest {
     @Test
     public void testMessageMultipleAttendee(){
         Speaker s = new Speaker("Lebron", "James", "s23");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         Attendee a1 = new Attendee("Steph", "Curry", "a30");
         Attendee a2 = new Attendee("James", "Harden", "a13");
         Attendee a3 = new Attendee("Kevin", "Durant", "a5");
@@ -97,7 +97,7 @@ public class SpeakerControllerTest {
     @Test
     public void testMessageMultipleAttendeeOneValid(){
         Speaker s = new Speaker("Lebron", "James", "s23");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         Attendee a1 = new Attendee("Steph", "Curry", "a30");
         Attendee a2 = new Attendee("James", "Harden", "a13");
         Attendee a3 = new Attendee("Kevin", "Durant", "a5");
@@ -126,7 +126,7 @@ public class SpeakerControllerTest {
     @Test
     public void testShowEventsSingle(){
         Speaker s = new Speaker("Lebron", "James", "s23");
-        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
+        Event e = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
         Attendee a = new Attendee("Steph", "Curry", "a30");
         Message m = new Message("Blew a 3-1 lead", s.getID(), a.getID(), "m123", LocalDateTime.now());
         ArrayList<Speaker> speakerArray = new ArrayList<>();
@@ -149,9 +149,9 @@ public class SpeakerControllerTest {
     @Test
     public void testShowEventsMultiple(){
         Speaker s = new Speaker("Lebron", "James", "s23");
-        Event e1 = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234");
-        Event e2 = new Event("102", LocalDateTime.now(), LocalDateTime.now(), "5678");
-        Event e3 = new Event("103", LocalDateTime.now(), LocalDateTime.now(), "910");
+        Event e1 = new Event("101", LocalDateTime.now(), LocalDateTime.now(), "1234",2);
+        Event e2 = new Event("102", LocalDateTime.now(), LocalDateTime.now(), "5678",2);
+        Event e3 = new Event("103", LocalDateTime.now(), LocalDateTime.now(), "910",2);
         Attendee a = new Attendee("Steph", "Curry", "a30");
         Message m = new Message("Blew a 3-1 lead", s.getID(), a.getID(), "m123", LocalDateTime.now());
         ArrayList<Speaker> speakerArray = new ArrayList<>();

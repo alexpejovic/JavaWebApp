@@ -70,7 +70,7 @@ public class RoomManagerTest {
         assertTrue(testRoomArrayListEquals(expected,roomManager.getRooms()));
 
         // capacityOfRoom()
-        assertEquals(2, roomManager.capacityOfRoom("r1"));
+        assertEquals(2, roomManager.getCapacityOfRoom("r1"));
 
         // isEventInRoom()
         assertFalse(roomManager.isEventInRoom("r1", "e1"));
@@ -81,7 +81,7 @@ public class RoomManagerTest {
 
         // addEventToRoom() - Adding event to room 1
         LocalDateTime date1 = LocalDateTime.of(2020, 11, 3, 11, 11);
-        Event event1 = new Event("r1", date1, date1.plusHours(1), "e1");
+        Event event1 = new Event("r1", date1, date1.plusHours(1), "e1",2);
         roomManager.addEventToRoom("r1","e1");
         ArrayList<String> expected1 = new ArrayList<>();
         expected1.add("e1");
@@ -113,8 +113,8 @@ public class RoomManagerTest {
         assertTrue(testRoomArrayListEquals(expected,roomManager.getRooms()));
 
         // adding events e1 and e2 to eventManager
-        eventManager.createEvent("0",time2,time3,"e1");
-        eventManager.createEvent("0", time4, time5.plusHours(1),"e2");
+        eventManager.createEvent("0",time2,time3,"e1",2);
+        eventManager.createEvent("0", time4, time5.plusHours(1),"e2",2);
 
         // room 0 has no events
         assertTrue(roomManager.isRoomAvailable("r0", time1, time5, eventManager));
@@ -142,7 +142,7 @@ public class RoomManagerTest {
     @Test(expected = RoomNotFoundException.class)
     public void testCapacityOfRoomEx(){
         RoomManager roomManager = new RoomManager(new ArrayList<>());
-        roomManager.capacityOfRoom("r0");
+        roomManager.getCapacityOfRoom("r0");
     }
 
     @Test(expected = RoomNotFoundException.class)

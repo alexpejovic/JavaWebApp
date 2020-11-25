@@ -33,11 +33,13 @@ public class Event implements Serializable {
     /** The name of the Event **/
     private String name;
     /** The Speaker who will present at the Event **/
-    private String speaker = "";
+    private ArrayList<String> speakerList = new ArrayList<>();
+
 
     /**
      * Sets the room capacity and room number for the room where the Event will take place with only StartTime
      * Assumes this event will last 1 hour
+     * Assumes this event will have a capacity of 2
      * @param roomNumber the room number the Event will be held
      * @param time the time at which the Event will begin
      */
@@ -56,9 +58,10 @@ public class Event implements Serializable {
      * @param startTime the time at which this Event will begin
      * @param endTime the time at which this Event will end
      * @param eventId the unique id of this Event
+     * @param capacity the maximum number of attendees allowed in this event
      */
-    public Event(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventId){
-        this.capacity = 2;
+    public Event(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventId, int capacity){
+        this.capacity = capacity;
         this.roomNumber = roomNumber;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -97,14 +100,46 @@ public class Event implements Serializable {
     /** Set a speaker to present at this Event
      * @param speaker the speaker who is assigned to present at this Event
      */
-    public void scheduleSpeaker(String speaker){this.speaker = speaker;}
+    public void scheduleSpeaker(String speaker){this.speakerList.add(speaker);}
 
     /** Checks if there is a speaker presenting at the Event
      * @return true if the event has a speaker scheduled, false if not
      */
     public boolean hasSpeaker(){
-        return !this.speaker.equals("");
+        return !this.speakerList.isEmpty();
     }
+
+    /**
+     * Checks if there is a speaker with given speakerID speaking at this Event
+     * @param speakerID the id being checked
+     * @return true if the event has the speaker with speakerID scheduled, false if not
+     */
+    public boolean hasSpeaker(String speakerID){return this.speakerList.contains(speakerID);}
+
+    /**
+     * Returns a shallow copy of the speaker ids of speakers speaking at this event
+     * @return a shallow copy of the speaker ids of speakers speaking at this event
+     */
+    public ArrayList<String> getSpeakers() {
+        ArrayList<String> speakers = new ArrayList<>();
+        speakers.addAll(speakerList);
+        return speakers;
+    }
+
+    /**
+     * Removes specific speaker from the Event's list of attendees
+     * @param userID the unique id of the speaker being removed from the Event's speaker list
+     * @throws UserNotFoundException if there is no speaker user with userID speaking at this event
+     */
+    public void removeSpeaker(String userID){
+        if (speakerList.contains(userID)){
+            speakerList.remove(userID);
+        }
+        else{
+            throw new UserNotFoundException();
+        }
+    }
+
 
     /** Gets the name of the Event
      *
@@ -131,6 +166,10 @@ public class Event implements Serializable {
         return capacity - attendeeList.size();
     }
 
+    /**
+     * Returns the unique id of this event
+     * @return the id of this event
+     */
     public String getID() { return eventId;}
 
     /**

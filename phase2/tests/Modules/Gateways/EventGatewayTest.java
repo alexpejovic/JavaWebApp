@@ -19,7 +19,7 @@ public class EventGatewayTest {
         ArrayList<Event> events = new ArrayList<>();
         LocalDateTime e1Start = LocalDateTime.of(2020, 10, 15, 13, 25);
         LocalDateTime e1End = LocalDateTime.of(2020, 10, 15, 14, 25);
-        Event e1 = new Event("1", e1Start, e1End, "1");
+        Event e1 = new Event("1", e1Start, e1End, "1",2);
         events.add(e1);
 
         File temp;

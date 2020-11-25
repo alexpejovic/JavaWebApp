@@ -97,7 +97,7 @@ public class RoomManager {
      * @param roomNumber the room number of the Room we want to get the capacity of
      * @return the capacity of the room 
      */
-    public int capacityOfRoom(String roomNumber){
+    public int getCapacityOfRoom(String roomNumber){
         return this.getRoom(roomNumber).getCapacity();
     }
 
