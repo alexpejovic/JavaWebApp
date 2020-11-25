@@ -56,7 +56,7 @@ public class AttendeeController {
      */
     public ArrayList<String> getAttendingEvents() {
 
-         return attendeeManager.getAttendee(attendeeID).getEventsList();
+         return attendeeManager.getEventsList(attendeeID);
 //         ArrayList<String> eventStrings = attendeeManager.getAttendee(attendeeID).getEventsList();
 //         ArrayList<Event> events = new ArrayList<>();
 //
@@ -79,9 +79,9 @@ public class AttendeeController {
         boolean signUpSuccessful = false;
         for (Event event: events){
             if (event.getID().equals(eventID)){
-                if (attendeeManager.timeAvailable(attendeeManager.getAttendee(attendeeID), event.getStartTime(), event.getEndTime(), eventManager) &&
+                if (attendeeManager.timeAvailable(attendeeID, event.getStartTime(), event.getEndTime(), eventManager) &&
                         eventManager.canAttend(event.getID())){
-                    attendeeManager.addEventToAttendee(attendeeManager.getAttendee(attendeeID), event, eventManager);
+                    attendeeManager.addEventToAttendee(attendeeID, event, eventManager);
                     eventManager.addAttendee(event.getID(), attendeeID);
                     signUpSuccessful = true;
                 }
@@ -98,11 +98,10 @@ public class AttendeeController {
     public boolean cancelEnrollment(String eventName){
         String eventID = eventManager.getEventID(eventName);
         //check if user is signed up for event
-        Attendee attendee = attendeeManager.getAttendee(attendeeID);
-        if (attendee.getEventsList().contains(eventID)){
+        if (attendeeManager.getEventsList(attendeeID).contains(eventID)){
             eventManager.removeAttendee(eventID, attendeeID);
             try {
-                attendee.removeEvent(eventID);
+                attendeeManager.removeEvent(eventID, attendeeID);
             }catch (EventNotFoundException e){
                 e.printStackTrace();
             }
@@ -119,7 +118,7 @@ public class AttendeeController {
      * @return true if the message was successfully sent, false if the user was not on attendee's friends list
      */
     public boolean sendMessage(String receiverID, String message) throws UserNotFoundException{
-        if (attendeeManager.getAttendee(attendeeID).getFriendList().contains(receiverID)){
+        if (attendeeManager.getFriendList(attendeeID).contains(receiverID)){
             messageManager.sendMessage(attendeeID, receiverID, message);
             return true;
         }
@@ -132,8 +131,8 @@ public class AttendeeController {
      * @return true if the given user was added to attendee's friend list, false if the user was already friend
      */
     public boolean addUserToFriendList(String userID){
-        if(!attendeeManager.getAttendee(attendeeID).getFriendList().contains(userID)){
-            attendeeManager.getAttendee(attendeeID).addToFriendList(userID);
+        if(!attendeeManager.getFriendList(attendeeID).contains(userID)){
+            attendeeManager.addToFriendList(attendeeID, userID);
             return true;
         }
         return false;
