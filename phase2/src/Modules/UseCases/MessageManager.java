@@ -199,4 +199,22 @@ public class MessageManager {
         Message message = this.getMessage(messageID);
         return message.getDateTime();
     }
+
+    /**
+     * Mark the message specified by messageID as read
+     * @param messageID the unique ID of the message that is to be marked as read
+     */
+    public void markMessageAsRead(String messageID){
+        Message message = this.getMessage(messageID);
+        message.markAsRead();
+    }
+
+    /**
+     * Mark the message specified by messageID as unread
+     * @param messageID the unique ID of the message to be marked as unread
+     */
+    public void markMessageAsUnread(String messageID){
+        Message message = this.getMessage((messageID));
+        message.markAsUnread();
+    }
 }

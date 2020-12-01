@@ -20,6 +20,9 @@ public class Message implements Comparable<Message>, Serializable {
     // Message ID
     private String messageID;
 
+    //Classifies whether message has already been read or not
+    private boolean hasBeenRead;
+
     /**
      * Initialize message object from data.
      * @param content The content of the message
@@ -34,6 +37,7 @@ public class Message implements Comparable<Message>, Serializable {
         this.receiverID = receiverID;
         this.messageID = messageID;
         this.dateTime = dateTime;
+        this.hasBeenRead = false;
     }
 
     /**
@@ -100,5 +104,19 @@ public class Message implements Comparable<Message>, Serializable {
     @Override
     public int compareTo(Message message) {
         return this.dateTime.compareTo(message.getDateTime());
+    }
+
+    /**
+     * Changes hasBeenRead value to indicate this message has been read
+     */
+    public void markAsRead(){
+        hasBeenRead = true;
+    }
+
+    /**
+     * Changes hasBeenRead to indicate that this message has not been read
+     */
+    public void markAsUnread(){
+        hasBeenRead = false;
     }
 }

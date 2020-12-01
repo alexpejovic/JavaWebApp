@@ -144,7 +144,14 @@ public class AttendeeController {
      * @return array list of messageIDs of messages that correspond to the sorted conversation between sender and receiver
      */
     public ArrayList<String> seeMessage(String senderId){
-        return messageManager.getConversation(attendeeID, senderId);
+        ArrayList<String> conversation = messageManager.getConversation(attendeeID, senderId);
+        for(String ID: conversation){
+            if(messageManager.getReceiverIDOfMessage(ID).equals(attendeeID)){
+                messageManager.markMessageAsRead(ID);
+            }
+
+        }
+        return conversation;
     }
 
 }
