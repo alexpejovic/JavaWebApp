@@ -15,8 +15,6 @@ public class Attendee extends User {
     /**true if and only if attendee is a VIP attendee, defaults to false for attendees
      * unless changed when account is created*/
     private boolean isVIP;
-    /** an exception thrown if looking for an event ID that is not in this attendee's list */
-    private RuntimeException EventNotFoundException;
 
     /**
      * Constructor for Attendee
@@ -45,7 +43,7 @@ public class Attendee extends User {
      */
     public void removeEvent(String id) throws EventNotFoundException {
         if (!this.alreadyAttendingEvent(id)){
-            throw EventNotFoundException;
+            throw new EventNotFoundException();
         }
         eventsList.remove(id);
     }
