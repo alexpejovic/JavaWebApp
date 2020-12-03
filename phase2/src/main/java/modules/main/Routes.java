@@ -1,9 +1,11 @@
 package modules.main;
 
+import org.apache.log4j.BasicConfigurator;
 import static spark.Spark.*;
 
 public class Routes {
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         staticFileLocation("/web");
         port(8000);
         get("/home", (req, res) -> {res.redirect("/endpoints/login.html"); return "";});
