@@ -252,6 +252,11 @@ public class OrganizerUI {
         String name = input.nextLine();
         System.out.println("What is the capacity of the event?");
         String capacityStr = input.nextLine();
+        System.out.println("Input yes if you'd like this event to be VIP-only, otherwise input no");
+        boolean isVIPEvent = false;
+        if(input.nextLine().equals("yes")){
+            isVIPEvent = true;
+        }
         int capacity = -1;
         // checking that capacity is int and is less than or equal to room capacity
         boolean isInt = false;
@@ -271,7 +276,7 @@ public class OrganizerUI {
                 capacityStr = input.nextLine();
             }
         }
-        while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1), name, capacity)){
+        while (!organizerController.scheduleEvent(roomNumber,dates.get(0), dates.get(1), name, capacity, isVIPEvent)){
             System.out.println("I'm sorry, but either the room you have chosen is not available at this time.\n " +
                     "Please select a different time");
             System.out.println("Input the time you wish your event to begin\n"+

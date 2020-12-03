@@ -12,6 +12,9 @@ public class Attendee extends User {
     // ids of events Attendee is attending
     /** a list of events that this attendee is attending */
     private ArrayList<String> eventsList;
+    /**true if and only if attendee is a VIP attendee, defaults to false for attendees
+     * unless changed when account is created*/
+    private boolean isVIP;
     /** an exception thrown if looking for an event ID that is not in this attendee's list */
     private RuntimeException EventNotFoundException;
 
@@ -24,6 +27,7 @@ public class Attendee extends User {
     public Attendee(String username, String password, String userID){
         super(username, password, userID);
         this.eventsList = new ArrayList<>();
+        this.isVIP = false;
     }
 
     /**
@@ -71,5 +75,20 @@ public class Attendee extends User {
      */
     public boolean alreadyAttendingEvent(String id){
         return eventsList.contains(id);
+    }
+
+    /**
+     * identifies this Attendee as a VIP attendee who can attend VIP events
+     */
+    public void setAsVIP(){
+        this.isVIP = true;
+    }
+
+    /**
+     * Returns whether this attendee can attend VIP-only events
+     * @return true if and only this attendee is a VIP attendee, false otherwise
+     */
+    public boolean getVIPStatus(){
+        return this.isVIP;
     }
 }

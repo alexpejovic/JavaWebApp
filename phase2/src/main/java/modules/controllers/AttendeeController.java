@@ -75,7 +75,8 @@ public class AttendeeController {
         for (Event event: events){
             if (event.getID().equals(eventID)){
                 if (attendeeManager.timeAvailable(attendeeID, event.getStartTime(), event.getEndTime(), eventManager) &&
-                        eventManager.canAttend(event.getID())){
+                        eventManager.canAttend(event.getID()) &&
+                        attendeeManager.canAttendEvent(attendeeID, eventID, eventManager)){
                     attendeeManager.addEventToAttendee(attendeeID, event, eventManager);
                     eventManager.addAttendee(event.getID(), attendeeID);
                     signUpSuccessful = true;

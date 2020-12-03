@@ -218,4 +218,41 @@ public class AttendeeManager extends UserManager{
         return attendee.getEventsList();
     }
 
+    /**
+     * Mark the attendee with the specified userID as a VIP Attendee
+     * @param attendeeID the ID of the Attendee who is to be marked as a VIP attendee
+     */
+    public void setAsVIP(String attendeeID){
+        Attendee attendee = getAttendee(attendeeID);
+        attendee.setAsVIP();
+    }
+
+    /**
+     * Identifies whether the specified attendee is a VIP attendee
+     * @param attendeeID the ID of the attendee whose VIP status is to be checked
+     * @return true if and only if the attendee with the specified ID is a VIP attendee, false otherwise
+     */
+    public boolean getVIPStatus(String attendeeID){
+        Attendee attendee = getAttendee(attendeeID);
+        return attendee.getVIPStatus();
+    }
+
+    /**
+     * Returns whether the specified attendee is eligible to attend the specified event.
+     * An Attendee is eligible to attend an event if the event is not VIP-only, or if the event is VIP-only
+     * and the specified attendee is a VIP attendee
+     * @param attendeeID the ID of the attendee whose eligibility we want to check
+     * @param eventID the ID of the event who the specified attendee wishes to attend
+     * @param eventManager the current EventManager
+     * @return true if and only if the specified attendee is aligible to attend the specified event,
+     * false otherwise
+     */
+    public boolean canAttendEvent(String attendeeID, String eventID, EventManager eventManager){
+        Attendee attendee = getAttendee(attendeeID);
+        if (eventManager.getVIPStatus(eventID) && !attendee.getVIPStatus()){
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -34,6 +34,8 @@ public class Event implements Serializable {
     private String name;
     /** The Speaker who will present at the Event **/
     private ArrayList<String> speakerList = new ArrayList<>();
+   /** Indicates whether this event only permits VIP attendees, defaults to false**/
+    private boolean isVIP;
 
 
     /**
@@ -50,6 +52,7 @@ public class Event implements Serializable {
         this.endTime = time.plusHours(1);
         this.eventId = eventId;
         attendeeList = new ArrayList<>();
+        this.isVIP = false;
     }
 
     /**
@@ -206,4 +209,19 @@ public class Event implements Serializable {
      * @return The end time for the Event
      */
     public LocalDateTime getEndTime(){return this.endTime;}
+
+    /**
+     * Marks this event as a VIP only event
+     */
+    public void setAsVIP(){
+        this.isVIP = true;
+    }
+
+    /**
+     * Returns whether this event permits VIP attendees only, or permits all attendees
+     * @return true if and only if this is a VIP-only event, false otherwise
+     */
+    public boolean getVIPStatus(){
+        return this.isVIP;
+    }
 }

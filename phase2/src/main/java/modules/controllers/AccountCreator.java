@@ -57,7 +57,8 @@ public class AccountCreator {
      * @param password the password of the Attendee
      * @param events a list of event ids that the Attendee is attending at
      */
-    public boolean createAttendeeAccount(String username, String password, ArrayList<String> events){
+    public boolean createAttendeeAccount(String username, String password, ArrayList<String> events,
+                                         boolean isVIP){
         this.isUniqueUsername(username); // throws exception if username is not unique
 
         boolean accountCreated = true;
@@ -65,6 +66,9 @@ public class AccountCreator {
             // attendee's id starts with a then has the attendee # starting from 0
             String userId = "a"+ attendeeManager.getAttendeeList().size();
             attendeeManager.addAttendee(username,password,userId,events);
+            if (isVIP){
+                attendeeManager.getAttendee(userId).setAsVIP();
+            }
         } catch (NonUniqueIdException e){
             accountCreated = false;
         }
