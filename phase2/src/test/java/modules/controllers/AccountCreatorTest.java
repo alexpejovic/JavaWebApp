@@ -37,12 +37,12 @@ public class AccountCreatorTest {
         
         AccountCreator accountCreator = new AccountCreator(organizerManager,attendeeManager,speakerManager);
 
-        assertTrue(accountCreator.createAttendeeAccount("at","pass", new ArrayList<>()));
+        assertTrue(accountCreator.createAttendeeAccount("at","pass", new ArrayList<>(), false));
         assertTrue(attendeeManager.isUser("at"));
         assertTrue(attendeeManager.validatePassword("at","pass"));
 
         // exception should be thrown if username is not unique
-        accountCreator.createAttendeeAccount("at", "pass", new ArrayList<>());
+        accountCreator.createAttendeeAccount("at", "pass", new ArrayList<>(), false);
     }
 
     @Test (expected = NonUniqueUsernameException.class)

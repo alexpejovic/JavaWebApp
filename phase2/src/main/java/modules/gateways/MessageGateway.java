@@ -9,7 +9,7 @@ import java.io.*;
  */
 public class MessageGateway {
 
-    private String filename = "res/messages.ser";
+    private String filename = "ser/messages.ser";
 
     //To run the unit test, this filename must be used
     //private String filename = "messagesTest.ser";

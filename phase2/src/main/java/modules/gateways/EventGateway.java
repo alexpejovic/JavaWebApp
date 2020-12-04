@@ -9,7 +9,7 @@ import java.io.*;
  */
 public class EventGateway {
 
-    private String filename = "res/events.ser";
+    private String filename = "ser/events.ser";
 
     //To run the unit test, this filename must be used
     //private String filename = "eventsTest.ser";
