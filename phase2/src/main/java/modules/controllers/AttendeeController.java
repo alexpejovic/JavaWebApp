@@ -75,7 +75,8 @@ public class AttendeeController {
         for (Event event: events){
             if (event.getID().equals(eventID)){
                 if (attendeeManager.timeAvailable(attendeeID, event.getStartTime(), event.getEndTime(), eventManager) &&
-                        eventManager.canAttend(event.getID())){
+                        eventManager.canAttend(event.getID()) &&
+                        attendeeManager.canAttendEvent(attendeeID, eventID, eventManager)){
                     attendeeManager.addEventToAttendee(attendeeID, event, eventManager);
                     eventManager.addAttendee(event.getID(), attendeeID);
                     signUpSuccessful = true;
@@ -139,7 +140,14 @@ public class AttendeeController {
      * @return array list of messageIDs of messages that correspond to the sorted conversation between sender and receiver
      */
     public ArrayList<String> seeMessage(String senderId){
-        return messageManager.getConversation(attendeeID, senderId);
+        ArrayList<String> conversation = messageManager.getConversation(attendeeID, senderId);
+        for(String ID: conversation){
+            if(messageManager.getReceiverIDOfMessage(ID).equals(attendeeID)){
+                messageManager.markMessageAsRead(ID);
+            }
+
+        }
+        return conversation;
     }
 
 }

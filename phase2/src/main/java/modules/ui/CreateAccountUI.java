@@ -40,7 +40,8 @@ public class CreateAccountUI {
         System.out.println("Enter, \n" +
                 "1, if you wish to create an Attendee account\n" +
                 "2, if you wish to create a Speaker account\n" +
-                "3, if you wish to create an Organizer account\n");
+                "3, if you wish to create an Organizer account\n" +
+                "4, if you wish to create a VIP Attendee account\n");
 
         String num = input.nextLine();
 
@@ -55,11 +56,13 @@ public class CreateAccountUI {
         try{
             switch (num) {
                 case "1":
-                    return accountCreator.createAttendeeAccount(username, password, new ArrayList<>());
+                    return accountCreator.createAttendeeAccount(username, password, new ArrayList<>(), false);
                 case "2":
                     return accountCreator.createSpeakerAccount(username, password, new ArrayList<>());
                 case "3":
                     return accountCreator.createOrganizerAccount(username, password);
+                case "4":
+                    return accountCreator.createAttendeeAccount(username, password, new ArrayList<>(), true);
                 default:
                     System.out.println("Invalid Input, try again");
                     return false;

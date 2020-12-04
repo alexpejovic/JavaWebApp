@@ -365,6 +365,21 @@ public class EventManager {
         return this.getEvent(eventID).getSpeakers().contains(speakerID);
     }
 
+    /**
+     * Set the specified event as a VIP-only event
+     * @param eventID the ID of the event to be set as a VIP-only event
+     */
+    public void setAsVIP(String eventID){
+        this.getEvent(eventID).setAsVIP();
+    }
 
+    /**
+     * Returns whether the specified event is a VIP-only event
+     * @param eventID the ID of the event whose VIP-status is to be returned
+     * @return true if this event is VIP-only, false otherwise
+     */
+    public boolean getVIPStatus(String eventID){
+        return this.getEvent(eventID).getVIPStatus();
+    }
 
 }

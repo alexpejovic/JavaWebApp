@@ -33,7 +33,7 @@ public class EventCreatorTest {
 
         organizerController.addNewRoom("21", 5);
 
-        assertTrue(eventCreator.createEvent(startTime, endTime, "21", "New Event",2));
+        assertTrue(eventCreator.createEvent(startTime, endTime, "21", "New Event",2, false));
         assertEquals(1, eventManager.getNumberOfEvents());
         assertEquals("e0", eventManager.getEventList().get(0).getID());
 

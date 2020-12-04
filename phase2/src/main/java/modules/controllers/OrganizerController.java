@@ -53,7 +53,8 @@ public class OrganizerController {
      * @param capacity the maximum number of attendees allowed in the event
      * @return true if the event was scheduled, false if the event was not scheduled
      */
-    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName, int capacity){
+    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName, int capacity,
+                                 boolean isVIP){
         //check room is available at this time, doesn't have other event
         boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
         //check event not already in another room
@@ -62,7 +63,7 @@ public class OrganizerController {
         boolean canRoomHold = this.isRoomCapacityEnough(roomNumber,capacity);
         if (isRoomAvailable && canBook && canRoomHold) {
             //create the Event
-            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName,capacity);
+            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName,capacity, isVIP);
             if (created){
                 try {
                     String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 */
 public class RoomGateway {
 
-    private String filename = "res/rooms.ser";
+    private String filename = "ser/rooms.ser";
 
     //To run the unit test, this filename must be used
     //private String filename = "roomsTest.ser";
