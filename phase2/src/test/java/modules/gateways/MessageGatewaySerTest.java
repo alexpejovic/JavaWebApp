@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 import java.time.LocalDateTime;
 
-public class MessageGatewayTest {
+public class MessageGatewaySerTest {
 
     //NOTE: For these tests to run properly the final variable <filename>
     //in MessageGateway must be changed to "messagesTest.ser"

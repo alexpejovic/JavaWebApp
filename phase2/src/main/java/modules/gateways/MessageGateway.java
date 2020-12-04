@@ -1,62 +1,31 @@
 package modules.gateways;
 
+import modules.entities.Event;
 import modules.entities.Message;
-import java.util.ArrayList;
-import java.io.*;
 
-/**
- * reads and writes files for Messages
- */
+import java.util.ArrayList;
+
 public class MessageGateway {
 
-    private String filename = "ser/messages.ser";
+    private MessageStrategy strategy;
 
-    //To run the unit test, this filename must be used
-    //private String filename = "messagesTest.ser";
-
-    public ArrayList<Message> readSerFile() {
-
-        ArrayList<Message> messages = new ArrayList<>();
-        try {
-            FileInputStream file = new FileInputStream(filename);
-            ObjectInputStream storedMessages = new ObjectInputStream(file);
-
-            messages = (ArrayList<Message>) storedMessages.readObject();
-
-            storedMessages.close();
-            file.close();
-
-            return messages;
-
-        } catch (FileNotFoundException e) {
-            System.out.println(filename + " is missing");
-        } catch (IOException | ClassNotFoundException e) {
-            return messages;
-        }
-
-        return messages;
+    public MessageGateway() {
+        this.strategy = new MessageGatewayDB();
     }
 
-    /**
-     * @param writeMessages ArrayList of objects being written to filename
-     * @throws IOException Exception thrown when Object cannot be found
-     */
-    public void writeSerFile(ArrayList<Message> writeMessages) throws IOException {
-        try{
-            FileOutputStream file = new FileOutputStream(filename);
-            ObjectOutputStream writer = new ObjectOutputStream(file);
+    public ArrayList<Message> readData() {
+        return this.strategy.readData();
+    }
 
-            writer.writeObject(writeMessages);
+    public void writeData(ArrayList<Message> writeMessages) {
+        this.strategy.writeData(writeMessages);
+    }
 
-            writer.close();
-            file.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println(filename + " not found");
-        }
+    public void setStrategy(MessageStrategy newStrat) {
+        this.strategy = newStrat;
     }
 
     public void setFilename(String newFilename) {
-        filename = newFilename;
+        this.strategy.setFilename(newFilename);
     }
 }

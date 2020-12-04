@@ -1,10 +1,7 @@
 package modules.controllers;
 
 import modules.entities.*;
-import modules.gateways.EventGateway;
-import modules.gateways.MessageGateway;
-import modules.gateways.RoomGateway;
-import modules.gateways.UserGateway;
+import modules.gateways.*;
 import modules.presenters.EventPresenter;
 import modules.presenters.MessagePresenter;
 import modules.ui.*;
@@ -49,14 +46,14 @@ public class Conference {
      */
     private ArrayList<Event> readEvents() {
         EventGateway eventGateway = new EventGateway();
-        return eventGateway.readSerFile();
+        return eventGateway.readData();
     }
     /**
      * @return an arraylist of Message entities
      */
     private ArrayList<Message> readMessages() {
         MessageGateway messageGateway = new MessageGateway();
-        return messageGateway.readSerFile();
+        return messageGateway.readData();
     }
 
     /**
@@ -64,7 +61,7 @@ public class Conference {
      */
     private ArrayList<Room> readRooms() {
         RoomGateway roomGateway = new RoomGateway();
-        return roomGateway.readSerFile();
+        return roomGateway.readData();
     }
 
     /**
@@ -72,7 +69,7 @@ public class Conference {
      */
     private ArrayList<Attendee> readAttendees() {
         UserGateway userGateway = new UserGateway();
-        ArrayList<User> users = userGateway.readSerFile();
+        ArrayList<User> users = userGateway.readData();
             return getAttendeesFromUsers(users);
     }
 
@@ -81,7 +78,7 @@ public class Conference {
      */
     private ArrayList<Organizer> readOrganizers() {
         UserGateway userGateway = new UserGateway();
-        ArrayList<User> users = userGateway.readSerFile();
+        ArrayList<User> users = userGateway.readData();
             return getOrganizersFromUsers(users);
     }
 
@@ -90,7 +87,7 @@ public class Conference {
      */
     private ArrayList<Speaker> readSpeakers() {
         UserGateway userGateway = new UserGateway();
-        ArrayList<User> users = userGateway.readSerFile();
+        ArrayList<User> users = userGateway.readData();
             return getSpeakersFromUsers(users);
     }
 
@@ -145,23 +142,18 @@ public class Conference {
         MessageGateway messageGateway = new MessageGateway();
         UserGateway userGateway = new UserGateway();
 
-        try {
-            eventGateway.writeSerFile(eventManager.getEventList());
-            roomGateway.writeSerFile(roomManager.getRooms());
-            messageGateway.writeSerFile(messageManager.getAllMessages());
+        eventGateway.writeData(eventManager.getEventList());
+        roomGateway.writeData(roomManager.getRooms());
+        messageGateway.writeData(messageManager.getAllMessages());
 
-            // Create an arraylist of User objects before writing to file.
-            ArrayList<User> userList = new ArrayList<>();
+        // Create an arraylist of User objects before writing to file.
+        ArrayList<User> userList = new ArrayList<>();
 
-            userList.addAll(attendeeManager.getAttendeeList());
-            userList.addAll(organizerManager.getListOfOrganizers());
-            userList.addAll(speakerManager.getListOfSpeakers());
+        userList.addAll(attendeeManager.getAttendeeList());
+        userList.addAll(organizerManager.getListOfOrganizers());
+        userList.addAll(speakerManager.getListOfSpeakers());
 
-            userGateway.writeSerFile(userList);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        userGateway.writeData(userList);
     }
 
     private ArrayList<Organizer> getOrganizersFromUsers(ArrayList<User> users) {
