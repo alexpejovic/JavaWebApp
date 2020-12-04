@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 import java.time.LocalDateTime;
 
-public class EventGatewayTest {
+public class EventGatewaySerTest {
 
     //NOTE: For these tests to run properly the final variable <filename>
     //in EventGateway must be changed to "eventsTest.ser"

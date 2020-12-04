@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
-public class UserGatewayTest {
+public class UserGatewaySerTest {
 
     //NOTE: For these tests to run properly the final variable <filename>
     //in UserGateway must be changed to "usersTest.ser"

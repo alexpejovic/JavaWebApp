@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
-public class RoomGatewayTest {
+public class RoomGatewaySerTest {
 
     //NOTE: For these tests to run properly the final variable <filename>
     //in RoomGateway must be changed to "roomsTest.ser"

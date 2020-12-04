@@ -1,63 +1,31 @@
 package modules.gateways;
 
 import modules.entities.Room;
-import java.io.*;
+
 import java.util.ArrayList;
 
-/**
- * reads and writes files for Rooms
-*/
 public class RoomGateway {
 
-    private String filename = "ser/rooms.ser";
+    private RoomStrategy strategy;
 
-    //To run the unit test, this filename must be used
-    //private String filename = "roomsTest.ser";
-
-    public ArrayList<Room> readSerFile() {
-
-        ArrayList<Room> rooms = new ArrayList<>();
-        try {
-            FileInputStream file = new FileInputStream(filename);
-            ObjectInputStream storedRooms = new ObjectInputStream(file);
-
-            rooms = (ArrayList<Room>) storedRooms.readObject();
-
-            storedRooms.close();
-            file.close();
-
-            return rooms;
-
-        } catch (FileNotFoundException e) {
-            System.out.println(filename + " is missing");
-        } catch (IOException | ClassNotFoundException e) {
-            return rooms;
-        }
-
-        return rooms;
+    public RoomGateway() {
+        this.strategy = new RoomGatewayDB();
     }
 
-    /**
-     * @param writeRooms ArrayList of objects being written to filename
-     * @throws IOException Exception thrown when Object cannot be found
-     */
-    public void writeSerFile(ArrayList<Room> writeRooms) throws IOException {
+    public ArrayList<Room> readData() {
+        return this.strategy.readData();
+    }
 
-        try{
-            FileOutputStream file = new FileOutputStream(filename);
-            ObjectOutputStream writer = new ObjectOutputStream(file);
+    public void writeData(ArrayList<Room> writeRooms) {
+        this.strategy.writeData(writeRooms);
+    }
 
-            writer.writeObject(writeRooms);
-
-            writer.close();
-            file.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println(filename + " not found");
-        }
+    public void setStrategy(RoomStrategy newStrat) {
+        this.strategy = newStrat;
     }
 
     public void setFilename(String newFilename) {
-        filename = newFilename;
+        this.strategy.setFilename(newFilename);
     }
 }
+
