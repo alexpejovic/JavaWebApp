@@ -2,8 +2,9 @@ package modules.controllers;
 
 
 import modules.presenters.EventPresenter;
-import modules.presenters.LoginSignupPresenter;
+import modules.presenters.LoginPresenter;
 import modules.presenters.MessagePresenter;
+import modules.presenters.SignupPresenter;
 import modules.usecases.*;
 import modules.views.ILoginView;
 import modules.views.ISignupView;
@@ -24,16 +25,20 @@ public class StartConference {
     private AccountCreator accountCreator;
     private EventCreator eventCreator;
     // presenters
-    private LoginSignupPresenter loginSignupPresenter;
+    private LoginPresenter loginPresenter;
+    private SignupPresenter signupPresenter;
     private MessagePresenter messagePresenter ;
     private EventPresenter eventPresenter;
 
-    // UI interfaces
-    private ILoginView iLoginSignupView;
-    private ISignupView iSignupView;
 
-    public StartConference(){
-        ConferenceBuilder.buildConference(); // this should set initialize all the variables above
+    /**
+     * Constructor for StartConference that initializes and stores all use-case,presenter,controller methods
+     * @param iLoginView the class with login page functionalities
+     * @param iSignupView the class with signup page functionalities
+     */
+    public StartConference(ILoginView iLoginView, ISignupView iSignupView){
+        ConferenceBuilder conferenceBuilder = new ConferenceBuilder(iLoginView, iSignupView);
+        conferenceBuilder.buildConference(this); // this should set initialize all the variables above
     }
 
     /**
@@ -48,7 +53,7 @@ public class StartConference {
             this.initUserSession();
         }
         else{ // invalid username password combo
-            loginSignupPresenter.invalidLogin();
+            loginPresenter.invalidLogin();
         }
     }
 
@@ -91,10 +96,10 @@ public class StartConference {
      */
     private void checkValidSignup(boolean isValidSignup){
         if (isValidSignup){
-            loginSignupPresenter.signupSuccessful();
+            signupPresenter.signupSuccessful();
         }
         else{ // username is not unique
-            loginSignupPresenter.invalidSignup();
+            signupPresenter.invalidSignup();
         }
     }
 
@@ -107,20 +112,124 @@ public class StartConference {
 
         if (userID.startsWith("a")) {
             AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID, messageManager);
-            loginSignupPresenter.attendeeLogin(attendeeController);
+            loginPresenter.attendeeLogin(attendeeController);
         }
         else if (userID.startsWith("o")) {
             AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID, messageManager);
             OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager, speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID);
-            loginSignupPresenter.organizerLogin(organizerController, attendeeController);
+            loginPresenter.organizerLogin(organizerController, attendeeController);
         }
         else if (userID.startsWith("s")) {
             SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager, attendeeManager, messageManager);
-            loginSignupPresenter.speakerLogin(speakerController);
+            loginPresenter.speakerLogin(speakerController);
         }
     }
 
-    // Setters for all the variables
+    // Below are just setters for all the variables
+
+    /**
+     * Setter for attendeeManager
+     * @param attendeeManager the attendeeManager for this conference
+     */
+    public void setAttendeeManager(AttendeeManager attendeeManager) {
+        this.attendeeManager = attendeeManager;
+    }
+
+    /**
+     * Setter for organizerManager
+     * @param organizerManager the organizerManager for this conference
+     */
+    public void setOrganizerManager(OrganizerManager organizerManager) {
+        this.organizerManager = organizerManager;
+    }
+
+    /**
+     * Setter for speakerManager
+     * @param speakerManager the speakerManager for this conference
+     */
+    public void setSpeakerManager(SpeakerManager speakerManager) {
+        this.speakerManager = speakerManager;
+    }
+
+    /**
+     * Setter for eventManager
+     * @param eventManager the eventManager for this conference
+     */
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * Setter for roomManager
+     * @param roomManager the roomManager for this conference
+     */
+    public void setRoomManager(RoomManager roomManager) {
+        this.roomManager = roomManager;
+    }
+
+    /**
+     * Setter for messageManager
+     * @param messageManager the messageManager for this conference
+     */
+    public void setMessageManager(MessageManager messageManager) {
+        this.messageManager = messageManager;
+    }
+
+    /**
+     * Setter for loginController
+     * @param loginController the loginController for this conference
+     */
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
+    }
+
+    /**
+     * Setter for accountCreator
+     * @param accountCreator the accountCreator for this conference
+     */
+    public void setAccountCreator(AccountCreator accountCreator) {
+        this.accountCreator = accountCreator;
+    }
+
+    /**
+     * Setter for eventCreator
+     * @param eventCreator the eventCreator for this conference
+     */
+    public void setEventCreator(EventCreator eventCreator) {
+        this.eventCreator = eventCreator;
+    }
+
+    /**
+     * Setter for loginPresenter
+     * @param loginPresenter the loginPresenter for this conference
+     */
+    public void setLoginPresenter(LoginPresenter loginPresenter) {
+        this.loginPresenter = loginPresenter;
+    }
+
+    /**
+     * Setter for signupPresenter
+     * @param signupPresenter the signupPresenter for this conference
+     */
+    public void setSignupPresenter(SignupPresenter signupPresenter) {
+        this.signupPresenter = signupPresenter;
+    }
+
+    /**
+     * Setter for messagePresenter
+     * @param messagePresenter the messagePresenter for this conference
+     */
+    public void setMessagePresenter(MessagePresenter messagePresenter) {
+        this.messagePresenter = messagePresenter;
+    }
+
+    /**
+     * Setter for eventPresenter
+     * @param eventPresenter the eventPresenter for this conference
+     */
+    public void setEventPresenter(EventPresenter eventPresenter) {
+        this.eventPresenter = eventPresenter;
+    }
 
 
 }
