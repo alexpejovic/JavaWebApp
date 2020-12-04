@@ -29,10 +29,10 @@ public class PopulateData {
 //        roomGateway.setFilename("testres/rooms.ser");
 //        userGateway.setFilename("testres/users.ser");
 
-        eventGateway.setFilename("res/events.ser");
-        messageGateway.setFilename("res/messages.ser");
-        roomGateway.setFilename("res/rooms.ser");
-        userGateway.setFilename("res/users.ser");
+        eventGateway.setFilename("ser/events.ser");
+        messageGateway.setFilename("ser/messages.ser");
+        roomGateway.setFilename("ser/rooms.ser");
+        userGateway.setFilename("ser/users.ser");
 
         eventGateway.writeSerFile(getEvents());
         roomGateway.writeSerFile(getRooms());

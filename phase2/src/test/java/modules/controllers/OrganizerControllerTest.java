@@ -42,12 +42,12 @@ public class OrganizerControllerTest{
         LocalDateTime endTime = LocalDateTime.of(2020, 11, 7,7,0);
         organizerController.addNewRoom("21", 5);
         organizerManager.addOrganizer(new Organizer("Michael Scott", "Dundermifflin", "o123"));
-        assertTrue(organizerController.scheduleEvent("21", startTime, endTime, "Fitness",2,false));
-        assertFalse(organizerController.scheduleEvent("21", startTime, endTime, "Health",2,false));
+        assertTrue(organizerController.scheduleEvent("21", startTime, endTime, "Fitness",2, false));
+        assertFalse(organizerController.scheduleEvent("21", startTime, endTime, "Health",2, false));
         assertEquals(1, eventManager.getNumberOfEvents());
         LocalDateTime newStartTime = LocalDateTime.of(2020, 11, 7, 4, 0);
         LocalDateTime newEndTime = LocalDateTime.of(2020, 11, 7, 8, 30);
-        assertTrue(organizerController.scheduleEvent("21", newStartTime, startTime, "Cooking",2,false));
+        assertTrue(organizerController.scheduleEvent("21", newStartTime, startTime, "Cooking",2, false));
         assertEquals(2, eventManager.getNumberOfEvents());
         assertFalse(organizerController.scheduleEvent("21", newStartTime, endTime, "Singing",2, false));
 
@@ -98,7 +98,7 @@ public class OrganizerControllerTest{
         organizerController.addNewRoom("20", 5);
         LocalDateTime startTime = LocalDateTime.of(2020, 11, 7, 5, 30);
         LocalDateTime endTime = LocalDateTime.of(2020, 11, 7,7,0);
-        organizerController.scheduleEvent("20", startTime, endTime, "Fitness",2,false);
+        organizerController.scheduleEvent("20", startTime, endTime, "Fitness",2, false);
         assertTrue(organizerController.isCorrectEvent("Fitness", "20"));
         assertFalse(organizerController.isCorrectEvent("Eating", "20"));
     }
@@ -112,8 +112,8 @@ public class OrganizerControllerTest{
         organizerController.addNewRoom("20", 5);
         LocalDateTime startTime = LocalDateTime.of(2020, 11, 7, 10, 30);
         LocalDateTime endTime = LocalDateTime.of(2020, 11, 7,11,30);
-        assertTrue(organizerController.scheduleEvent("20", startTime, endTime, "Fitness",2,false));
-        assertTrue(organizerController.scheduleEvent("21", startTime, endTime, "Cooking",2,false));
+        assertTrue(organizerController.scheduleEvent("20", startTime, endTime, "Fitness",2, false));
+        assertTrue(organizerController.scheduleEvent("21", startTime, endTime, "Cooking",2, false));
         Speaker speaker = new Speaker("Jessica",  "1234", "s123");
         Speaker speaker2 = new Speaker("Jim",  "1234", "s124");
         assertFalse(organizerController.scheduleSpeaker("Jessica", "25", "Fitness"));
@@ -122,7 +122,7 @@ public class OrganizerControllerTest{
         speakerManager.addSpeaker(speaker2);
         assertTrue(organizerController.scheduleSpeaker("Jessica", "20", "Fitness"));
         assertFalse(organizerController.scheduleSpeaker("Jessica", "21", "Cooking"));
-        assertTrue(organizerController.scheduleEvent("21", startTime.plusHours(2), endTime.plusHours(2), "Drawing",2,false));
+        assertTrue(organizerController.scheduleEvent("21", startTime.plusHours(2), endTime.plusHours(2), "Drawing",2, false));
         assertTrue(organizerController.scheduleSpeaker("Jessica", "21", "Drawing"));
         assertFalse(organizerController.scheduleSpeaker("Jim", "21", "Drawing"));
     }
