@@ -18,14 +18,6 @@ public class DBConnect {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
         }
     }
 }

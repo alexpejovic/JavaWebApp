@@ -1,6 +1,7 @@
 package modules.gateways;
 
 import modules.entities.*;
+import modules.gateways.EventGateway;
 import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +30,10 @@ public class EventGatewaySerTest {
             temp = File.createTempFile("eventsTest", ".ser");
 
             //Write to temp file
-            gw.writeSerFile(events);
+            gw.writeData(events);
 
             //Read temp file and compare
-            ArrayList<Event> actualEvents = gw.readSerFile();
+            ArrayList<Event> actualEvents = gw.readData();
 
             assertEquals(e1.getRoomNumber(), actualEvents.get(0).getRoomNumber());
             assertEquals(e1.getStartTime(), actualEvents.get(0).getStartTime());

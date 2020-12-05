@@ -4,13 +4,14 @@ import modules.entities.Attendee;
 import modules.entities.Organizer;
 import modules.entities.Speaker;
 import modules.entities.User;
+import modules.gateways.UserGateway;
 import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
-public class UserGatewaySerTest {
+public class UserGatewayTestSer {
 
     //NOTE: For these tests to run properly the final variable <filename>
     //in UserGateway must be changed to "usersTest.ser"
@@ -32,10 +33,10 @@ public class UserGatewaySerTest {
             temp = File.createTempFile("usersTest", ".ser");
 
             //Write to temp file
-            gw.writeSerFile(users);
+            gw.writeData(users);
 
             //Read temp file and compare
-            ArrayList<User> actualUsers = gw.readSerFile();
+            ArrayList<User> actualUsers = gw.readData();
             assertEquals("u1", actualUsers.get(0).getUsername());
             assertTrue(actualUsers.get(0) instanceof Attendee);
             assertFalse(actualUsers.get(0) instanceof Speaker);
