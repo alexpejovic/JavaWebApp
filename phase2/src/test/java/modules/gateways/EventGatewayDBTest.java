@@ -15,7 +15,6 @@ public class EventGatewayDBTest {
     public void testReadFile(){
         EventGatewayDB eventDB = new EventGatewayDB();
         ArrayList<Event> eventList = eventDB.readData();
-        assertEquals(2, eventList.size());
         assertEquals("room3", eventList.get(0).getRoomNumber());
         assertEquals("event23", eventList.get(0).getID());
     }
@@ -32,6 +31,28 @@ public class EventGatewayDBTest {
     public void testWriteFile2(){
         EventGatewayDB eventDB = new EventGatewayDB();
         Event newEvent = new Event("room2", LocalDateTime.now(), LocalDateTime.now(), "event2", 23);
+        ArrayList<Event> eventList = new ArrayList<>();
+        eventList.add(newEvent);
+        eventDB.writeData(eventList);
+    }
+    @Test
+    public void testWriteFileWithAttendees(){
+        Attendee a = new Attendee("Lebron", "James", "a101");
+        EventGatewayDB eventDB = new EventGatewayDB();
+        Event newEvent = new Event("room2", LocalDateTime.now(), LocalDateTime.now(), "event1", 23);
+        newEvent.addAttendee(a.getID());
+        ArrayList<Event> eventList = new ArrayList<>();
+        eventList.add(newEvent);
+        eventDB.writeData(eventList);
+    }
+    @Test
+    public void testWriteFileWithAttendeesAndSpeaker(){
+        Attendee a = new Attendee("Lebron", "James", "a101");
+        Speaker s = new Speaker("Steph", "Curry", "s101");
+        EventGatewayDB eventDB = new EventGatewayDB();
+        Event newEvent = new Event("room2", LocalDateTime.now(), LocalDateTime.now(), "event4", 23);
+        newEvent.addAttendee(a.getID());
+        newEvent.scheduleSpeaker(s.getID());
         ArrayList<Event> eventList = new ArrayList<>();
         eventList.add(newEvent);
         eventDB.writeData(eventList);
