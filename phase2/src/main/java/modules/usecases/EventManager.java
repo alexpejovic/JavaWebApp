@@ -217,12 +217,23 @@ public class EventManager {
     }
 
     /**
-     * Sets the speaker of the event. This method removes the previous speaker if there was one
+     * Adds speaker to specified event.
      * @param speakerID the unique user ID of the speaker
      * @param eventID the unique ID of the event
+     * Precondition: speakerID is NOT in the list of speakers for the specified Event
      */
-    public void setSpeaker(String speakerID, String eventID) {
+    public void addSpeakerToEvent(String speakerID, String eventID) {
         getEvent(eventID).scheduleSpeaker(speakerID);
+    }
+
+    /**
+     * Removes the specified speaker id from the specified Event's list of speakers
+     * @param eventID the id of the event in question
+     * @param speakerID the speaker id being removed
+     * Precondition: speakerID is in the list of speakers for the specified Event
+     */
+    public void removeSpeakerFromEvent(String eventID, String speakerID){
+        this.getEvent(eventID).removeSpeaker(speakerID);
     }
 
     /**
@@ -242,7 +253,6 @@ public class EventManager {
     public void renameEvent(String eventID, String name) {
         getEvent(eventID).setName(name);
     }
-
 
     /**
      * Finds a event that is occurring in this room matching the given specifications
@@ -336,24 +346,14 @@ public class EventManager {
     }
 
     /**
-     * Removes the specified speaker id from the specified Event's list of speakers
-     * @param eventID the id of the event in question
-     * @param speakerID the speaker id being removed
-     * Precondition: speakerID is in the list of speakers for the specified Event
+     * Returns a shallow copy of the list of speaker ids of speakers speaking at the specified Event
+     * @param eventID the ID of the Event in question
+     * @return a shallow copy of the list of speaker ids of speakers speaking at the specified Event
      */
-    public void removeSpeakerFromEvent(String eventID, String speakerID){
-            this.getEvent(eventID).removeSpeaker(speakerID);
+    public ArrayList<String> getAttendeesOfEvent(String eventID){
+        return  this.getEvent(eventID).getAttendees();
     }
 
-    /**
-     * Adds the specified speaker id from the specified Event's list of speakers
-     * @param eventID the id of the event in question
-     * @param speakerID the speaker id being added
-     * Precondition: speakerID is NOT in the list of speakers for the specified Event
-     */
-    public void addSpeakerToEvent(String eventID, String speakerID){
-        this.getEvent(eventID).scheduleSpeaker(speakerID);
-    }
 
     /**
      * Checks if the specified speaker is speaking at the specified Event
