@@ -23,6 +23,7 @@ public class EventGatewayDB implements EventStrategy{
      * If the relations table already exists, nothing occurs
      */
     public void createRelations(){
+        //Query for creating relations table
         String createRel = "Create TABLE IF NOT EXISTS relations (\n"
                 + " relId INTEGER PRIMARY KEY AUTOINCREMENT, \n"
                 + " eventId VARCHAR(20), \n"
@@ -30,7 +31,7 @@ public class EventGatewayDB implements EventStrategy{
                 + ");";
         try (Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
              Statement stmt = conn.createStatement()) {
-            // create a new table
+            // create a new relations table
             stmt.execute(createRel);
         } catch (SQLException | ClassNotFoundException e4) {
             System.out.println(e4.getMessage());
