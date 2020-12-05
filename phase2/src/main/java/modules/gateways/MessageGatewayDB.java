@@ -42,6 +42,7 @@ public class MessageGatewayDB implements MessageStrategy {
     @Override
     /**
      * Reads the data from the messages table in the database and creates the resultant message entities.
+     * @return the list of messages in the database
      */
     public ArrayList<Message> readData() {
         //List of messages to be returned

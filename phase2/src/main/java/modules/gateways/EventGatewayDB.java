@@ -67,6 +67,7 @@ public class EventGatewayDB implements EventStrategy{
     /**
      * Reads all the data pertaining to events from the database and creates the resulting event entities.
      * This includes populating the attendeeList and speakerList variables.
+     * @return the list of events in the database
      */
     @Override
     public ArrayList<Event> readData() {
