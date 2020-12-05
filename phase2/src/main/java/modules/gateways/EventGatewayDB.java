@@ -2,6 +2,7 @@ package modules.gateways;
 
 import modules.entities.Event;
 import modules.gateways.DBConnect;
+import modules.usecases.EventManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,7 +13,15 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.Date;
 
+/**
+ * A class to write event data to the database and read data from the database
+ */
 public class EventGatewayDB implements EventStrategy{
+    /**
+     * Creates a relations table which keeps track of the relationships between attendees and the events they are attending
+     * as well as the relationship between speakers and the events they are speaking at.
+     * If the relations table already exists, nothing occurs
+     */
     public void createRelations(){
         String createRel = "Create TABLE IF NOT EXISTS relations (\n"
                 + " relId INTEGER PRIMARY KEY AUTOINCREMENT, \n"
@@ -28,21 +37,10 @@ public class EventGatewayDB implements EventStrategy{
         }
     }
 
-    public void createRelations2(){
-        String createRel = "Create TABLE IF NOT EXISTS relations2 (\n"
-                + " relId INTEGER PRIMARY KEY AUTOINCREMENT, \n"
-                + " eventId VARCHAR(20), \n"
-                + " speakerId VARCHAR(20) \n"
-                + ");";
-        try (Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
-             Statement stmt = conn.createStatement()) {
-            // create a new table
-            stmt.execute(createRel);
-        } catch (SQLException | ClassNotFoundException e4) {
-            System.out.println(e4.getMessage());
-        }
-    }
-
+    /**
+     * Creates an events table if it has not already been created. This events table store data for all the events
+     * in the conference except for the speakers and attendees of the event.
+     */
     public void createEvents(){
         //Query for creating new event table if one does not already exist
         String createSql = "CREATE TABLE IF NOT EXISTS events (\n"
@@ -65,6 +63,10 @@ public class EventGatewayDB implements EventStrategy{
         }
     }
 
+    /**
+     * Reads all the data pertaining to events from the database and creates the resulting event entities.
+     * This includes populating the attendeeList and speakerList variables.
+     */
     @Override
     public ArrayList<Event> readData() {
         //List of events to be returned
@@ -73,8 +75,6 @@ public class EventGatewayDB implements EventStrategy{
         createEvents();
         //Create relations table if it hasn't already
         createRelations();
-        //Create relations2 table if it hasn't already
-        createRelations2();
         //Query for selecting contents of event table
         String sql = "SELECT roomNumber, startTime, endTime, eventId, capacity, name, isVIP FROM events";
         //Executing the query for selecting event contents
@@ -84,7 +84,7 @@ public class EventGatewayDB implements EventStrategy{
             //For each row in the event table, create a new event using the data
             while (rs.next()) {
                 //Query for selecting attendees of event
-                String attendeeQuery = "SELECT userId, eventId FROM relations WHERE eventId == '"+rs.getString("eventId")+"'";
+                String attendeeQuery = "SELECT userId, eventId FROM relations WHERE eventId == '"+rs.getString("eventId")+"' AND substr(userId, 1, 1) == 'a'";
                 ArrayList<String> attendeeIds = new ArrayList<>();
                 try(Statement stmt2 = dbConn.createStatement();
                     ResultSet rs2 = stmt2.executeQuery(attendeeQuery)){
@@ -93,12 +93,12 @@ public class EventGatewayDB implements EventStrategy{
                     }
                 }
                 //Query for selecting speakers of event
-                String speakerQuery = "SELECT speakerId, eventId FROM relations2 WHERE eventId == '"+rs.getString("eventId")+"'";
+                String speakerQuery = "SELECT userId, eventId FROM relations WHERE eventId == '"+rs.getString("eventId")+"' AND substr(userId, 1, 1) == 's'";
                 ArrayList<String> speakerIds = new ArrayList<>();
                 try(Statement stmt3 = dbConn.createStatement();
                     ResultSet rs3 = stmt3.executeQuery(speakerQuery)){
                     while (rs3.next()) {
-                        speakerIds.add(rs3.getString("speakerId"));
+                        speakerIds.add(rs3.getString("userId"));
                     }
                 }
                 //Use the data retrieved from the tables to create Event entity
@@ -128,14 +128,16 @@ public class EventGatewayDB implements EventStrategy{
     return eventList;
     }
 
+    /**
+     * Writes the data from a list of events into the database so it can be referenced in the future
+     * @param writeEvents the list of events to be represented in the database
+     */
     @Override
     public void writeData(ArrayList<Event> writeEvents) {
         //Create event table if it hasn't already been
         createEvents();
         //Create relations table if it hasn't already been
         createRelations();
-        //Create relations2 table if it hasn't already been
-        createRelations2();
         for(Event event: writeEvents){
             //Query for writing the event to the database
             String sql = "INSERT INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP)" +
@@ -159,7 +161,7 @@ public class EventGatewayDB implements EventStrategy{
             }
             //For each speaker talking at this event, we write this relationship into the database
             for(String id: event.getSpeakers()) {
-                String relationQuery = "INSERT INTO relations2 (eventId, speakerId)" + " Values('"+event.getID()+"', '"+id+"')";
+                String relationQuery = "INSERT INTO relations (eventId, userId)" + " Values('"+event.getID()+"', '"+id+"')";
                 try (Connection rConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
                      Statement stmt = rConn.createStatement()) {
                     //Write relationship

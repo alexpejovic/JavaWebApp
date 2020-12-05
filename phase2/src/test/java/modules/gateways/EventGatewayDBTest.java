@@ -10,14 +10,7 @@ import static org.junit.Assert.*;
 import java.time.LocalDateTime;
 
 public class EventGatewayDBTest {
-
-    @Test
-    public void testReadFile(){
-        EventGatewayDB eventDB = new EventGatewayDB();
-        ArrayList<Event> eventList = eventDB.readData();
-        assertEquals("room3", eventList.get(0).getRoomNumber());
-        assertEquals("event23", eventList.get(0).getID());
-    }
+    //Run the tests in order on an empty database
 
     @Test
     public void testWriteFile(){
@@ -56,5 +49,16 @@ public class EventGatewayDBTest {
         ArrayList<Event> eventList = new ArrayList<>();
         eventList.add(newEvent);
         eventDB.writeData(eventList);
+    }
+    @Test
+    public void testReadFile(){
+        EventGatewayDB eventDB = new EventGatewayDB();
+        ArrayList<Event> eventList = eventDB.readData();
+        assertEquals("room3", eventList.get(0).getRoomNumber());
+        assertEquals("event23", eventList.get(0).getID());
+        assertEquals(1, eventList.get(3).getAttendees().size());
+        assertEquals(1, eventList.get(3).getSpeakers().size());
+        assertEquals(eventList.size(), 4);
+
     }
 }
