@@ -5,11 +5,9 @@ import modules.gateways.EventGateway;
 import modules.gateways.MessageGateway;
 import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
-import modules.presenters.EventPresenter;
-import modules.presenters.LoginPresenter;
-import modules.presenters.MessagePresenter;
-import modules.presenters.SignupPresenter;
+import modules.presenters.*;
 import modules.usecases.*;
+import modules.views.IAttendeeHomePageView;
 import modules.views.ILoginView;
 import modules.views.ISignupView;
 
@@ -28,10 +26,12 @@ public class ConferenceBuilder {
     // UI interfaces
     private ILoginView iLoginView;
     private ISignupView iSignupView;
+    private IAttendeeHomePageView iAttendeeHomePageView;
 
-    public ConferenceBuilder(ILoginView iLoginView, ISignupView iSignupView){
+    public ConferenceBuilder(ILoginView iLoginView, ISignupView iSignupView, IAttendeeHomePageView iAttendeeHomePageView){
         this.iLoginView = iLoginView;
         this.iSignupView = iSignupView;
+        this.iAttendeeHomePageView = iAttendeeHomePageView;
     }
 
     public void buildConference(StartConference startConference){
@@ -54,12 +54,14 @@ public class ConferenceBuilder {
         // Init controllers
         startConference.setAccountCreator(new AccountCreator(organizerManager, attendeeManager, speakerManager));
         startConference.setLoginController(new LoginController(attendeeManager, organizerManager, speakerManager));
+        startConference.setStringFormatter(new StringFormatter(eventManager, messageManager));
 
         // Init presenters
         startConference.setMessagePresenter(new MessagePresenter(messageManager));
         startConference.setEventPresenter(new EventPresenter(eventManager));
         startConference.setLoginPresenter(new LoginPresenter(iLoginView));
         startConference.setSignupPresenter(new SignupPresenter(iSignupView));
+        startConference.setAttendeeOptionsPresenter(new AttendeeOptionsPresenter(iAttendeeHomePageView));
 
     }
 
@@ -68,14 +70,14 @@ public class ConferenceBuilder {
      */
     private ArrayList<Event> readEvents() {
         EventGateway eventGateway = new EventGateway();
-        return eventGateway.readSerFile();
+        return eventGateway.readData();
     }
     /**
      * @return an arraylist of Message entities
      */
     private ArrayList<Message> readMessages() {
         MessageGateway messageGateway = new MessageGateway();
-        return messageGateway.readSerFile();
+        return messageGateway.readData();
     }
 
     /**
@@ -83,7 +85,7 @@ public class ConferenceBuilder {
      */
     private ArrayList<Room> readRooms() {
         RoomGateway roomGateway = new RoomGateway();
-        return roomGateway.readSerFile();
+        return roomGateway.readData();
     }
 
     /**
@@ -91,7 +93,7 @@ public class ConferenceBuilder {
      */
     private ArrayList<Attendee> readAttendees() {
         UserGateway userGateway = new UserGateway();
-        ArrayList<User> users = userGateway.readSerFile();
+        ArrayList<User> users = userGateway.readData();
         return getAttendeesFromUsers(users);
     }
 
@@ -100,7 +102,7 @@ public class ConferenceBuilder {
      */
     private ArrayList<Organizer> readOrganizers() {
         UserGateway userGateway = new UserGateway();
-        ArrayList<User> users = userGateway.readSerFile();
+        ArrayList<User> users = userGateway.readData();
         return getOrganizersFromUsers(users);
     }
 
@@ -109,7 +111,7 @@ public class ConferenceBuilder {
      */
     private ArrayList<Speaker> readSpeakers() {
         UserGateway userGateway = new UserGateway();
-        ArrayList<User> users = userGateway.readSerFile();
+        ArrayList<User> users = userGateway.readData();
         return getSpeakersFromUsers(users);
     }
 

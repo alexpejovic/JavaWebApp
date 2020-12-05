@@ -115,23 +115,23 @@ public class Conference {
         MessagePresenter messagePresenter = new MessagePresenter(messageManager);
         boolean logout = true;
 
-        if (userID.startsWith("a")) {
-            AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID, messageManager);
-            AttendeeUI attendeeUI = new AttendeeUI(attendeeController, eventPresenter, messagePresenter);
-            logout = attendeeUI.run();
-        }
-        else if (userID.startsWith("o")) {
-            eventCreator = new EventCreator(eventManager);
-            accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager);
-            OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager, speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID);
-            OrganizerUI organizerUI = new OrganizerUI(organizerController, messagePresenter, eventPresenter, eventCreator, accountCreator);
-            logout = organizerUI.run();
-        }
-        else if (userID.startsWith("s")) {
-            SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager, attendeeManager, messageManager);
-            SpeakerUI speakerUI = new SpeakerUI(speakerController, eventPresenter,messagePresenter);
-            logout = speakerUI.run();
-        }
+//        if (userID.startsWith("a")) {
+//            AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID, messageManager);
+//            AttendeeUI attendeeUI = new AttendeeUI(attendeeController, eventPresenter, messagePresenter);
+//            logout = attendeeUI.run();
+//        }
+//        else if (userID.startsWith("o")) {
+//            eventCreator = new EventCreator(eventManager);
+//            accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager);
+//            OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager, speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID);
+//            OrganizerUI organizerUI = new OrganizerUI(organizerController, messagePresenter, eventPresenter, eventCreator, accountCreator);
+//            logout = organizerUI.run();
+//        }
+//        else if (userID.startsWith("s")) {
+//            SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager, attendeeManager, messageManager);
+//            SpeakerUI speakerUI = new SpeakerUI(speakerController, eventPresenter,messagePresenter);
+//            logout = speakerUI.run();
+//        }
         // Returns true is user wants to log out and false if user wants to exit the program
         return !logout;
     }
