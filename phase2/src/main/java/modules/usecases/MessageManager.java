@@ -217,4 +217,36 @@ public class MessageManager {
         Message message = this.getMessage((messageID));
         message.markAsUnread();
     }
+
+    /**
+     * Returns a boolean representing if the specified message has been read
+     * @param messageID the unique ID of the message to be marked as unread
+     * @return true if the message has been read, false otherwise
+     */
+    public boolean getHasMessageBeenRead(String messageID){
+        Message message = this.getMessage((messageID));
+        return message.getHasBeenRead();
+    }
+
+    /**
+     * Checks if there are any messages between two users
+     * @param user1 the userId of one of the users
+     * @param user2 the userId of one of the users
+     * @return true if there exits a message between the two users, false otherwise
+     */
+    public boolean hasUsersMessagedBefore(String user1, String user2){
+        if(!messages.containsKey(user1)){
+            // to prevent NullPointerExceptions
+            return false;
+        }
+        ArrayList<Message> user1Messages = messages.get(user1);
+        for (Message message: user1Messages){
+            if (message.getReceiverID().equals(user2) || message.getSenderID().equals(user2)){
+                // if there exits a message between the two users
+                return true;
+            }
+        }
+        // no message exists between two users
+        return false;
+    }
 }

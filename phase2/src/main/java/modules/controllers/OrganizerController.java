@@ -152,7 +152,7 @@ public class OrganizerController {
         //schedule the speaker
         if (isSpeakerAvailable && isEventAvailable && !isSpeakerSpeakingAtEvent){
             // add speaker to event's properties
-            eventManager.setSpeaker(speakerId,eventId);
+            eventManager.addSpeakerToEvent(speakerId,eventId);
             // add event to speaker's properties
             speakerManager.addEventToSpeaker(eventId,speakerId);
             return true;

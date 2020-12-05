@@ -130,6 +130,16 @@ public class Event implements Serializable {
     }
 
     /**
+     * Returns a shallow copy of the attendee ids of attendees of this event
+     * @return a shallow copy of the attendee ids of attendees of this event
+     */
+    public ArrayList<String> getAttendees() {
+        ArrayList<String> attendees  = new ArrayList<>();
+        attendees.addAll(attendeeList);
+        return attendees;
+    }
+
+    /**
      * Removes specific speaker from the Event's list of attendees
      * @param userID the unique id of the speaker being removed from the Event's speaker list
      * @throws UserNotFoundException if there is no speaker user with userID speaking at this event
@@ -142,7 +152,6 @@ public class Event implements Serializable {
             throw new UserNotFoundException();
         }
     }
-
 
     /** Gets the name of the Event
      *

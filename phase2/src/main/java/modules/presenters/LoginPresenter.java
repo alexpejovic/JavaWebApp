@@ -4,37 +4,19 @@ import modules.controllers.AttendeeController;
 import modules.controllers.OrganizerController;
 import modules.controllers.SpeakerController;
 import modules.views.ILoginView;
-import modules.views.ISignupView;
 
 /**
- * Presenter class for the Login and Signup actions
+ * Presenter class for the Login actions
  */
-public class LoginSignupPresenter {
+public class LoginPresenter {
     private ILoginView iLoginView;
-    private ISignupView iSignupView;
 
     /**
-     * Constructor for LoginSignupPresenter
+     * Constructor for LoginPresenter
      * @param iLoginView the interface for the login page
-     * @param iSignupView the interface for the signup page
      */
-    public LoginSignupPresenter(ILoginView iLoginView, ISignupView iSignupView){
+    public LoginPresenter(ILoginView iLoginView){
         this.iLoginView = iLoginView;
-        this.iSignupView = iSignupView;
-    }
-
-    /**
-     * Sends a message to signup page that a username is already taken
-     */
-    public void invalidSignup(){
-        iSignupView.displaySignupMessage("Sorry username is taken.");
-    }
-
-    /**
-     * Navigates back to login page after successful login
-     */
-    public void signupSuccessful(){
-        iSignupView.returnToLoginPage();
     }
 
     /**

@@ -49,7 +49,7 @@ public class AttendeeManagerTest {
         attendeeManager.addAttendee(attendee);
         EventManager eventManager = new EventManager(new ArrayList<>());
         eventManager.createEvent("1", time1, time2, "e1234",2);
-        attendeeManager.addEventToAttendee(attendee.getID(), eventManager.getEventList().get(0), eventManager);
+        attendeeManager.addEventToAttendee(attendee.getID(), eventManager.getEventList().get(0).getID());
         assertEquals("e1234", attendee.getEventsList().get(0));
     }
 

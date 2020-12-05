@@ -119,4 +119,10 @@ public class Message implements Comparable<Message>, Serializable {
     public void markAsUnread(){
         hasBeenRead = false;
     }
+
+    /**
+     * Returns a boolean representing if this message has been read
+     * @return true if the message has been read, false otherwise
+     */
+    public boolean getHasBeenRead(){return hasBeenRead;}
 }
