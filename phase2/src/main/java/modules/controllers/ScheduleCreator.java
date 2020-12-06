@@ -44,6 +44,9 @@ public class ScheduleCreator {
                     "      border: 1px solid black;\n" +
                     "      border-collapse: collapse;\n" +
                     "    }\n" +
+                    "    th{background-color: #E3E7E7 }\n" +
+                    "    td{background-color: #F6F7F7}\n" +
+                    "    body {background-color: #B3BEBE ;}"+
                     "</style>\n");
             bufferedWriter.write("<h1>\n    Schedule of Conference \n</h1> \n");
             // get hashmap with dates(no hour min) as keys and eventIDs as values
