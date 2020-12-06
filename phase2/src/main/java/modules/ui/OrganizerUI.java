@@ -55,7 +55,10 @@ public class OrganizerUI {
                 seeListOfEvents();
             } else if (userInput ==6){
                 manageEventsAttending();
+            } else if (userInput == 7){
+                runCreateNewUser();
             }
+
 
         }while(userInput != 1 && userInput != 2);
 
@@ -72,8 +75,9 @@ public class OrganizerUI {
                 "3, To get to work and do some organizing!\n" +
                 "4, To chat and message other users\n" +
                 "5, See total list of Events\n" +
-                "6, Manage the Events you are attending\n");
-        return this.validSelection(6);
+                "6, Manage the Events you are attending\n" +
+                "7, Create new users");
+        return this.validSelection(7);
     }
 
     /**
@@ -82,9 +86,9 @@ public class OrganizerUI {
     private void runOrganizing(){
         System.out.println("Enter, \n" +
                 "1, to schedule an Event\n" +
-                "2, to create a Speaker Account\n" +
-                "3, to schedule a Speaker to an Event\n" +
-                "4, add a room into the system\n");
+                "2, to schedule a Speaker to an Event\n" +
+                "3, add a room into the system\n" +
+                "4, Cancel an Event");
         int numChosen = this.validSelection(4);
         runOrganizingSpecifics(numChosen);
     }
@@ -114,14 +118,75 @@ public class OrganizerUI {
     }
 
     /**
+     * Private helper that enables Organizer to choose what type of user to create
+     */
+    private void runCreateNewUser(){
+        System.out.println("Enter, \n" +
+                "1: to create a Speaker account \n" +
+                "2: to create an Organizer account\n" +
+                "3: to create an Attendee account\n");
+        int numChosen = this.validSelection(3);
+        createNewUser(numChosen);
+    }
+
+    /**
+     * Private helper that enables Organizer to create their selected user account
+     */
+    private void createNewUser(int userInput){
+        Scanner input = new Scanner(System.in);
+        System.out.println("enter the username of the user you wish to create");
+        String userName = input.nextLine();
+        System.out.println("enter the password of the user you wish to create");
+        String password = input.nextLine();
+        if (userInput == 1){
+            accountCreator.createSpeakerAccount(userName, password, new ArrayList<>());
+            System.out.println("The Speaker account has successfully been created");
+        } else if (userInput == 2){
+            accountCreator.createOrganizerAccount(userName, password);
+            System.out.println("The Organizer account has successfully been created");
+        } else if (userInput == 3){
+            System.out.println("Enter \n" +
+                    "Y, if the user is a VIP \n" +
+                    "N, if the user is not a VIP");
+            String isVip = input.nextLine();
+            while (!isVip.equals("Y") && !isVip.equals("N")){
+                System.out.println("Please enter Y or N");
+                isVip = input.nextLine();
+            }
+            accountCreator.createAttendeeAccount(userName, password,new ArrayList<>(), isVip.equals("Y"));
+            System.out.println("The Attendee account has successfully been created");
+        }
+    }
+
+    /**
      * Private helper that completes the specific organizational operation based on the user input for organizing options
      * @param userInput the organizing option the Organizer has selected
      */
     private void runOrganizingSpecifics(int userInput){
         if (userInput==1){ scheduleEvent(); }
-        else if (userInput==2){createSpeakerAccount();}
-        else if (userInput==3){scheduleSpeaker();}
-        else {addNewRoom();}
+        else if (userInput==2){scheduleSpeaker();}
+        else if (userInput==3){addNewRoom();}
+        else if (userInput == 4){ cancelEvent();}
+    }
+
+    /**
+     * Private helper that enables organizer to cancel an event
+     */
+    private void cancelEvent(){
+        Scanner input = new Scanner(System.in);
+        System.out.println("Input the event name of the event you wish to cancel");
+        String eventName = input.nextLine();
+        // check if event exists
+        while (!organizerController.eventExists(eventName)){
+            System.out.println("Oops! It seems the event you have selected does not exist \n" +
+                    "Please Input the name of an existing event");
+            eventName = input.nextLine();
+        }
+        // cancel event
+        organizerController.cancelEvent(eventName);
+        organizerController.cancelEnrollment(eventName);
+        // confirm cancellation
+        System.out.println("The event " + eventName +" is successfully and fully removed from the conference");
     }
 
     /**
@@ -316,19 +381,6 @@ public class OrganizerUI {
         return dates;
     }
 
-    /**
-     * Private helper that enables Organizer to create a Speaker account and add it to the system
-     */
-    private void createSpeakerAccount(){
-        Scanner input = new Scanner(System.in);
-
-        System.out.println("Input the username of the Speaker you wish to create");
-        String speakerUserName = input.nextLine();
-        System.out.println("Input the password of the Speaker you wish to create");
-        String speakerPassword = input.nextLine();
-        accountCreator.createSpeakerAccount(speakerUserName, speakerPassword, new ArrayList<>());
-        System.out.println("The Speaker account has successfully been created");
-    }
 
     /**
      * Private helper that enables Organizer to see the list of all events in the system and their description
