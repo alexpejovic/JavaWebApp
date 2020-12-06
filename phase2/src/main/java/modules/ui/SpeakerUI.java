@@ -37,7 +37,7 @@ public class SpeakerUI {
      */
     public boolean run(){
 
-
+/*
         // int to store user selection
         int selection; // initially 0
 
@@ -81,12 +81,15 @@ public class SpeakerUI {
             // exit program
             return false;
         }
+        */
+        return true;
     }
 
     /**
      * private helper to allow speaker user to see the list of all talks they are giving
      */
     private void seeListOfTalks(){
+        /*
         // getting list of event ids of Events for speaker
         ArrayList<String> events = speakerController.showEvents();
 
@@ -105,11 +108,13 @@ public class SpeakerUI {
         }
 
         System.out.println(); // spacing
+         */
     }
 
     /**
      * private helper that allows speakers to message single attendees that are attending their events
      */
+    /*
     private void messageAttendee(){
         Scanner input = new Scanner(System.in);
         System.out.println("Please input the recipient's user ID");
@@ -129,10 +134,13 @@ public class SpeakerUI {
         }
         System.out.println(); // spacing
     }
+    */
+
 
     /**
      * private helper that allows speakers to message all attendees that are attending their events
      */
+    /*
     private void messageAllAttendees(){
         Scanner input = new Scanner(System.in);
         System.out.println("Please input a message");
@@ -149,9 +157,12 @@ public class SpeakerUI {
         System.out.println(); // spacing
     }
 
+     */
+
     /**
      * private helper to display all messages that this speaker has sent/ recieved
      */
+    /*
     private void seeMessages(){
         ArrayList<String> msgs = messagePresenter.getMessageList( speakerController.getAllMessages());
         if (msgs.isEmpty()){
@@ -166,10 +177,13 @@ public class SpeakerUI {
         System.out.println(); // spacing
     }
 
+     */
+
 
     /**
      * private helper that makes sure that user input is valid selection and returns the
      */
+    /*
     private int validSelection(){
         Scanner input = new Scanner(System.in);
         int selection = 0;
@@ -195,6 +209,9 @@ public class SpeakerUI {
 
         return selection;
     }
+
+     */
+
 
 
 
