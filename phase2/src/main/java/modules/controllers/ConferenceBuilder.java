@@ -55,6 +55,7 @@ public class ConferenceBuilder {
         startConference.setAccountCreator(new AccountCreator(organizerManager, attendeeManager, speakerManager));
         startConference.setLoginController(new LoginController(attendeeManager, organizerManager, speakerManager));
         startConference.setStringFormatter(new StringFormatter(eventManager, messageManager));
+        startConference.setScheduleCreator(new ScheduleCreator(eventManager));
 
         // Init presenters
         startConference.setMessagePresenter(new MessagePresenter(messageManager));

@@ -28,7 +28,7 @@ public class StringFormatter {
      * @param eventIDs a list of eventIDs for the events to be formatted
      * @return a list of JSON strings representing the specified events in this format:
      *          "{'eventID': '...', 'name': '...', 'startTime': 'yyyy-MM-ddTHH:mm',
-     *          'endTime': 'yyyy-MM-ddTHH:mm', 'remainingSeats': ...}"
+     *          'endTime': 'yyyy-MM-ddTHH:mm', 'roomNumber': '...', 'capacity': ..., 'remainingSeats': ...}"
      */
     public ArrayList<String> eventsToJSONString(ArrayList<String> eventIDs){
         ArrayList<String> eventStrings = new ArrayList<>();
@@ -39,12 +39,16 @@ public class StringFormatter {
             }
             String startTime = eventManager.startTimeOfEvent(eventID).toString();
             String endTime = eventManager.endTimeOfEvent(eventID).toString();
+            String roomNumber = eventManager.getRoomNumberOfEvent(eventID);
+            String capacity = String.valueOf(eventManager.getCapacity(eventID));
             String remainingSeats = String.valueOf(eventManager.getRemainingSeats(eventID));
             String eventString =  "{'eventID': '" + eventID
                                  + "', 'name': '" + eventName +
                               "', 'startTime': '" + startTime +
                                 "', 'endTime': '" + endTime +
-                         "', 'remainingSeats': "  + remainingSeats + "}";
+                             "', 'roomNumber': '" + roomNumber +
+                               "', 'capacity': " + capacity+
+                         ", 'remainingSeats': "  + remainingSeats + "}";
             eventStrings.add(eventString);
         }
         return eventStrings;

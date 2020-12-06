@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * A class representing an event in a conference
  */
-public class Event implements Serializable {
+public class Event implements Comparable<Event>, Serializable {
 
     /** ArrayList that stores the userIDs of attendees who are signed up to attend this event**/
     private ArrayList<String> attendeeList;
@@ -232,5 +232,17 @@ public class Event implements Serializable {
      */
     public boolean getVIPStatus(){
         return this.isVIP;
+    }
+
+    /**
+     * Compares another event with this event
+     * @param event The event being compared with
+     * @return an integer greater than 0 if event started later than this event
+     *         0 if the events started at the same time
+     *         an integer less than 0 if event started before this event
+     */
+    @Override
+    public int compareTo(Event event) {
+        return this.startTime.compareTo(event.getStartTime());
     }
 }

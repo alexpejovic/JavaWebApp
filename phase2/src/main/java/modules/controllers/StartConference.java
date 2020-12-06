@@ -23,6 +23,7 @@ public class StartConference {
     private AccountCreator accountCreator;
     private EventCreator eventCreator;
     private StringFormatter stringFormatter;
+    private ScheduleCreator scheduleCreator;
     // presenters
     private LoginPresenter loginPresenter;
     private SignupPresenter signupPresenter;
@@ -201,6 +202,14 @@ public class StartConference {
      */
     public void setEventCreator(EventCreator eventCreator) {
         this.eventCreator = eventCreator;
+    }
+
+    /**
+     * Setter for scheduleCreator
+     * @param scheduleCreator the scheduleCreator for this conference
+     */
+    public void setScheduleCreator(ScheduleCreator scheduleCreator) {
+        this.scheduleCreator = scheduleCreator;
     }
 
     /**
