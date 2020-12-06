@@ -6,7 +6,7 @@ import modules.usecases.MessageManager;
 import java.util.ArrayList;
 
 /**
- * A controller class that uses use case methods to format entity infromation into json strings to pass to the UI
+ * A controller class that uses use case methods to format entity information into json strings to pass to the UI
  */
 public class StringFormatter {
 
