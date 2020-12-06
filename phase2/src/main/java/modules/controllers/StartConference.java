@@ -28,6 +28,7 @@ public class StartConference {
     private LoginPresenter loginPresenter;
     private SignupPresenter signupPresenter;
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
+    private SpeakerOptionsPresenter speakerOptionsPresenter;
     private MessagePresenter messagePresenter ;
     private EventPresenter eventPresenter;
 
@@ -125,7 +126,8 @@ public class StartConference {
         }
         else if (userID.startsWith("s")) {
             SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager,
-                                                                        attendeeManager, messageManager);
+                                                                        attendeeManager, messageManager,
+                                                                        speakerOptionsPresenter, stringFormatter);
             loginPresenter.speakerLogin(speakerController);
         }
     }

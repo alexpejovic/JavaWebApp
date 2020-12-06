@@ -240,6 +240,15 @@ public class EventManager {
     }
 
     /**
+     * removes event from event from
+     * @param eventName
+     */
+    public void removeEvent(String eventName){
+        Event event = getEvent(getEventID(eventName));
+        eventList.remove(eventName);
+    }
+
+    /**
      * Returns the name of the event
      * @param eventID the unique ID of the event
      * @return returns a String representing the name of the event

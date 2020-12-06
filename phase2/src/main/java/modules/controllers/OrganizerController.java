@@ -252,6 +252,41 @@ public class OrganizerController {
     }
 
     /**
+     * Checks if the event with given username exists in the system
+     * @param eventName the name of the event being searched
+     * @return true if the event is in the system, false otherwise
+     */
+    public boolean eventExists(String eventName){
+        try{
+            eventManager.getEventID(eventName);
+            return true;
+        } catch (EventNotFoundException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Cancels/removes event from the program, the event being cancelled exists in the system
+     * @param eventName the name of the event being cancelled
+     */
+    public void cancelEvent(String eventName){
+        // removes event from system
+        eventManager.removeEvent(eventName);
+        String eventId = eventManager.getEventID(eventName);
+        ArrayList<String> roomList = roomManager.roomsContainingEvent(eventId);
+        // removes event from all rooms contained in
+        for (String roomNumber: roomList){
+            roomManager.removeEventFromRoom(roomNumber, eventId);
+        }
+        // removes event from the attendance lists of all attendees in the conference
+        attendeeManager.removeEventFromAllAttendees(eventId);
+        // removes event from the organized lists of all organizers in the conference
+        organizerManager.removeFromOrganizedEvents(eventId);
+        // removes event from the hosting lists of all speakers in the conference
+        speakerManager.removeEventFromAllSpeakers(eventId);
+    }
+
+    /**
      * Schedules organizer to attend event
      * @param eventName the name of the event the Organizer will attend, if that event exists or has
      *                  available seating
