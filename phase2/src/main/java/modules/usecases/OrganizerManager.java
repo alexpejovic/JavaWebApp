@@ -147,5 +147,14 @@ public class OrganizerManager extends UserManager {
         organizer.addManagedEvent(eventId);
     }
 
+    /**
+     * Removes the given event from the list of organized events for all organizers in the system
+     * @param eventId the id of the event being removed
+     */
+    public void removeFromOrganizedEvents(String eventId){
+        for (Organizer organizer: listOfOrganizers){
+            organizer.removeManagedEvent(eventId);
+        }
+    }
 
 }
