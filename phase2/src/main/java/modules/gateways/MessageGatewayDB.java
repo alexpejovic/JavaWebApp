@@ -85,7 +85,7 @@ public class MessageGatewayDB implements MessageStrategy {
         createMessages();
         for(Message message: writeMessage){
             //Query for writing the message to the database
-            String sql = "INSERT INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead)" +
+            String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead)" +
                     " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+message.getHasBeenRead()+"')";
             try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
                  Statement stmt = iConn.createStatement()) {

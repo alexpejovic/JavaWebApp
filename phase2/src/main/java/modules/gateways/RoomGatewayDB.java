@@ -93,7 +93,7 @@ public class RoomGatewayDB implements RoomStrategy {
         createRooms();
         for(Room room: writeRooms){
             //Query for writing the room to the database
-            String sql = "INSERT INTO rooms (roomNumber, capacity)" +
+            String sql = "REPLACE INTO rooms (roomNumber, capacity)" +
                     " Values('"+room.getRoomNumber()+"', '"+room.getCapacity()+"')";
             try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
                  Statement stmt = iConn.createStatement()) {
