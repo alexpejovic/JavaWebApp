@@ -4,18 +4,22 @@ import modules.exceptions.MessageNotFoundException;
 import modules.presenters.AttendeeOptionsPresenter;
 import modules.usecases.MessageManager;
 
+import java.util.ArrayList;
+
 
 public class MessageController {
 
     private String userID;
     private MessageManager messageManager;
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
+    private StringFormatter stringFormatter;
 
     public MessageController(String userID, MessageManager messageManager, AttendeeOptionsPresenter
-            attendeeOptionsPresenter){
+            attendeeOptionsPresenter, StringFormatter stringFormatter){
         this.userID = userID;
         this.messageManager = messageManager;
         this.attendeeOptionsPresenter = attendeeOptionsPresenter;
+        this.stringFormatter = stringFormatter;
     }
     /**
      * Marks the message specified by messageID as unread, if it exists
@@ -71,5 +75,15 @@ public class MessageController {
             attendeeOptionsPresenter.messageDoesNotExist();
         }
 
+    }
+
+    /**
+     * Returns the messageIDs of archived messages between the receiver and sender
+     * @param user2ID the id of the other user involved in the archived messages to be presented
+     */
+    public void seeArchivedMessages(String user2ID){
+        ArrayList<String> archivedMessages = messageManager.getArchivedMessages(userID, user2ID);
+        ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(archivedMessages);
+        attendeeOptionsPresenter.seeMessages(formattedMessages);
     }
 }
