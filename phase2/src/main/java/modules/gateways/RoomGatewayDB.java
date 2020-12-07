@@ -14,6 +14,9 @@ import java.sql.DatabaseMetaData;
  * A Gateway class used to read room data from the database and write room data to the database
  */
 public class RoomGatewayDB implements RoomStrategy {
+
+    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+    
     /**
      * Creates a rooms table in the database to store data pertaining to room entities.
      * If the table has already been created, nothing occurs
@@ -24,7 +27,7 @@ public class RoomGatewayDB implements RoomStrategy {
                 + " roomNumber VARCHAR(20) PRIMARY KEY, \n"
                 + " capacity INTEGER(20) \n"
                 + ");";
-        try (Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection conn = DBConnect.connect(this.filename);
              Statement stmt = conn.createStatement()) {
             // create a new rooms table
             stmt.execute(createRel);
@@ -47,7 +50,7 @@ public class RoomGatewayDB implements RoomStrategy {
         //Query for selecting contents of rooms table
         String sql = "SELECT roomNumber, capacity FROM rooms";
         //Executing the query for selecting rooms contents
-        try (Connection dbConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection dbConn = DBConnect.connect(this.filename);
              Statement stmt = dbConn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)){
             //For each row in the rooms table, create a new room using the data
@@ -95,7 +98,7 @@ public class RoomGatewayDB implements RoomStrategy {
             //Query for writing the room to the database
             String sql = "REPLACE INTO rooms (roomNumber, capacity)" +
                     " Values('"+room.getRoomNumber()+"', '"+room.getCapacity()+"')";
-            try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+            try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
             } catch (SQLException | ClassNotFoundException e2) {
@@ -104,8 +107,11 @@ public class RoomGatewayDB implements RoomStrategy {
         }
     }
 
+    /**
+     * @param newFilename The new filepath for the database
+     */
     @Override
     public void setFilename(String newFilename) {
-
+        this.filename = newFilename;
     }
 }

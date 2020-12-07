@@ -14,6 +14,9 @@ import java.sql.ResultSet;
  * write message data to the database.
  */
 public class MessageGatewayDB implements MessageStrategy {
+
+    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+
     /**
      * Creates a messages table in the database that stores data pertaining to message entities.
      * If the messages table has already been created, nothing happens.
@@ -29,7 +32,7 @@ public class MessageGatewayDB implements MessageStrategy {
                 + "	hasBeenRead BOOLEAN NOT NULL \n"
                 + ");";
         //Check if trying to create messages table results in an error (messages table already exists)
-        try (Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection conn = DBConnect.connect(this.filename);
              Statement stmt = conn.createStatement()) {
             // creating a new messages table
             stmt.execute(createSql);
@@ -52,7 +55,7 @@ public class MessageGatewayDB implements MessageStrategy {
         //Query for selecting contents of messages table
         String sql = "SELECT messageId, content, senderId, receiverId, dateTime, hasBeenRead FROM messages";
         //Executing the query for selecting messages contents
-        try (Connection dbConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection dbConn = DBConnect.connect(this.filename);
              Statement stmt = dbConn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)){
             //For each row in the messages table, create a new message using the data
@@ -87,7 +90,7 @@ public class MessageGatewayDB implements MessageStrategy {
             //Query for writing the message to the database
             String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead)" +
                     " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+message.getHasBeenRead()+"')";
-            try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+            try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
             } catch (SQLException | ClassNotFoundException e2) {
@@ -96,8 +99,11 @@ public class MessageGatewayDB implements MessageStrategy {
         }
     }
 
+    /**
+     * @param newFilename The new filepath for the database
+     */
     @Override
     public void setFilename(String newFilename) {
-
+        this.filename = newFilename;
     }
 }
