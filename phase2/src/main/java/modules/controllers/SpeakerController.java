@@ -110,4 +110,6 @@ public class SpeakerController {
         return messageManager.getUserMessages(speakerId);
     }
 
+
+
 }

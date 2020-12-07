@@ -116,6 +116,11 @@ public class AttendeeOptionsPresenter {
     }
 
     /**
+     * Displays a message that a specified message was not in the system
+     */
+    public void messageDoesNotExist(){ iAttendeeHomePageView.displayMessage("Sorry, that message does not exist");}
+
+    /**
      * Displays a message that a specified event was not in the system
      */
     public void eventNotFound(){
