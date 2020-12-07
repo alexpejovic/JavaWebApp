@@ -6,7 +6,7 @@ import modules.usecases.MessageManager;
 import java.util.ArrayList;
 
 /**
- * A controller class that uses use case methods to format entity infromation into json strings to pass to the UI
+ * A controller class that uses use case methods to format entity information into json strings to pass to the UI
  */
 public class StringFormatter {
 
@@ -28,7 +28,7 @@ public class StringFormatter {
      * @param eventIDs a list of eventIDs for the events to be formatted
      * @return a list of JSON strings representing the specified events in this format:
      *          "{'eventID': '...', 'name': '...', 'startTime': 'yyyy-MM-ddTHH:mm',
-     *          'endTime': 'yyyy-MM-ddTHH:mm', 'remainingSeats': ...}"
+     *          'endTime': 'yyyy-MM-ddTHH:mm', 'roomNumber': '...', 'capacity': ..., 'remainingSeats': ...}"
      */
     public ArrayList<String> eventsToJSONString(ArrayList<String> eventIDs){
         ArrayList<String> eventStrings = new ArrayList<>();
@@ -39,12 +39,16 @@ public class StringFormatter {
             }
             String startTime = eventManager.startTimeOfEvent(eventID).toString();
             String endTime = eventManager.endTimeOfEvent(eventID).toString();
+            String roomNumber = eventManager.getRoomNumberOfEvent(eventID);
+            String capacity = String.valueOf(eventManager.getCapacity(eventID));
             String remainingSeats = String.valueOf(eventManager.getRemainingSeats(eventID));
             String eventString =  "{'eventID': '" + eventID
                                  + "', 'name': '" + eventName +
                               "', 'startTime': '" + startTime +
                                 "', 'endTime': '" + endTime +
-                         "', 'remainingSeats': "  + remainingSeats + "}";
+                             "', 'roomNumber': '" + roomNumber +
+                               "', 'capacity': " + capacity+
+                         ", 'remainingSeats': "  + remainingSeats + "}";
             eventStrings.add(eventString);
         }
         return eventStrings;

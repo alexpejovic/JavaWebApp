@@ -102,6 +102,16 @@ public class AttendeeManager extends UserManager{
     }
 
     /**
+     * Removes event from the list of events attending for each attendee in the system
+     * @param eventID the id of the event being removed
+     */
+    public void removeEventFromAllAttendees(String eventID){
+        for (Attendee attendee: attendeeList){
+            removeEvent(eventID, attendee.getID());
+        }
+    }
+
+    /**
      * Returns a shallow copy of the list of existing attendees
      * @return a shallow copy of the list of existing attendees
      */

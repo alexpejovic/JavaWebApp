@@ -6,6 +6,7 @@ import modules.usecases.*;
 import modules.views.IAttendeeHomePageView;
 import modules.views.ILoginView;
 import modules.views.ISignupView;
+import modules.views.ISpeakerHomePageView;
 
 import java.util.ArrayList;
 
@@ -23,10 +24,12 @@ public class StartConference {
     private AccountCreator accountCreator;
     private EventCreator eventCreator;
     private StringFormatter stringFormatter;
+    private ScheduleCreator scheduleCreator;
     // presenters
     private LoginPresenter loginPresenter;
     private SignupPresenter signupPresenter;
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
+    private SpeakerOptionsPresenter speakerOptionsPresenter;
     private MessagePresenter messagePresenter ;
     private EventPresenter eventPresenter;
 
@@ -36,8 +39,10 @@ public class StartConference {
      * @param iLoginView the class with login page functionalities
      * @param iSignupView the class with signup page functionalities
      */
-    public StartConference(ILoginView iLoginView, ISignupView iSignupView, IAttendeeHomePageView iAttendeeHomePageView){
-        ConferenceBuilder conferenceBuilder = new ConferenceBuilder(iLoginView, iSignupView, iAttendeeHomePageView);
+    public StartConference(ILoginView iLoginView, ISignupView iSignupView,
+                           IAttendeeHomePageView iAttendeeHomePageView,ISpeakerHomePageView iSpeakerHomePageView){
+        ConferenceBuilder conferenceBuilder = new ConferenceBuilder(iLoginView, iSignupView,
+                                    iAttendeeHomePageView,iSpeakerHomePageView);
         conferenceBuilder.buildConference(this); // this should set initialize all the variables above
     }
 
@@ -124,7 +129,8 @@ public class StartConference {
         }
         else if (userID.startsWith("s")) {
             SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager,
-                                                                        attendeeManager, messageManager);
+                                                                        attendeeManager, messageManager,
+                                                                        speakerOptionsPresenter, stringFormatter);
             loginPresenter.speakerLogin(speakerController);
         }
     }
@@ -204,6 +210,14 @@ public class StartConference {
     }
 
     /**
+     * Setter for scheduleCreator
+     * @param scheduleCreator the scheduleCreator for this conference
+     */
+    public void setScheduleCreator(ScheduleCreator scheduleCreator) {
+        this.scheduleCreator = scheduleCreator;
+    }
+
+    /**
      * Setter for stringFormatter
      * @param stringFormatter the stringFormatter for this conference
      */
@@ -249,5 +263,13 @@ public class StartConference {
      */
     public void setAttendeeOptionsPresenter(AttendeeOptionsPresenter attendeeOptionsPresenter) {
         this.attendeeOptionsPresenter = attendeeOptionsPresenter;
+    }
+
+    /**
+     * Setter for speakerOptionsPresenter
+     * @param speakerOptionsPresenter the speakerOptionsPresenter for this conference
+     */
+    public void setSpeakerOptionsPresenter(SpeakerOptionsPresenter speakerOptionsPresenter) {
+        this.speakerOptionsPresenter = speakerOptionsPresenter;
     }
 }

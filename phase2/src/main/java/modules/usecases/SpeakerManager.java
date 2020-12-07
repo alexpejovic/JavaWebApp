@@ -213,4 +213,17 @@ public class SpeakerManager extends UserManager{
         this.getSpeaker(speakerID).removeEvent(eventID);
     }
 
+
+    /**
+     * Removes the hosted event from all speakers in the system
+     * @param eventId the id of the event being removed
+     */
+    public void removeEventFromAllSpeakers(String eventId){
+        for (Speaker speaker: speakerList){
+            if (speaker.isHosting(eventId)){
+                speaker.removeEvent(eventId);
+            }
+        }
+    }
+
 }

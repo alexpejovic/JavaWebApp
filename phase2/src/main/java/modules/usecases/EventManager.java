@@ -7,6 +7,9 @@ import modules.exceptions.UserNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * This class represents the use case class EventManager
@@ -237,6 +240,15 @@ public class EventManager {
     }
 
     /**
+     * removes event from event from
+     * @param eventName
+     */
+    public void removeEvent(String eventName){
+        Event event = getEvent(getEventID(eventName));
+        eventList.remove(eventName);
+    }
+
+    /**
      * Returns the name of the event
      * @param eventID the unique ID of the event
      * @return returns a String representing the name of the event
@@ -316,6 +328,15 @@ public class EventManager {
     }
 
     /**
+     * Returns the total capacity for the event specified by eventID
+     * @param eventID the unique id of the event in question
+     * @return the maximum number of attendees allowed at this event
+     */
+    public int getCapacity(String eventID){
+        return this.getEvent(eventID).getCapacity();
+    }
+
+    /**
      * Returns the room number for the event specified by eventID
      * @param eventID the unique id of the event in question
      * @return the room number of the room that this event is held in
@@ -381,5 +402,36 @@ public class EventManager {
     public boolean getVIPStatus(String eventID){
         return this.getEvent(eventID).getVIPStatus();
     }
+
+    /**
+     * Gets a hashmap of eventIDs where the keys are dates at 0:00
+     * @return A hashmap of events organized by date of start time
+     */
+    public HashMap<LocalDateTime, ArrayList<String>> getAllEventsWithDates(){
+        HashMap<LocalDateTime, ArrayList<String>> events = new HashMap<>();
+        for (Event event: eventList){
+            // the day that the event starts at
+            int year = event.getStartTime().getYear();
+            int month = event.getStartTime().getMonthValue();
+            int day = event.getStartTime().getDayOfMonth();
+            LocalDateTime date = LocalDateTime.of(year,month,day, 0,0);
+            // putting event in hashmap
+            if (events.containsKey(date)){
+                events.get(date).add(event.getID());
+            }
+            else{
+                ArrayList<String> lst = new ArrayList<>();
+                lst.add(event.getID());
+                events.put(date,lst);
+            }
+        }
+        // sort events by start time for each date key
+        for (LocalDateTime date : events.keySet()){
+            Collections.sort(events.get(date));
+        }
+        return events;
+    }
+
+
 
 }

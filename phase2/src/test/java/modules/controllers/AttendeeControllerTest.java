@@ -45,7 +45,7 @@ public class AttendeeControllerTest {
         ArrayList<String> actual = testAttendeeHomepageView.returnValueList;
         ArrayList<String> expected = new ArrayList<>();
         expected.add("{'eventID': 'e1234', 'name': 'unnamed event', 'startTime': '2020-01-01T01:00'," +
-                " 'endTime': '2020-01-01T02:00', 'remainingSeats': 2}");
+                " 'endTime': '2020-01-01T02:00', 'roomNumber': '1', 'capacity': 2, 'remainingSeats': 2}");
         assertEquals(expected, actual);
     }
 
