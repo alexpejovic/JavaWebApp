@@ -11,6 +11,12 @@ public class MessageController {
     private MessageManager messageManager;
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
 
+    public MessageController(String userID, MessageManager messageManager, AttendeeOptionsPresenter
+            attendeeOptionsPresenter){
+        this.userID = userID;
+        this.messageManager = messageManager;
+        this.attendeeOptionsPresenter = attendeeOptionsPresenter;
+    }
     /**
      * Marks the message specified by messageID as unread, if it exists
      * @param messageID the unique ID of the message to be marked as unread
