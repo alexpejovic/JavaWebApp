@@ -152,21 +152,6 @@ public class AttendeeController {
         }
     }
 
-    /**
-     * Returns the messageIDs of messages received by user and the full conversation between the receiver and sender
-     * @param senderId the id of the user who sends the message
-     */
-    public void seeMessage(String senderId){
-        ArrayList<String> conversation = messageManager.getConversation(attendeeID, senderId);
-        for(String ID: conversation){
-            if(messageManager.getReceiverIDOfMessage(ID).equals(attendeeID)){
-                messageManager.markMessageAsRead(ID);
-            }
-        }
-        ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(conversation);
-        attendeeOptionsPresenter.seeMessages(formattedMessages);
-    }
-
 
 
 }

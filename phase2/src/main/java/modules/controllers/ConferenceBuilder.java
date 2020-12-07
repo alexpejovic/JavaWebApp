@@ -7,10 +7,7 @@ import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
 import modules.presenters.*;
 import modules.usecases.*;
-import modules.views.IAttendeeHomePageView;
-import modules.views.ILoginView;
-import modules.views.ISignupView;
-import modules.views.ISpeakerHomePageView;
+import modules.views.*;
 
 import java.util.ArrayList;
 
@@ -27,8 +24,10 @@ public class ConferenceBuilder {
     // UI interfaces
     private ILoginView iLoginView;
     private ISignupView iSignupView;
+    private IMessageView iMessageView;
     private IAttendeeHomePageView iAttendeeHomePageView;
     private ISpeakerHomePageView iSpeakerHomePageView;
+    private IOrganizerHomePageView iOrganizerHomePageView;
 
     /**
      * Constructor for ConferenceBuilder
@@ -37,13 +36,15 @@ public class ConferenceBuilder {
      * @param iAttendeeHomePageView the view for the homepage for attendee options
      * @param iSpeakerHomePageView the view for the homepage for speaker options
      */
-    public ConferenceBuilder(ILoginView iLoginView, ISignupView iSignupView,
-                             IAttendeeHomePageView iAttendeeHomePageView,
-                             ISpeakerHomePageView iSpeakerHomePageView){
+    public ConferenceBuilder(ILoginView iLoginView, ISignupView iSignupView, IAttendeeHomePageView iAttendeeHomePageView,
+                             ISpeakerHomePageView iSpeakerHomePageView, IOrganizerHomePageView iOrganizerHomePageView,
+                             IMessageView iMessageView){
         this.iLoginView = iLoginView;
         this.iSignupView = iSignupView;
         this.iAttendeeHomePageView = iAttendeeHomePageView;
         this.iSpeakerHomePageView = iSpeakerHomePageView;
+        this.iOrganizerHomePageView = iOrganizerHomePageView;
+        this.iMessageView = iMessageView;
     }
 
     /**
@@ -75,12 +76,11 @@ public class ConferenceBuilder {
         startConference.setScheduleCreator(new ScheduleCreator(eventManager));
 
         // Init presenters
-        startConference.setMessagePresenter(new MessagePresenter(messageManager));
-        startConference.setEventPresenter(new EventPresenter(eventManager));
         startConference.setLoginPresenter(new LoginPresenter(iLoginView));
         startConference.setSignupPresenter(new SignupPresenter(iSignupView));
         startConference.setAttendeeOptionsPresenter(new AttendeeOptionsPresenter(iAttendeeHomePageView));
         startConference.setSpeakerOptionsPresenter(new SpeakerOptionsPresenter(iSpeakerHomePageView));
+        startConference.setOrganizerOptionsPresenter(new OrganizerOptionsPresenter(iOrganizerHomePageView));
 
     }
 

@@ -2,6 +2,7 @@ package modules.controllers;
 
 import modules.exceptions.MessageNotFoundException;
 import modules.presenters.AttendeeOptionsPresenter;
+import modules.presenters.MessagePresenter;
 import modules.usecases.MessageManager;
 
 import java.util.ArrayList;
@@ -11,14 +12,14 @@ public class MessageController {
 
     private String userID;
     private MessageManager messageManager;
-    private AttendeeOptionsPresenter attendeeOptionsPresenter;
+    private MessagePresenter messagePresenter;
     private StringFormatter stringFormatter;
 
-    public MessageController(String userID, MessageManager messageManager, AttendeeOptionsPresenter
-            attendeeOptionsPresenter, StringFormatter stringFormatter){
+    public MessageController(String userID, MessageManager messageManager, MessagePresenter messagePresenter,
+                             StringFormatter stringFormatter){
         this.userID = userID;
         this.messageManager = messageManager;
-        this.attendeeOptionsPresenter = attendeeOptionsPresenter;
+        this.messagePresenter = messagePresenter;
         this.stringFormatter = stringFormatter;
     }
     /**
@@ -30,7 +31,7 @@ public class MessageController {
             messageManager.markMessageAsUnread(messageID);
         }
         catch (MessageNotFoundException e){
-            attendeeOptionsPresenter.messageDoesNotExist();
+            messagePresenter.messageDoesNotExist();
         }
 
     }
@@ -44,7 +45,7 @@ public class MessageController {
             messageManager.markMessageAsArchived(messageID);
         }
         catch (MessageNotFoundException e){
-            attendeeOptionsPresenter.messageDoesNotExist();
+            messagePresenter.messageDoesNotExist();
         }
 
     }
@@ -58,7 +59,7 @@ public class MessageController {
             messageManager.markMessageAsUnarchived(messageID);
         }
         catch (MessageNotFoundException e){
-            attendeeOptionsPresenter.messageDoesNotExist();
+            messagePresenter.messageDoesNotExist();
         }
 
     }
@@ -72,7 +73,7 @@ public class MessageController {
             messageManager.deleteMessage(messageID, userID);
         }
         catch (MessageNotFoundException e){
-            attendeeOptionsPresenter.messageDoesNotExist();
+            messagePresenter.messageDoesNotExist();
         }
 
     }
@@ -84,6 +85,28 @@ public class MessageController {
     public void seeArchivedMessages(String user2ID){
         ArrayList<String> archivedMessages = messageManager.getArchivedMessages(userID, user2ID);
         ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(archivedMessages);
-        attendeeOptionsPresenter.seeMessages(formattedMessages);
+        messagePresenter.seeMessages(formattedMessages);
+    }
+
+    /**
+     * Returns the messageIDs of messages received by user and the full conversation between the receiver and sender
+     * @param senderId the id of the user who sends the message
+     */
+    public void seeMessages(String senderId){
+        ArrayList<String> conversation = messageManager.getConversation(userID, senderId);
+        for(String ID: conversation){
+            if(messageManager.getReceiverIDOfMessage(ID).equals(userID)){
+                messageManager.markMessageAsRead(ID);
+            }
+        }
+        // message is presented to user if there is no messages found between the two
+        if(conversation.isEmpty()){
+            messagePresenter.noMessagesFound();
+        }
+        else{
+            ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(conversation);
+            messagePresenter.seeMessages(formattedMessages);
+        }
+
     }
 }

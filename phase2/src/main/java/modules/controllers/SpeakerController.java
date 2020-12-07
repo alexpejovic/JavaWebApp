@@ -87,6 +87,12 @@ public class SpeakerController {
      */
     public void showAllMessages(){
         ArrayList<String> messageIDs = messageManager.getUserMessages(speakerId);
+        // mark as read
+        for(String ID: messageIDs){
+            if(messageManager.getReceiverIDOfMessage(ID).equals(ID)){
+                messageManager.markMessageAsRead(ID);
+            }
+        }
         ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(messageIDs);
         speakerOptionsPresenter.showAllMessages(formattedMessages);
     }

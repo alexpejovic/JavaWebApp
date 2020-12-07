@@ -3,10 +3,7 @@ package modules.controllers;
 
 import modules.presenters.*;
 import modules.usecases.*;
-import modules.views.IAttendeeHomePageView;
-import modules.views.ILoginView;
-import modules.views.ISignupView;
-import modules.views.ISpeakerHomePageView;
+import modules.views.*;
 
 import java.util.ArrayList;
 
@@ -28,10 +25,10 @@ public class StartConference {
     // presenters
     private LoginPresenter loginPresenter;
     private SignupPresenter signupPresenter;
+    private MessagePresenter messagePresenter;
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
     private SpeakerOptionsPresenter speakerOptionsPresenter;
-    private MessagePresenter messagePresenter ;
-    private EventPresenter eventPresenter;
+    private OrganizerOptionsPresenter organizerOptionsPresenter;
 
 
     /**
@@ -39,10 +36,11 @@ public class StartConference {
      * @param iLoginView the class with login page functionalities
      * @param iSignupView the class with signup page functionalities
      */
-    public StartConference(ILoginView iLoginView, ISignupView iSignupView,
-                           IAttendeeHomePageView iAttendeeHomePageView,ISpeakerHomePageView iSpeakerHomePageView){
-        ConferenceBuilder conferenceBuilder = new ConferenceBuilder(iLoginView, iSignupView,
-                                    iAttendeeHomePageView,iSpeakerHomePageView);
+    public StartConference(ILoginView iLoginView, ISignupView iSignupView, IAttendeeHomePageView iAttendeeHomePageView,
+                           ISpeakerHomePageView iSpeakerHomePageView, IOrganizerHomePageView iOrganizerHomePageView,
+                           IMessageView iMessageView){
+        ConferenceBuilder conferenceBuilder = new ConferenceBuilder(iLoginView, iSignupView, iAttendeeHomePageView,
+                                        iSpeakerHomePageView, iOrganizerHomePageView, iMessageView );
         conferenceBuilder.buildConference(this); // this should set initialize all the variables above
     }
 
@@ -115,23 +113,26 @@ public class StartConference {
         // userID of the person logged in currently
         String userID = loginController.getLoggedUser();
 
+        MessageController messageController = new MessageController(userID, messageManager,
+                                                                    messagePresenter,stringFormatter);
+
         if (userID.startsWith("a")) {
             AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID,
                                                          messageManager, attendeeOptionsPresenter, stringFormatter);
-            loginPresenter.attendeeLogin(attendeeController);
+            loginPresenter.attendeeLogin(attendeeController,messageController);
         }
         else if (userID.startsWith("o")) {
             AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID,
                     messageManager, attendeeOptionsPresenter, stringFormatter);
             OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager,
                     speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID);
-            loginPresenter.organizerLogin(organizerController, attendeeController);
+            loginPresenter.organizerLogin(organizerController, attendeeController,messageController);
         }
         else if (userID.startsWith("s")) {
             SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager,
                                                                         attendeeManager, messageManager,
                                                                         speakerOptionsPresenter, stringFormatter);
-            loginPresenter.speakerLogin(speakerController);
+            loginPresenter.speakerLogin(speakerController,messageController);
         }
     }
 
@@ -250,14 +251,6 @@ public class StartConference {
     }
 
     /**
-     * Setter for eventPresenter
-     * @param eventPresenter the eventPresenter for this conference
-     */
-    public void setEventPresenter(EventPresenter eventPresenter) {
-        this.eventPresenter = eventPresenter;
-    }
-
-    /**
      * Setter for attendeeOptionsPresenter
      * @param attendeeOptionsPresenter the attendeeOptionsPresenter for this conference
      */
@@ -271,5 +264,13 @@ public class StartConference {
      */
     public void setSpeakerOptionsPresenter(SpeakerOptionsPresenter speakerOptionsPresenter) {
         this.speakerOptionsPresenter = speakerOptionsPresenter;
+    }
+
+    /**
+     * Setter for organizerOptionsPresenter
+     * @param organizerOptionsPresenter the organizerOptionsPresenter for this conference
+     */
+    public void setOrganizerOptionsPresenter(OrganizerOptionsPresenter organizerOptionsPresenter) {
+        this.organizerOptionsPresenter = organizerOptionsPresenter;
     }
 }

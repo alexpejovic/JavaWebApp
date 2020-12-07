@@ -5,7 +5,7 @@ import modules.views.IAttendeeHomePageView;
 import java.util.ArrayList;
 
 /**
- * Presenter class for the Signup actions
+ * Presenter class for the Attendee actions
  */
 public class AttendeeOptionsPresenter {
     private IAttendeeHomePageView iAttendeeHomePageView;
@@ -99,26 +99,6 @@ public class AttendeeOptionsPresenter {
         }
     }
 
-    /**
-     * Sends list of message info to homepage to display
-     * @param formattedMessages a list of json strings representing all messages between two users
-     */
-    public void seeMessages(ArrayList<String> formattedMessages){
-        iAttendeeHomePageView.displayMessages(formattedMessages);
-    }
-
-
-    /**
-     * Displays a message that a specified event was not in the system
-     */
-    public void noMessagesFound(){
-        iAttendeeHomePageView.displayMessage("Sorry, no messages exist between you two");
-    }
-
-    /**
-     * Displays a message that a specified message was not in the system
-     */
-    public void messageDoesNotExist(){ iAttendeeHomePageView.displayMessage("Sorry, that message does not exist");}
 
     /**
      * Displays a message that a specified event was not in the system
