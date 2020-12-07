@@ -23,6 +23,9 @@ public class Message implements Comparable<Message>, Serializable {
     //Classifies whether message has already been read or not
     private boolean hasBeenRead;
 
+    //Indicates whether this message has been archived or not
+    private boolean isArchived;
+
     /**
      * Initialize message object from data.
      * @param content The content of the message
@@ -118,5 +121,33 @@ public class Message implements Comparable<Message>, Serializable {
      */
     public void markAsUnread(){
         hasBeenRead = false;
+    }
+
+    /**
+     * Returns a boolean representing if this message has been read
+     * @return true if the message has been read, false otherwise
+     */
+    public boolean getHasBeenRead(){return hasBeenRead;}
+
+    /**
+     * Changes isArchived value to indicate that this message has been arvhived
+     */
+    public void markAsArchived(){
+        isArchived = true;
+    }
+
+    /**
+     * Changes isArchived value to indicate that is message is not archived
+     */
+    public void markAsUnarchived(){
+        isArchived= false;
+    }
+
+    /**
+     * Returns a boolean representing if this message has been archived
+     * @return true if this message has been archived, false otherwise
+     */
+    public boolean getIsArchived(){
+        return isArchived;
     }
 }

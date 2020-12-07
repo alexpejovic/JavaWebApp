@@ -1,6 +1,7 @@
 package modules.gateways;
 
 import modules.entities.*;
+import modules.gateways.MessageGateway;
 import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 import java.time.LocalDateTime;
 
-public class MessageGatewayTest {
+public class MessageGatewaySerTest {
 
     //NOTE: For these tests to run properly the final variable <filename>
     //in MessageGateway must be changed to "messagesTest.ser"
@@ -28,10 +29,10 @@ public class MessageGatewayTest {
             temp = File.createTempFile("messagesTest", ".ser");
 
             //Write to temp file
-            gw.writeSerFile(messages);
+            gw.writeData(messages);
 
             //Read temp file and compare
-            ArrayList<Message> actualMessages = gw.readSerFile();
+            ArrayList<Message> actualMessages = gw.readData();
 
             assertEquals(m1.getContent(), actualMessages.get(0).getContent());
             assertEquals(m1.getSenderID(), actualMessages.get(0).getSenderID());

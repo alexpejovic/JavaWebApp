@@ -64,6 +64,16 @@ public class RoomManager {
         return copy;
     }
 
+    public ArrayList<String> roomsContainingEvent(String eventId){
+        ArrayList<String> roomNumberList = new ArrayList<>();
+        for (Room room: rooms){
+            if (room.isEventInRoom(eventId)){
+                roomNumberList.add(room.getRoomNumber());
+            }
+        }
+        return roomNumberList;
+    }
+
     /**
      * Private helper that returns the Room in this RoomManager with roomNumber
      * or raises a RoomNotFoundException if there is no Room in this RoomManager

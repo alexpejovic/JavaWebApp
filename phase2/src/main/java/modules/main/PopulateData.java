@@ -2,10 +2,7 @@ package modules.main;
 
 
 import modules.entities.*;
-import modules.gateways.EventGateway;
-import modules.gateways.MessageGateway;
-import modules.gateways.RoomGateway;
-import modules.gateways.UserGateway;
+import modules.gateways.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -34,10 +31,10 @@ public class PopulateData {
         roomGateway.setFilename("ser/rooms.ser");
         userGateway.setFilename("ser/users.ser");
 
-        eventGateway.writeSerFile(getEvents());
-        roomGateway.writeSerFile(getRooms());
-        userGateway.writeSerFile(getUsers());
-        messageGateway.writeSerFile(getMessages());
+        eventGateway.writeData(getEvents());
+        roomGateway.writeData(getRooms());
+        userGateway.writeData(getUsers());
+        messageGateway.writeData(getMessages());
 
 //         //to start a new conference with no sample data uncomment this block
 //        eventGateway.writeSerFile(new ArrayList<>());

@@ -103,12 +103,12 @@ public class MessageManager {
     public ArrayList<String> getConversation(String user1, String user2) {
         ArrayList<Message> conversation = new ArrayList<>();
         for (Message message : messages.get(user1)) {
-            if (message.getReceiverID().equals(user2)) {
+            if (message.getReceiverID().equals(user2) && !message.getIsArchived()) {
                 conversation.add(message);
             }
         }
         for (Message message : messages.get(user1)) {
-            if (message.getSenderID().equals(user2)) {
+            if (message.getSenderID().equals(user2) && !message.getIsArchived()) {
                 conversation.add(message);
             }
         }
@@ -216,5 +216,105 @@ public class MessageManager {
     public void markMessageAsUnread(String messageID){
         Message message = this.getMessage((messageID));
         message.markAsUnread();
+    }
+
+    /**
+     * Returns a boolean representing if the specified message has been read
+     * @param messageID the unique ID of the message to be marked as unread
+     * @return true if the message has been read, false otherwise
+     */
+    public boolean getHasMessageBeenRead(String messageID){
+        Message message = this.getMessage((messageID));
+        return message.getHasBeenRead();
+    }
+
+    /**
+     * Checks if there are any messages between two users
+     * @param user1 the userId of one of the users
+     * @param user2 the userId of one of the users
+     * @return true if there exits a message between the two users, false otherwise
+     */
+    public boolean hasUsersMessagedBefore(String user1, String user2){
+        if(!messages.containsKey(user1)){
+            // to prevent NullPointerExceptions
+            return false;
+        }
+        ArrayList<Message> user1Messages = messages.get(user1);
+        for (Message message: user1Messages){
+            if (message.getReceiverID().equals(user2) || message.getSenderID().equals(user2)){
+                // if there exits a message between the two users
+                return true;
+            }
+        }
+        // no message exists between two users
+        return false;
+    }
+
+    /**
+     * Mark the message specified by messageID as archived
+     * @param messageID the unique ID of the message to be marked as archived
+     */
+    public void markMessageAsArchived(String messageID){
+        Message message = this.getMessage(messageID);
+        message.markAsArchived();
+    }
+
+    /**
+     * Mark the message specified by messageID as unarchived
+     * @param messageID the unique ID of the message to be marked as unarchived
+     */
+    public void markMessageAsUnarchived(String messageID){
+        Message message = this.getMessage(messageID);
+        message.markAsUnarchived();
+    }
+
+    /**
+     * Returns a boolean representing if the specified message has been archived
+     * @param messageID the unique ID of the message whose archived status is to be returned
+     * @return true if this message has been archived, false otherwise
+     */
+    public boolean getHasMessageBeenArchived(String messageID){
+        Message message = this.getMessage(messageID);
+        return message.getIsArchived();
+    }
+
+    /**
+     * Returns an ArrayList of unique IDs of messages between two users that have been archived, sorted by date
+     * @param user1 the unique ID of the first user involved in this conversation
+     * @param user2 the unique ID of the second user involved in this conversation
+     * @return an ArrayList of unique IDs of messages that have been archived
+     */
+    public ArrayList<String> getArchivedMessages(String user1, String user2) {
+        ArrayList<Message> archivedMessages = new ArrayList<>();
+        for (Message message : messages.get(user1)) {
+            if (message.getReceiverID().equals(user2) && message.getIsArchived()) {
+                archivedMessages.add(message);
+            }
+        }
+        for (Message message : messages.get(user1)) {
+            if (message.getSenderID().equals(user2) && message.getIsArchived()) {
+                archivedMessages.add(message);
+            }
+        }
+
+        Collections.sort(archivedMessages);
+        ArrayList<String> archivedIDs = new ArrayList<>();
+        for (Message message: archivedMessages){
+            archivedIDs.add(message.getID());
+        }
+        return archivedIDs;
+    }
+
+    /**
+     * Deletes the message with the specified unique ID from the list of existing messages
+     * @param messageID the unique ID of the message to be deleted
+     * @param userID the unique ID of the user who wishes to delete the message
+     */
+    public void deleteMessage(String messageID, String userID){
+        for (Message message: messages.get(userID)){
+            if(message.getID().equals(messageID)){
+                messages.remove(userID, message);
+            }
+        }
     }
 }

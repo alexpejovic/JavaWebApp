@@ -7,6 +7,9 @@ import modules.exceptions.UserNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * This class represents the use case class EventManager
@@ -217,12 +220,32 @@ public class EventManager {
     }
 
     /**
-     * Sets the speaker of the event. This method removes the previous speaker if there was one
+     * Adds speaker to specified event.
      * @param speakerID the unique user ID of the speaker
      * @param eventID the unique ID of the event
+     * Precondition: speakerID is NOT in the list of speakers for the specified Event
      */
-    public void setSpeaker(String speakerID, String eventID) {
+    public void addSpeakerToEvent(String speakerID, String eventID) {
         getEvent(eventID).scheduleSpeaker(speakerID);
+    }
+
+    /**
+     * Removes the specified speaker id from the specified Event's list of speakers
+     * @param eventID the id of the event in question
+     * @param speakerID the speaker id being removed
+     * Precondition: speakerID is in the list of speakers for the specified Event
+     */
+    public void removeSpeakerFromEvent(String eventID, String speakerID){
+        this.getEvent(eventID).removeSpeaker(speakerID);
+    }
+
+    /**
+     * removes event from event from
+     * @param eventName
+     */
+    public void removeEvent(String eventName){
+        Event event = getEvent(getEventID(eventName));
+        eventList.remove(eventName);
     }
 
     /**
@@ -242,7 +265,6 @@ public class EventManager {
     public void renameEvent(String eventID, String name) {
         getEvent(eventID).setName(name);
     }
-
 
     /**
      * Finds a event that is occurring in this room matching the given specifications
@@ -306,6 +328,15 @@ public class EventManager {
     }
 
     /**
+     * Returns the total capacity for the event specified by eventID
+     * @param eventID the unique id of the event in question
+     * @return the maximum number of attendees allowed at this event
+     */
+    public int getCapacity(String eventID){
+        return this.getEvent(eventID).getCapacity();
+    }
+
+    /**
      * Returns the room number for the event specified by eventID
      * @param eventID the unique id of the event in question
      * @return the room number of the room that this event is held in
@@ -336,24 +367,14 @@ public class EventManager {
     }
 
     /**
-     * Removes the specified speaker id from the specified Event's list of speakers
-     * @param eventID the id of the event in question
-     * @param speakerID the speaker id being removed
-     * Precondition: speakerID is in the list of speakers for the specified Event
+     * Returns a shallow copy of the list of speaker ids of speakers speaking at the specified Event
+     * @param eventID the ID of the Event in question
+     * @return a shallow copy of the list of speaker ids of speakers speaking at the specified Event
      */
-    public void removeSpeakerFromEvent(String eventID, String speakerID){
-            this.getEvent(eventID).removeSpeaker(speakerID);
+    public ArrayList<String> getAttendeesOfEvent(String eventID){
+        return  this.getEvent(eventID).getAttendees();
     }
 
-    /**
-     * Adds the specified speaker id from the specified Event's list of speakers
-     * @param eventID the id of the event in question
-     * @param speakerID the speaker id being added
-     * Precondition: speakerID is NOT in the list of speakers for the specified Event
-     */
-    public void addSpeakerToEvent(String eventID, String speakerID){
-        this.getEvent(eventID).scheduleSpeaker(speakerID);
-    }
 
     /**
      * Checks if the specified speaker is speaking at the specified Event
@@ -381,5 +402,36 @@ public class EventManager {
     public boolean getVIPStatus(String eventID){
         return this.getEvent(eventID).getVIPStatus();
     }
+
+    /**
+     * Gets a hashmap of eventIDs where the keys are dates at 0:00
+     * @return A hashmap of events organized by date of start time
+     */
+    public HashMap<LocalDateTime, ArrayList<String>> getAllEventsWithDates(){
+        HashMap<LocalDateTime, ArrayList<String>> events = new HashMap<>();
+        for (Event event: eventList){
+            // the day that the event starts at
+            int year = event.getStartTime().getYear();
+            int month = event.getStartTime().getMonthValue();
+            int day = event.getStartTime().getDayOfMonth();
+            LocalDateTime date = LocalDateTime.of(year,month,day, 0,0);
+            // putting event in hashmap
+            if (events.containsKey(date)){
+                events.get(date).add(event.getID());
+            }
+            else{
+                ArrayList<String> lst = new ArrayList<>();
+                lst.add(event.getID());
+                events.put(date,lst);
+            }
+        }
+        // sort events by start time for each date key
+        for (LocalDateTime date : events.keySet()){
+            Collections.sort(events.get(date));
+        }
+        return events;
+    }
+
+
 
 }

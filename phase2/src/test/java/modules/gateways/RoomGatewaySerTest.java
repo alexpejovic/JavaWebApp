@@ -1,13 +1,14 @@
 package modules.gateways;
 
 import modules.entities.*;
+import modules.gateways.RoomGateway;
 import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
-public class RoomGatewayTest {
+public class RoomGatewaySerTest {
 
     //NOTE: For these tests to run properly the final variable <filename>
     //in RoomGateway must be changed to "roomsTest.ser"
@@ -29,10 +30,10 @@ public class RoomGatewayTest {
             temp = File.createTempFile("roomsTest", ".ser");
 
             //Write to temp file
-            gw.writeSerFile(rooms);
+            gw.writeData(rooms);
 
             //Read temp file and compare
-            ArrayList<Room> actualRooms = gw.readSerFile();
+            ArrayList<Room> actualRooms = gw.readData();
 
             assertEquals(r1.getRoomNumber(), actualRooms.get(0).getRoomNumber());
             assertEquals(r1.getEvents(), actualRooms.get(0).getEvents());

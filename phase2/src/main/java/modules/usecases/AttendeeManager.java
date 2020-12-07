@@ -80,15 +80,13 @@ public class AttendeeManager extends UserManager{
 
     /**
      * Adds the given event's eventID to the given attendee's list of events
-     * that they are attending if they don't already have a event at the same time
+     * Precondition: attendee does not already have a event at the same time
      * @param attendeeID the ID of the attendee whose events list we want to alter
-     * @param event the event that we want to add to the attendee's events list
+     * @param eventID the ID of the event that we want to add to the attendee's events list
      */
-    public void addEventToAttendee(String attendeeID, Event event, EventManager eventManager){
+    public void addEventToAttendee(String attendeeID, String eventID){
         Attendee attendee = getAttendee(attendeeID);
-        if (timeAvailable(attendeeID, event.getStartTime(), event.getEndTime(), eventManager)){
-            attendee.addEvent(event.getID());
-        }
+        attendee.addEvent(eventID);
     }
 
     /**
@@ -101,6 +99,16 @@ public class AttendeeManager extends UserManager{
     public void removeEvent(String eventID, String attendeeID) {
         Attendee attendee = getAttendee(attendeeID);
         attendee.removeEvent(eventID);
+    }
+
+    /**
+     * Removes event from the list of events attending for each attendee in the system
+     * @param eventID the id of the event being removed
+     */
+    public void removeEventFromAllAttendees(String eventID){
+        for (Attendee attendee: attendeeList){
+            removeEvent(eventID, attendee.getID());
+        }
     }
 
     /**
