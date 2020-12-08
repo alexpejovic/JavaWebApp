@@ -11,6 +11,9 @@ import java.sql.DatabaseMetaData;
  * A Gateway class used to read and write user data from/to the database
  */
 public class UserGatewayDB implements UserStrategy {
+
+    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+    
     /**
      * Creates a users table to store user data
      * If a users table has already been created, nothing occurs
@@ -25,7 +28,7 @@ public class UserGatewayDB implements UserStrategy {
                 + ");";
         //Check if trying to create users table results in an error (users table already exists)
         try (
-                Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+                Connection conn = DBConnect.connect(this.filename);
                 Statement stmt = conn.createStatement()) {
             // creating a new table
             stmt.execute(createSql);
@@ -45,9 +48,10 @@ public class UserGatewayDB implements UserStrategy {
         String createRel = "Create TABLE IF NOT EXISTS friends (\n"
                 + " fId INTEGER PRIMARY KEY AUTOINCREMENT, \n"
                 + " userId VARCHAR(20), \n"
-                + " friendId VARCHAR(20) \n"
+                + " friendId VARCHAR(20), \n"
+                + " UNIQUE (userId, friendId) \n"
                 + ");";
-        try (Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection conn = DBConnect.connect(this.filename);
              Statement stmt = conn.createStatement()) {
             // create a new friends table
             stmt.execute(createRel);
@@ -67,7 +71,7 @@ public class UserGatewayDB implements UserStrategy {
         String friendQuery = "SELECT userId, friendId FROM friends WHERE userId == '"+user.getString("userId")+"'";
         //The list of friends to be returned
         ArrayList<String> friendIds = new ArrayList<>();
-        try (Connection dbConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection dbConn = DBConnect.connect(this.filename);
                 Statement stmt3 = dbConn.createStatement();
              ResultSet rs3 = stmt3.executeQuery(friendQuery)) {
             while (rs3.next()) {
@@ -95,7 +99,7 @@ public class UserGatewayDB implements UserStrategy {
         //Query for selecting contents of users table
         String sql = "SELECT userId, username, password, isVIP FROM users";
         //Executing the query for selecting users contents
-        try (Connection dbConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection dbConn = DBConnect.connect(this.filename);
              Statement stmt = dbConn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)){
             //Check if the relations table exists
@@ -193,9 +197,9 @@ public class UserGatewayDB implements UserStrategy {
         for(User user: writeUsers){
             //Query for writing the user to the database
             if(user instanceof Speaker || user instanceof Organizer) {
-                String sql = "INSERT INTO users (userId, username, password)" +
+                String sql = "REPLACE INTO users (userId, username, password)" +
                         " Values('" + user.getID() + "', '" + user.getUsername() + "', '" + user.getPassword() + "')";
-                try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+                try (Connection iConn = DBConnect.connect(this.filename);
                      Statement stmt = iConn.createStatement()) {
                     stmt.execute(sql);
                     //We must update the relations table for the events this organizer is managing
@@ -207,12 +211,30 @@ public class UserGatewayDB implements UserStrategy {
                         if (tables.next()) {
                             //Update in relations the events being managed by this organizer
                             for(String eventId: ((Organizer) user).getManagedEvents()) {
-                                String manageQuery = "INSERT INTO relations (eventId, userId) VALUES('" + eventId + "', '" + user.getID() + "')";
+                                String manageQuery = "REPLACE INTO relations (eventId, userId) VALUES('" + eventId + "', '" + user.getID() + "')";
                                 try (Statement newStmt = iConn.createStatement()) {
                                     newStmt.execute(manageQuery);
                                 } catch (SQLException e2) {
                                     System.out.println(e2.getMessage());
                                 }
+                            }
+                            //Delete unwanted managed events
+                            String getFriends = "SELECT eventId, userId FROM relations WHERE userId == '"+user.getID()+"'";
+                            try(Statement stmt3 = iConn.createStatement();
+                                ResultSet rs3 = stmt3.executeQuery(getFriends)){
+                                while (rs3.next()) {
+                                    //Delete unwanted managed event
+                                    if(!(((Organizer) user).getManagedEvents().contains(rs3.getString("eventId")))){
+                                        String removeQuery = "DELETE FROM relations WHERE eventId == '"+rs3.getString("eventId")+"' AND userId == '"+user.getID()+"'";
+                                        try (Statement delStmt = iConn.createStatement()) {
+                                            delStmt.execute(removeQuery);
+                                        } catch (SQLException e2) {
+                                            System.out.println(e2.getMessage());
+                                        }
+                                    }
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
                             }
                         }
                     }
@@ -221,9 +243,9 @@ public class UserGatewayDB implements UserStrategy {
                 }
                 //If user is an attendee (Since we must populate the isVIP variable)
             } else {
-                String sql = "INSERT INTO users (userId, username, password, isVIP)" +
+                String sql = "REPLACE INTO users (userId, username, password, isVIP)" +
                         " Values('" + user.getID() + "', '" + user.getUsername() + "', '" + user.getPassword() + "', '" + ((Attendee) user).getVIPStatus() + "')";
-                try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+                try (Connection iConn = DBConnect.connect(this.filename);
                      Statement stmt = iConn.createStatement()) {
                     stmt.execute(sql);
                 } catch (SQLException | ClassNotFoundException e2) {
@@ -232,19 +254,41 @@ public class UserGatewayDB implements UserStrategy {
             }
             //Query for adding friendships to database
             for(String friend: user.getFriendList()) {
-                String friendQuery = "INSERT INTO friends (userId, friendId) VALUES('" + user.getID() + "', '" + friend + "')";
-                try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+                String friendQuery = "REPLACE INTO friends (userId, friendId) VALUES('" + user.getID() + "', '" + friend + "')";
+                try (Connection iConn = DBConnect.connect(this.filename);
                      Statement stmt = iConn.createStatement()) {
                     stmt.execute(friendQuery);
                 } catch (SQLException | ClassNotFoundException e2) {
                     System.out.println(e2.getMessage());
                 }
             }
+            //Deleting unwanted friendships
+            String getFriends = "SELECT userId, friendId FROM friends WHERE userId == '"+user.getID()+"'";
+            try(Connection dbConn = DBConnect.connect(this.filename);
+                Statement stmt3 = dbConn.createStatement();
+                ResultSet rs3 = stmt3.executeQuery(getFriends)){
+                while (rs3.next()) {
+                    //Delete unwanted friend
+                    if(!(user.getFriendList().contains(rs3.getString("friendId")))){
+                        String removeQuery = "DELETE FROM friends WHERE userId == '"+user.getID()+"' AND friendId == '"+rs3.getString("friendId")+"'";
+                        try (Statement stmt = dbConn.createStatement()) {
+                            stmt.execute(removeQuery);
+                        } catch (SQLException e2) {
+                            System.out.println(e2.getMessage());
+                        }
+                    }
+                }
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+    /**
+     * @param newFilename The new filepath for the database
+     */
     @Override
     public void setFilename(String newFilename) {
-
+        this.filename = newFilename;
     }
 }

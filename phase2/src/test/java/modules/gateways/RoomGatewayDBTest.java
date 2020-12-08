@@ -41,4 +41,24 @@ public class RoomGatewayDBTest {
         assertEquals(roomList.size(), 2);
         assertEquals(roomList.get(0).getCapacity(), 23);
     }
+
+    @Test
+    public void testWriteDataDuplicate(){
+        RoomGatewayDB RGDB = new RoomGatewayDB();
+        Room room = new Room("r1111", 11111111);
+        ArrayList<Room> roomList = new ArrayList<>();
+        roomList.add(room);
+        RGDB.writeData(roomList);
+    }
+
+    @Test
+    public void testReadDataCheckDuplicate(){
+        RoomGatewayDB RGDB = new RoomGatewayDB();
+        ArrayList<Room> roomList = RGDB.readData();
+        assertEquals(roomList.size(), 2);
+        assertEquals(roomList.get(0).getCapacity(), 23);
+        assertEquals(roomList.get(0).getRoomNumber(), "r1234");
+        assertEquals(roomList.get(1).getCapacity(), 11111111);
+        assertEquals(roomList.get(1).getRoomNumber(), "r1111");
+    }
 }

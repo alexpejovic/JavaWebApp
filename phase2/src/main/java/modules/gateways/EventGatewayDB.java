@@ -17,6 +17,9 @@ import java.util.Date;
  * A class to write event data to the database and read data from the database
  */
 public class EventGatewayDB implements EventStrategy{
+
+    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+
     /**
      * Creates a relations table which keeps track of the relationships between attendees and the events they are attending
      * as well as the relationship between speakers and the events they are speaking at.
@@ -27,9 +30,10 @@ public class EventGatewayDB implements EventStrategy{
         String createRel = "Create TABLE IF NOT EXISTS relations (\n"
                 + " relId INTEGER PRIMARY KEY AUTOINCREMENT, \n"
                 + " eventId VARCHAR(20), \n"
-                + " userId VARCHAR(20) \n"
+                + " userId VARCHAR(20), \n"
+                + " UNIQUE (eventId, userId) \n"
                 + ");";
-        try (Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection conn = DBConnect.connect(this.filename);
              Statement stmt = conn.createStatement()) {
             // create a new relations table
             stmt.execute(createRel);
@@ -51,10 +55,10 @@ public class EventGatewayDB implements EventStrategy{
                 + "	endTime TIMESTAMP NOT NULL,\n"
                 + "	name VARCHAR(250),\n"
                 + "	isVIP BOOLEAN NOT NULL,\n"
-                + "	capacity INTEGER(20) NOT NULL\n"
+                + "	capacity INTEGER(20) NOT NULL \n"
                 + ");";
         //Check if trying to create event table results in an error (event table already exists)
-        try (Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection conn = DBConnect.connect(this.filename);
              Statement stmt = conn.createStatement()) {
             // creating a new table
             stmt.execute(createSql);
@@ -64,6 +68,21 @@ public class EventGatewayDB implements EventStrategy{
         }
     }
 
+    /**
+     * Writes to the database the relationship between an attendee/speaker and the event they go to/host
+     * @param event they event the attendee/speaker goes to/hosts
+     * @param id the Id of the speaker/attendee
+     */
+    public void isInvolved(Event event, String id){
+        String relationQuery = "REPLACE INTO relations (eventId, userId)" + " Values('"+event.getID()+"', '"+id+"')";
+        try (Connection rConn = DBConnect.connect(this.filename);
+             Statement stmt = rConn.createStatement()) {
+            //Write relationship
+            stmt.execute(relationQuery);
+        } catch (SQLException | ClassNotFoundException e5) {
+            System.out.println(e5.getMessage());
+        }
+    }
     /**
      * Reads all the data pertaining to events from the database and creates the resulting event entities.
      * This includes populating the attendeeList and speakerList variables.
@@ -80,7 +99,7 @@ public class EventGatewayDB implements EventStrategy{
         //Query for selecting contents of event table
         String sql = "SELECT roomNumber, startTime, endTime, eventId, capacity, name, isVIP FROM events";
         //Executing the query for selecting event contents
-        try (Connection dbConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection dbConn = DBConnect.connect(this.filename);
              Statement stmt = dbConn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)){
             //For each row in the event table, create a new event using the data
@@ -142,9 +161,9 @@ public class EventGatewayDB implements EventStrategy{
         createRelations();
         for(Event event: writeEvents){
             //Query for writing the event to the database
-            String sql = "INSERT INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP)" +
+            String sql = "REPLACE INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP)" +
                     " Values('"+event.getID()+"', '"+event.getRoomNumber()+"', '"+event.getStartTime()+"', '"+event.getEndTime()+"', '"+event.getCapacity()+"', '"+event.getName()+"', '"+event.getVIPStatus()+"')";
-            try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+            try (Connection iConn = DBConnect.connect("this.filename");
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
             } catch (SQLException | ClassNotFoundException e2) {
@@ -152,30 +171,48 @@ public class EventGatewayDB implements EventStrategy{
             }
             //For each attendee going to this event, we write this relationship into the database
             for(String id: event.getAttendees()) {
-                String relationQuery = "INSERT INTO relations (eventId, userId)" + " Values('"+event.getID()+"', '"+id+"')";
-                try (Connection rConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
-                     Statement stmt = rConn.createStatement()) {
-                    //Write relationship
-                    stmt.execute(relationQuery);
-                } catch (SQLException | ClassNotFoundException e5) {
-                    System.out.println(e5.getMessage());
-                }
+                isInvolved(event, id);
             }
             //For each speaker talking at this event, we write this relationship into the database
             for(String id: event.getSpeakers()) {
-                String relationQuery = "INSERT INTO relations (eventId, userId)" + " Values('"+event.getID()+"', '"+id+"')";
-                try (Connection rConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
-                     Statement stmt = rConn.createStatement()) {
-                    //Write relationship
-                    stmt.execute(relationQuery);
-                } catch (SQLException | ClassNotFoundException e5) {
-                    System.out.println(e5.getMessage());
+                isInvolved(event, id);
+            }
+            //Query for deleting unwanted users
+            String getAttendees = "SELECT eventId, userId FROM relations WHERE eventId == '"+event.getID()+"'";
+            try(Connection dbConn = DBConnect.connect("this.filename");
+                Statement stmt3 = dbConn.createStatement();
+                ResultSet rs3 = stmt3.executeQuery(getAttendees)){
+                while (rs3.next()) {
+                    //Delete unwanted attendee
+                    if(rs3.getString("userId").charAt(0) == 'a' && !(event.getAttendees().contains(rs3.getString("userId")))){
+                        String removeQuery = "DELETE FROM relations WHERE eventId == '"+event.getID()+"' AND userId == '"+rs3.getString("userId")+"'";
+                        try (Statement stmt = dbConn.createStatement()) {
+                            stmt.execute(removeQuery);
+                        } catch (SQLException e2) {
+                            System.out.println(e2.getMessage());
+                        }
+                    }
+                    //Delete unwanted speaker
+                    if(rs3.getString("userId").charAt(0) == 's' && !(event.getSpeakers().contains(rs3.getString("userId")))){
+                        String remove = "DELETE FROM relations WHERE eventId == '"+event.getID()+"' AND userId == '"+rs3.getString("userId")+"'";
+                        try (Statement stmt = dbConn.createStatement()) {
+                            stmt.execute(sql);
+                        } catch (SQLException e2) {
+                            System.out.println(e2.getMessage());
+                        }
+                    }
                 }
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
             }
         }
     }
 
+    /**
+     * @param newFilename The new filepath for the database
+     */
     @Override
     public void setFilename(String newFilename) {
+        this.filename = newFilename;
     }
 }
