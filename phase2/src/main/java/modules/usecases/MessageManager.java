@@ -72,8 +72,9 @@ public class MessageManager {
      * @param senderID The ID string of the sender
      * @param receiverID The ID string of the receiver
      * @param message The string of the message
+     * @return the unique ID of the Message sent
      */
-    public void sendMessage(String senderID, String receiverID, String message) {
+    public String sendMessage(String senderID, String receiverID, String message) {
         Message newMessage = new Message(message, senderID, receiverID);
         // Get userMessages for sender and add new message
         if(messages.containsKey(senderID)) {
@@ -92,6 +93,7 @@ public class MessageManager {
             newMessagesArray.add(newMessage);
             messages.put(receiverID, newMessagesArray);
         }
+        return newMessage.getID();
     }
 
     /**
@@ -142,11 +144,12 @@ public class MessageManager {
     }
 
     /**
-     * private helper to return Message in this MessageManager matching given messageID
-     * Precondition: Message with messageID exists
-     * other wise throws MessageNotFound exception
+     * Returns Message in this MessageManager matching given messageID
+     * @param messageID the unique ID of the message in question
+     * @return the Message in this MessageManager matching given messageID
+     * @throws MessageNotFoundException if there is no message with messageID
      */
-    private Message getMessage(String messageID){
+    public Message getMessage(String messageID){
         for (ArrayList<Message> msgs:  messages.values()){
             for(Message message: msgs){
                 if (message.getID().equals(messageID))

@@ -1,6 +1,10 @@
 package modules.controllers;
 
 
+import modules.gateways.EventGateway;
+import modules.gateways.MessageGateway;
+import modules.gateways.RoomGateway;
+import modules.gateways.UserGateway;
 import modules.presenters.*;
 import modules.usecases.*;
 import modules.views.*;
@@ -22,6 +26,7 @@ public class StartConference {
     private EventCreator eventCreator;
     private StringFormatter stringFormatter;
     private ScheduleCreator scheduleCreator;
+    private UpdateInfo updateInfo;
     // presenters
     private LoginPresenter loginPresenter;
     private SignupPresenter signupPresenter;
@@ -29,6 +34,11 @@ public class StartConference {
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
     private SpeakerOptionsPresenter speakerOptionsPresenter;
     private OrganizerOptionsPresenter organizerOptionsPresenter;
+    // gateways
+    private EventGateway eventGateway;
+    private MessageGateway messageGateway;
+    private UserGateway userGateway;
+    private RoomGateway roomGateway;
 
 
     /**
@@ -114,24 +124,26 @@ public class StartConference {
         String userID = loginController.getLoggedUser();
 
         MessageController messageController = new MessageController(userID, messageManager,
-                                                                    messagePresenter,stringFormatter);
+                                                                    messagePresenter,stringFormatter, updateInfo);
 
         if (userID.startsWith("a")) {
             AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID,
-                                                         messageManager, attendeeOptionsPresenter, stringFormatter);
+                                            messageManager, attendeeOptionsPresenter, stringFormatter, updateInfo);
             loginPresenter.attendeeLogin(attendeeController,messageController);
         }
         else if (userID.startsWith("o")) {
             AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, userID,
-                    messageManager, attendeeOptionsPresenter, stringFormatter);
+                    messageManager, attendeeOptionsPresenter, stringFormatter,updateInfo);
             OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager,
-                    speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID);
+                                                                    speakerManager, messageManager, attendeeManager,
+                                                                    eventCreator, accountCreator, userID, updateInfo);
             loginPresenter.organizerLogin(organizerController, attendeeController,messageController);
         }
         else if (userID.startsWith("s")) {
             SpeakerController speakerController = new SpeakerController(userID, eventManager, speakerManager,
                                                                         attendeeManager, messageManager,
-                                                                        speakerOptionsPresenter, stringFormatter);
+                                                                        speakerOptionsPresenter, stringFormatter,
+                                                                        updateInfo);
             loginPresenter.speakerLogin(speakerController,messageController);
         }
     }
@@ -227,6 +239,14 @@ public class StartConference {
     }
 
     /**
+     * Setter for updateInfo
+     * @param updateInfo the updateInfo for this conference
+     */
+    public void setUpdateInfo(UpdateInfo updateInfo) {
+        this.updateInfo = updateInfo;
+    }
+
+    /**
      * Setter for loginPresenter
      * @param loginPresenter the loginPresenter for this conference
      */
@@ -272,5 +292,37 @@ public class StartConference {
      */
     public void setOrganizerOptionsPresenter(OrganizerOptionsPresenter organizerOptionsPresenter) {
         this.organizerOptionsPresenter = organizerOptionsPresenter;
+    }
+
+    /**
+     * Setter for eventGateway
+     * @param eventGateway the eventGateway for this conference
+     */
+    public void setEventGateway(EventGateway eventGateway) {
+        this.eventGateway = eventGateway;
+    }
+
+    /**
+     * Setter for messageGateway
+     * @param messageGateway the messageGateway for this conference
+     */
+    public void setMessageGateway(MessageGateway messageGateway) {
+        this.messageGateway = messageGateway;
+    }
+
+    /**
+     * Setter for roomGateway
+     * @param roomGateway the roomGateway for this conference
+     */
+    public void setRoomGateway(RoomGateway roomGateway) {
+        this.roomGateway = roomGateway;
+    }
+
+    /**
+     * Setter for userGateway
+     * @param userGateway the userGateway for this conference
+     */
+    public void setUserGateway(UserGateway userGateway) {
+        this.userGateway = userGateway;
     }
 }

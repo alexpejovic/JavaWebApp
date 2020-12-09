@@ -69,11 +69,17 @@ public class ConferenceBuilder {
         SpeakerManager speakerManager = new SpeakerManager(readSpeakers());
         startConference.setSpeakerManager(speakerManager);
 
+        //TODO: initialize gateways
+
         // Init controllers
-        startConference.setAccountCreator(new AccountCreator(organizerManager, attendeeManager, speakerManager));
+        UpdateInfo updateInfo = new UpdateInfo(messageGateway, eventGateway,userGateway,roomGateway);
+        startConference.setUpdateInfo(updateInfo);
+        startConference.setAccountCreator(new AccountCreator(organizerManager, attendeeManager,
+                                                                speakerManager, updateInfo));
         startConference.setLoginController(new LoginController(attendeeManager, organizerManager, speakerManager));
         startConference.setStringFormatter(new StringFormatter(eventManager, messageManager));
         startConference.setScheduleCreator(new ScheduleCreator(eventManager));
+        startConference.setEventCreator(new EventCreator(eventManager, updateInfo));
 
         // Init presenters
         startConference.setLoginPresenter(new LoginPresenter(iLoginView));
@@ -81,6 +87,7 @@ public class ConferenceBuilder {
         startConference.setAttendeeOptionsPresenter(new AttendeeOptionsPresenter(iAttendeeHomePageView));
         startConference.setSpeakerOptionsPresenter(new SpeakerOptionsPresenter(iSpeakerHomePageView));
         startConference.setOrganizerOptionsPresenter(new OrganizerOptionsPresenter(iOrganizerHomePageView));
+        startConference.setMessagePresenter(new MessagePresenter(iMessageView));
 
     }
 
