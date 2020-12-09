@@ -5,6 +5,10 @@ import modules.entities.Organizer;
 import modules.entities.Speaker;
 import modules.entities.User;
 import modules.exceptions.NonUniqueIdException;
+import modules.gateways.EventGateway;
+import modules.gateways.MessageGateway;
+import modules.gateways.RoomGateway;
+import modules.gateways.UserGateway;
 import modules.usecases.*;
 import org.junit.Test;
 
@@ -13,6 +17,8 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
+// tests would affect database info if connected to database
+// tests pass but since we are not connecting there is an SQLException message that is printed
 public class OrganizerControllerTest{
     // Creating the Controller Object
     EventManager eventManager = new EventManager(new ArrayList<>());
@@ -21,10 +27,13 @@ public class OrganizerControllerTest{
     OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
     RoomManager roomManager = new RoomManager(new ArrayList<>());
     SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
-    EventCreator eventCreator = new EventCreator(eventManager);
-    AccountCreator accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager);
+    UpdateInfo updateInfo = new UpdateInfo(new MessageGateway(),new EventGateway(),
+                                            new UserGateway(), new RoomGateway());
+    EventCreator eventCreator = new EventCreator(eventManager,updateInfo);
+    AccountCreator accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager,updateInfo);
     OrganizerController organizerController = new OrganizerController(organizerManager, eventManager,
-            roomManager, speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, "o123");
+                                                    roomManager, speakerManager, messageManager, attendeeManager,
+                                                    eventCreator, accountCreator, "o123", updateInfo);
 
     @Test (expected = NonUniqueIdException.class)
     public void testAddNewRoom(){

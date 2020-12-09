@@ -1,26 +1,37 @@
 package modules.controllers;
 
 import modules.exceptions.MessageNotFoundException;
-import modules.presenters.AttendeeOptionsPresenter;
 import modules.presenters.MessagePresenter;
 import modules.usecases.MessageManager;
 
 import java.util.ArrayList;
 
-
+/**
+ * A controller class for message options that are available to every type of user
+ */
 public class MessageController {
 
     private String userID;
     private MessageManager messageManager;
     private MessagePresenter messagePresenter;
     private StringFormatter stringFormatter;
+    private UpdateInfo updateInfo;
 
+    /**
+     * Constructor for MessageController
+     * @param userID the userID of the user logged in currently
+     * @param messageManager the messageManager for this conference
+     * @param messagePresenter the messageManager for this conference
+     * @param stringFormatter a class that
+     * @param updateInfo a class to update database info
+     */
     public MessageController(String userID, MessageManager messageManager, MessagePresenter messagePresenter,
-                             StringFormatter stringFormatter){
+                             StringFormatter stringFormatter, UpdateInfo updateInfo){
         this.userID = userID;
         this.messageManager = messageManager;
         this.messagePresenter = messagePresenter;
         this.stringFormatter = stringFormatter;
+        this.updateInfo = updateInfo;
     }
     /**
      * Marks the message specified by messageID as unread, if it exists
@@ -29,6 +40,7 @@ public class MessageController {
     public void markMessageAsUnread(String messageID){
         try {
             messageManager.markMessageAsUnread(messageID);
+            updateInfo.updateMessage(messageManager.getMessage(messageID));  // updating message info to database
         }
         catch (MessageNotFoundException e){
             messagePresenter.messageDoesNotExist();
@@ -43,6 +55,7 @@ public class MessageController {
     public void markMessageAsArchived(String messageID){
         try {
             messageManager.markMessageAsArchived(messageID);
+            updateInfo.updateMessage(messageManager.getMessage(messageID));  // updating message info to database
         }
         catch (MessageNotFoundException e){
             messagePresenter.messageDoesNotExist();
@@ -57,6 +70,7 @@ public class MessageController {
     public void markMessageAsUnarchived(String messageID){
         try {
             messageManager.markMessageAsUnarchived(messageID);
+            updateInfo.updateMessage(messageManager.getMessage(messageID));  // updating message info to database
         }
         catch (MessageNotFoundException e){
             messagePresenter.messageDoesNotExist();

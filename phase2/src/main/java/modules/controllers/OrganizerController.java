@@ -18,11 +18,12 @@ public class OrganizerController {
     private AttendeeManager attendeeManager;
     private EventCreator eventCreator;
     private AccountCreator accountCreator;
+    private UpdateInfo updateInfo;
 
     public OrganizerController(OrganizerManager organizerManager, EventManager eventManager,
                                RoomManager roomManager, SpeakerManager speakerManager,
                                MessageManager messageManager, AttendeeManager attendeeManager, EventCreator eventCreator,
-                               AccountCreator accountCreator, String organizerId){
+                               AccountCreator accountCreator, String organizerId, UpdateInfo updateInfo){
 
         this.organizerManager = organizerManager;
         this.eventManager = eventManager;
@@ -33,6 +34,7 @@ public class OrganizerController {
         this.eventCreator = eventCreator;
         this.accountCreator = accountCreator;
         this.organizerId = organizerId;
+        this.updateInfo = updateInfo;
     }
 
 
@@ -43,6 +45,7 @@ public class OrganizerController {
      */
     public void addNewRoom(String roomNumber, int capacity){
         roomManager.createRoom(roomNumber, capacity);
+        updateInfo.updateRoom(roomManager.getRoom(roomNumber));
     }
 
     /**
@@ -70,6 +73,7 @@ public class OrganizerController {
                     eventManager.renameEvent(eventId, eventName);
                     roomManager.addEventToRoom(roomNumber, eventId);
                     organizerManager.addToOrganizedEvents(organizerId, eventId);
+                    updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
                     return true;
                 }
                 catch(EventNotFoundException e){
@@ -100,6 +104,7 @@ public class OrganizerController {
     public void createSpeakerAccount(String userName, String password){
         ArrayList<String> listOfEvents = eventManager.getAllEventIDs();
         accountCreator.createSpeakerAccount(userName, password, listOfEvents);
+        // accountCreator updates database
     }
 
     /**
@@ -153,8 +158,12 @@ public class OrganizerController {
         if (isSpeakerAvailable && isEventAvailable && !isSpeakerSpeakingAtEvent){
             // add speaker to event's properties
             eventManager.addSpeakerToEvent(speakerId,eventId);
+            // update speaker info in database
+            updateInfo.updateUser(speakerManager.getSpeaker(speakerId));
             // add event to speaker's properties
             speakerManager.addEventToSpeaker(eventId,speakerId);
+            // update event info in database
+            updateInfo.updateEvent(eventManager.getEvent(eventId));
             return true;
         }
         //return if speaker was not scheduled
@@ -175,8 +184,12 @@ public class OrganizerController {
         if (eventManager.isSpeakerSpeakingAtEvent(eventId,speakerId)){
             //remove speaker from event
             eventManager.removeSpeakerFromEvent(eventId,speakerId);
+            // update speaker info in database
+            updateInfo.updateUser(speakerManager.getSpeaker(speakerId));
             //remove event from speaker
             speakerManager.removeEventFromSpeaker(eventId, speakerId);
+            // update event info in database
+            updateInfo.updateEvent(eventManager.getEvent(eventId));
             return true;
         }
         //speaker was not speaking at event
@@ -219,7 +232,7 @@ public class OrganizerController {
      */
     public void messageAllAttendees(String message){
         for (String attendeeID: attendeeManager.getUserIDOfAllAttendees()){
-            messageManager.sendMessage(organizerId, attendeeID, message);
+            sendMessage(attendeeID, message);
         }
     }
 
@@ -239,7 +252,8 @@ public class OrganizerController {
      * @param message the content of the message being sent
      */
     public void sendMessage(String receiverID, String message){
-        messageManager.sendMessage(organizerId, receiverID, message);
+        String messageID = messageManager.sendMessage(organizerId, receiverID, message);
+        updateInfo.updateMessage(messageManager.getMessage(messageID));   // updating message info in database
     }
 
     /**
@@ -277,6 +291,8 @@ public class OrganizerController {
         // removes event from all rooms contained in
         for (String roomNumber: roomList){
             roomManager.removeEventFromRoom(roomNumber, eventId);
+            // update room info in database
+            updateInfo.updateRoom(roomManager.getRoom(roomNumber));
         }
         // removes event from the attendance lists of all attendees in the conference
         attendeeManager.removeEventFromAllAttendees(eventId);
@@ -284,47 +300,12 @@ public class OrganizerController {
         organizerManager.removeFromOrganizedEvents(eventId);
         // removes event from the hosting lists of all speakers in the conference
         speakerManager.removeEventFromAllSpeakers(eventId);
-    }
-
-    /**
-     * Schedules organizer to attend event
-     * @param eventName the name of the event the Organizer will attend, if that event exists or has
-     *                  available seating
-     * @return true if the organizer has been scheduled, false if not
-     */
-    public boolean attendEvent(String eventName){
-        try {
-            String eventId = eventManager.getEventID(eventName);
-            if (eventManager.canAttend(eventId)){
-                eventManager.addAttendee(eventId, organizerId);
-                return true;
-            }
-            return false;
-        }
-        catch(EventNotFoundException e){
-            return false;
-        }
-    }
-
-    /**
-     * Organizer cancels their enrollment to attend an event
-     * @param eventName the name of the event the organizer will no longer attend,
-     *                  if event exists and the organizer is already attending the event
-     * @return a string that indicates the status of the organizer, if they were able to cancel their enrollment
-     * this will be displayed on the screen for user to see
-     */
-    public String cancelEnrollment(String eventName){
-        try{
-            String eventId = eventManager.getEventID(eventName);
-            eventManager.removeAttendee(eventId, organizerId);
-            return "Your Cancellation was successful";
-        }
-        catch(UserNotFoundException e){
-            return "You were never signed up for this event. Please select another event.";
-        }
-        catch(EventNotFoundException e){
-            return "This event doesn't exist. Please select a new existing event.";
-        }
+        // update user info in database
+        ArrayList<User> users = new ArrayList<>();
+        users.addAll(attendeeManager.getAttendeeList());
+        users.addAll(organizerManager.getListOfOrganizers());
+        users.addAll(speakerManager.getSpeakers());
+        updateInfo.updateUser(users);
     }
 
 }
