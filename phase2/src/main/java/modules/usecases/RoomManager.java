@@ -75,13 +75,12 @@ public class RoomManager {
     }
 
     /**
-     * Private helper that returns the Room in this RoomManager with roomNumber
-     * or raises a RoomNotFoundException if there is no Room in this RoomManager
+     * Returns the Room in this RoomManager with roomNumber
      * @param roomNumber the unique room number of the Room we want
      * @return the Room in this RoomManager with roomNumber
      * @throws RoomNotFoundException if there is no room with given RoomNumber in this Room
      */
-    private Room getRoom(String roomNumber){
+    public Room getRoom(String roomNumber){
         for(Room room: rooms){
             if (room.getRoomNumber().equals(roomNumber)){
                 return room;

@@ -2,7 +2,6 @@ package modules.controllers;
 
 import modules.entities.*;
 import modules.exceptions.EventNotFoundException;
-import modules.exceptions.MessageNotFoundException;
 import modules.exceptions.UserNotFoundException;
 import modules.presenters.AttendeeOptionsPresenter;
 import modules.usecases.AttendeeManager;
@@ -12,22 +11,24 @@ import modules.usecases.MessageManager;
 import java.util.ArrayList;
 
 public class AttendeeController {
+    private String attendeeID;
     private AttendeeManager attendeeManager;
     private EventManager eventManager;
     private MessageManager messageManager;
-    private String attendeeID;
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
     private StringFormatter stringFormatter;
+    private UpdateInfo updateInfo;
 
     public AttendeeController(AttendeeManager attendeeManager, EventManager eventManager,String attendeeID,
                               MessageManager messageManager, AttendeeOptionsPresenter attendeeOptionsPresenter,
-                              StringFormatter stringFormatter){
+                              StringFormatter stringFormatter, UpdateInfo updateInfo){
         this.attendeeManager = attendeeManager;
         this.eventManager = eventManager;
         this.attendeeID = attendeeID;
         this.messageManager = messageManager;
         this.attendeeOptionsPresenter = attendeeOptionsPresenter;
         this.stringFormatter = stringFormatter;
+        this.updateInfo = updateInfo;
     }
 
     /**
@@ -63,6 +64,8 @@ public class AttendeeController {
                     attendeeManager.canAttendEvent(attendeeID, eventID, eventManager)){
                 attendeeManager.addEventToAttendee(attendeeID, eventID);
                 eventManager.addAttendee(eventID, attendeeID);
+                updateInfo.updateEvent(eventManager.getEvent(eventID)); // updating event info to database
+                updateInfo.updateUser(attendeeManager.getAttendee(attendeeID)); // updating attendee info
                 signUpSuccessful = true;
             }
         }
@@ -85,6 +88,8 @@ public class AttendeeController {
             try {
                 attendeeManager.removeEvent(eventID, attendeeID);
                 eventManager.removeAttendee(eventID, attendeeID);
+                updateInfo.updateEvent(eventManager.getEvent(eventID)); // updating event info to database
+                updateInfo.updateUser(attendeeManager.getAttendee(attendeeID)); // updating attendee info
                 attendeeOptionsPresenter.cancelAttendanceToEventMessage(true);
             }catch (UserNotFoundException e){
                 // event did not have attendee in attending list
@@ -106,7 +111,8 @@ public class AttendeeController {
     public void sendMessage(String receiverID, String message) {
         try{
             if (attendeeManager.getFriendList(attendeeID).contains(receiverID)){
-                messageManager.sendMessage(attendeeID, receiverID, message);
+                String messageID = messageManager.sendMessage(attendeeID, receiverID, message);
+                updateInfo.updateMessage(messageManager.getMessage(messageID));   // updating message info in database
                 attendeeOptionsPresenter.sendMessage(true);
             }
             else{ // receiver is not in this attendee's friendList
@@ -127,7 +133,8 @@ public class AttendeeController {
     public void replyMessage(String receiverID, String message){
         try{
             if (messageManager.hasUsersMessagedBefore(attendeeID, receiverID)){
-                messageManager.sendMessage(attendeeID, receiverID, message);
+                String messageID = messageManager.sendMessage(attendeeID, receiverID, message);
+                updateInfo.updateMessage(messageManager.getMessage(messageID));  // updating message info to database
                 attendeeOptionsPresenter.replyMessage(true);
             }
             attendeeOptionsPresenter.replyMessage(false);
@@ -144,6 +151,7 @@ public class AttendeeController {
     public void addUserToFriendList(String userID){
         if(!attendeeManager.getFriendList(attendeeID).contains(userID)){
             attendeeManager.addToFriendList(attendeeID, userID);
+            updateInfo.updateUser(attendeeManager.getAttendee(attendeeID)); // updating attendee info
             attendeeOptionsPresenter.addToFriendList(true);
         }
         else{
@@ -151,8 +159,6 @@ public class AttendeeController {
             attendeeOptionsPresenter.addToFriendList(false);
         }
     }
-
-
 
 }
 

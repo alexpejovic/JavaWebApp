@@ -20,6 +20,7 @@ public class SpeakerController {
     private final MessageManager messageManager;
     private final StringFormatter stringFormatter;
     private final SpeakerOptionsPresenter speakerOptionsPresenter;
+    private final UpdateInfo updateInfo;
 
 
     /**
@@ -32,7 +33,8 @@ public class SpeakerController {
      */
     public SpeakerController(String speakerId, EventManager eventManager, SpeakerManager speakerManager,
                              AttendeeManager attendeeManager, MessageManager messageManager,
-                             SpeakerOptionsPresenter speakerOptionsPresenter, StringFormatter stringFormatter){
+                             SpeakerOptionsPresenter speakerOptionsPresenter, StringFormatter stringFormatter,
+                             UpdateInfo updateInfo){
         this.speakerId = speakerId;
         this.eventManager = eventManager;
         this.speakerManager = speakerManager;
@@ -40,6 +42,7 @@ public class SpeakerController {
         this.messageManager = messageManager;
         this.stringFormatter = stringFormatter;
         this.speakerOptionsPresenter = speakerOptionsPresenter;
+        this.updateInfo = updateInfo;
     }
 
     /**
@@ -61,7 +64,8 @@ public class SpeakerController {
             speakerOptionsPresenter.sendMessageAllSuccess(false);
         } else{
             for(Attendee attendee: this.getAttendees()){
-                messageManager.sendMessage(speakerId, attendee.getID(), message);
+                String messageID = messageManager.sendMessage(speakerId, attendee.getID(), message);
+                updateInfo.updateMessage(messageManager.getMessage(messageID));   // updating message info in database
             }
             speakerOptionsPresenter.sendMessageAllSuccess(true);
         }
@@ -75,7 +79,8 @@ public class SpeakerController {
     public void sendMessage(String recipientId, String message){
         for(Attendee attendee: this.getAttendees()){
             if(attendee.getID().equals(recipientId)){
-                messageManager.sendMessage(speakerId, recipientId, message);
+                String messageID = messageManager.sendMessage(speakerId, recipientId, message);
+                updateInfo.updateMessage(messageManager.getMessage(messageID));   // updating message info in database
                 speakerOptionsPresenter.sendMessageSuccess(true);
             }
         }

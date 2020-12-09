@@ -2,6 +2,7 @@ package modules.controllers;
 
 import static org.junit.Assert.*;
 
+import modules.gateways.*;
 import modules.presenters.AttendeeOptionsPresenter;
 import modules.testviews.TestAttendeeHomepageView;
 import modules.usecases.AttendeeManager;
@@ -9,14 +10,20 @@ import modules.usecases.EventManager;
 import modules.usecases.MessageManager;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+// tests would affect database info if connected to database
+// tests pass but since we are not connecting there is an SQLException message that is printed
 public class AttendeeControllerTest {
 
     TestAttendeeHomepageView testAttendeeHomepageView = new TestAttendeeHomepageView();
     // a test class representing the view with the strings that should be passes to UI in variable returnValue
     AttendeeOptionsPresenter attendeeOptionsPresenter = new AttendeeOptionsPresenter(testAttendeeHomepageView);
+    UpdateInfo updateInfo = new UpdateInfo(new MessageGateway(), new EventGateway(),
+                                                new UserGateway(), new RoomGateway());
+
 
     @Test
     public void testAttendeeController(){
@@ -26,7 +33,7 @@ public class AttendeeControllerTest {
         MessageManager messageManager = new MessageManager(new ArrayList<>());
         StringFormatter stringFormatter = new StringFormatter(eventManager, messageManager);
         AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, stringFormatter);
+                messageManager, attendeeOptionsPresenter, stringFormatter, updateInfo);
     }
 
     @Test
@@ -37,7 +44,7 @@ public class AttendeeControllerTest {
         MessageManager messageManager = new MessageManager(new ArrayList<>());
         StringFormatter stringFormatter = new StringFormatter(eventManager, messageManager);
         AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, stringFormatter);
+                messageManager, attendeeOptionsPresenter, stringFormatter, updateInfo);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234",2);
@@ -57,7 +64,7 @@ public class AttendeeControllerTest {
         MessageManager messageManager = new MessageManager(new ArrayList<>());
         StringFormatter stringFormatter = new StringFormatter(eventManager, messageManager);
         AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, stringFormatter);
+                messageManager, attendeeOptionsPresenter, stringFormatter, updateInfo);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234",2);
@@ -79,7 +86,7 @@ public class AttendeeControllerTest {
         MessageManager messageManager = new MessageManager(new ArrayList<>());
         StringFormatter stringFormatter = new StringFormatter(eventManager, messageManager);
         AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, stringFormatter);
+                messageManager, attendeeOptionsPresenter, stringFormatter, updateInfo);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234",2);
@@ -106,7 +113,7 @@ public class AttendeeControllerTest {
         MessageManager messageManager = new MessageManager(new ArrayList<>());
         StringFormatter stringFormatter = new StringFormatter(eventManager, messageManager);
         AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, stringFormatter);
+                messageManager, attendeeOptionsPresenter, stringFormatter, updateInfo);
         attendeeController.sendMessage("a2345", "heyyyy");
         String msgSentToView = testAttendeeHomepageView.returnValue;
         assertEquals("Message sent!", msgSentToView);
@@ -125,7 +132,7 @@ public class AttendeeControllerTest {
         MessageManager messageManager = new MessageManager(new ArrayList<>());
         StringFormatter stringFormatter = new StringFormatter(eventManager, messageManager);
         AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, stringFormatter);
+                messageManager, attendeeOptionsPresenter, stringFormatter, updateInfo);
         attendeeController.addUserToFriendList("a2345");
         String msgSentToView = testAttendeeHomepageView.returnValue;
         assertEquals("Successfully added to friends list", msgSentToView);
@@ -133,28 +140,4 @@ public class AttendeeControllerTest {
         msgSentToView = testAttendeeHomepageView.returnValue;
         assertEquals("Sorry, that user is already in your friends list", msgSentToView);
     }
-
-//    @Test
-//    public void testSeeMessages(){
-//        EventManager eventManager = new EventManager(new ArrayList<>());
-//        AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
-//        ArrayList<String> friendsList = new ArrayList<>();
-//        attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
-//        attendeeManager.addAttendee("username2", "password2", "a2345", new ArrayList<>());
-//        attendeeManager.getAttendee("a1234").addToFriendList("a2345");
-//        MessageManager messageManager = new MessageManager(new ArrayList<>());
-//        StringFormatter stringFormatter = new StringFormatter(eventManager, messageManager);
-//        AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-//                messageManager, attendeeOptionsPresenter, stringFormatter);
-//        attendeeController.sendMessage("a2345", "heyyyy");
-//        String time = LocalDateTime.now().toString(); // time msg was sent
-//        attendeeController.seeMessages("a1234");
-//        ArrayList<String> actual = testAttendeeHomepageView.returnValueList;
-//        ArrayList<String> expected = new ArrayList<>();
-//        expected.add("{'messageID': 'a1234,a2345,"+ time+ "', 'senderID': 'a1234', 'receiverID': 'a2345', " +
-//                "'content': 'heyyyy', 'time': '"+ time +"', 'hasBeenRead': false 'isArchived': false}");
-//        //NOTE: assertion below will fail since the time is milliseconds off for the messageID
-//        // but can run to see difference and make sure other parts are good
-////        assertEquals(expected,actual);
-//    }
 }

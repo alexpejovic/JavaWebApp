@@ -15,6 +15,7 @@ public class AccountCreator {
     private AttendeeManager attendeeManager;
     private OrganizerManager organizerManager;
     private SpeakerManager speakerManager;
+    private UpdateInfo updateInfo;
 
     /**
      * Constructor for AccountCreator
@@ -22,12 +23,12 @@ public class AccountCreator {
      * @param organizerManager the OrganizerManager use case for this conference
      * @param speakerManager the SpeakerManager use case for this conference
      */
-    public AccountCreator(OrganizerManager organizerManager,
-                           AttendeeManager attendeeManager,
-                           SpeakerManager speakerManager){
+    public AccountCreator(OrganizerManager organizerManager,AttendeeManager attendeeManager,
+                           SpeakerManager speakerManager, UpdateInfo updateInfo){
         this.attendeeManager = attendeeManager;
         this.organizerManager = organizerManager;
         this.speakerManager = speakerManager;
+        this.updateInfo = updateInfo;
     }
 
     /**
@@ -45,6 +46,7 @@ public class AccountCreator {
             // speaker's id starts with s then has the speaker # starting from 0
             String userId = "s"+ speakerManager.NumSpeakers();
             speakerManager.addSpeaker(username,password,userId,events);
+            updateInfo.updateUser(speakerManager.getSpeaker(userId));    // updating database to include new user
         } catch (NonUniqueIdException e){
             accountCreated = false;
         }
@@ -69,6 +71,7 @@ public class AccountCreator {
             if (isVIP){
                 attendeeManager.getAttendee(userId).setAsVIP();
             }
+            updateInfo.updateUser(attendeeManager.getAttendee(userId));    // updating database to include new user
         } catch (NonUniqueIdException e){
             accountCreated = false;
         }
@@ -89,6 +92,7 @@ public class AccountCreator {
             // organizer's id starts with a then has the organizer # starting from 0
             String userId = "o"+ organizerManager.getNumberOfOrganizers();
             organizerManager.createOrganizerAccount(username,password,userId);
+            updateInfo.updateUser(organizerManager.getOrganizer(userId));    // updating database to include new user
         } catch (NonUniqueIdException e){
             accountCreated = false;
         }

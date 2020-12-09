@@ -121,12 +121,11 @@ public class OrganizerManager extends UserManager {
     }
 
     /**
-     * Private helper method that finds the Organizer object in the system with the given id
-     *
+     * Finds the Organizer object in the system with the given id
      * @param organizerId the Organizer's id
      * @return the Organizer object that stores the corresponding id
      */
-    private Organizer findOrganizer(String organizerId) {
+    public Organizer getOrganizer(String organizerId) {
         for (Organizer currOrganizer : listOfOrganizers) {
             if (organizerId.equals(currOrganizer.getID())) {
                 return currOrganizer;
@@ -143,7 +142,7 @@ public class OrganizerManager extends UserManager {
      * @param eventId     the id of the Event being added to the organizer's list of organized events
      */
     public void addToOrganizedEvents(String organizerId, String eventId) {
-        Organizer organizer = findOrganizer(organizerId);
+        Organizer organizer = getOrganizer(organizerId);
         organizer.addManagedEvent(eventId);
     }
 
