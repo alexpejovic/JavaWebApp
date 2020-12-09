@@ -243,8 +243,9 @@ public class UserGatewayDB implements UserStrategy {
                 }
                 //If user is an attendee (Since we must populate the isVIP variable)
             } else {
+                int vip = ((Attendee) user).getVIPStatus() ? 1 : 0;
                 String sql = "REPLACE INTO users (userId, username, password, isVIP)" +
-                        " Values('" + user.getID() + "', '" + user.getUsername() + "', '" + user.getPassword() + "', '" + ((Attendee) user).getVIPStatus() + "')";
+                        " Values('" + user.getID() + "', '" + user.getUsername() + "', '" + user.getPassword() + "', '" + vip + "')";
                 try (Connection iConn = DBConnect.connect(this.filename);
                      Statement stmt = iConn.createStatement()) {
                     stmt.execute(sql);

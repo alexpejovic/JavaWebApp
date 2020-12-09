@@ -105,6 +105,7 @@ public class EventGatewayDBTest {
     public void testWriteUnwantedAttendee(){
         EventGatewayDB eventDB = new EventGatewayDB();
         Event newEvent = new Event("room2", LocalDateTime.now(), LocalDateTime.now(), "event1", 23);
+        newEvent.setAsVIP();
         ArrayList<Event> eventList = new ArrayList<>();
         eventList.add(newEvent);
         eventDB.writeData(eventList);
@@ -115,5 +116,6 @@ public class EventGatewayDBTest {
         EventGatewayDB eventDB = new EventGatewayDB();
         ArrayList<Event> eventList = eventDB.readData();
         assertEquals(eventList.get(3).getAttendees().size(), 0);
+        assertTrue(eventList.get(3).getVIPStatus());
     }
 }

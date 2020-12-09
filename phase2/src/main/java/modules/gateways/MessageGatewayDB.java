@@ -69,7 +69,7 @@ public class MessageGatewayDB implements MessageStrategy {
                 if(rs.getBoolean("hasBeenRead")) {
                     newMessage.markAsRead();
                 }
-                if(rs.getBoolean("isArchived")) {
+                if(rs.getBoolean("isArchived")){
                     newMessage.markAsArchived();
                 }
                 //Add new message to list of messages
@@ -92,8 +92,10 @@ public class MessageGatewayDB implements MessageStrategy {
         createMessages();
         for(Message message: writeMessage){
             //Query for writing the message to the database
+            int archived = message.getIsArchived() ? 1 : 0;
+            int read = message.getHasBeenRead() ? 1 : 0;
             String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead, isArchived)" +
-                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+message.getHasBeenRead()+"', '"+message.getIsArchived()+"')";
+                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+read+"', '"+archived+"')";
             try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);

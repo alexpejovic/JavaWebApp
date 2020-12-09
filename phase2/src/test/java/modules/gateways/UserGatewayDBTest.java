@@ -79,6 +79,7 @@ public class UserGatewayDBTest {
         Attendee attendee1 = new Attendee("Jon", "Squire", "a00000");
         organizer1.addToFriendList(attendee1.getID());
         attendee1.addToFriendList(organizer1.getID());
+        attendee1.setAsVIP();
         Event event1 = new Event("r123", LocalDateTime.now(), "e99999");
         Event event2 = new Event("r567", LocalDateTime.now(), "e77777");
         ArrayList<User> userList = new ArrayList<>();
@@ -100,6 +101,7 @@ public class UserGatewayDBTest {
         assertTrue(result.get(6) instanceof Attendee);
         assertEquals(((Organizer) result.get(5)).getManagedEvents().size(), 2);
         assertEquals(result.get(6).getFriendList().size(), 1);
+        assertTrue(((Attendee) result.get(6)).getVIPStatus());
     }
 
     @Test
