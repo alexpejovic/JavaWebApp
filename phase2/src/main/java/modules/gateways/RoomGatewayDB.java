@@ -15,8 +15,9 @@ import java.sql.DatabaseMetaData;
  */
 public class RoomGatewayDB implements RoomStrategy {
 
-    private String filename = "src\\main\\resources\\web\\database\\conference.db";
-    
+//    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+    private String filename = "src/main/resources/web/database/conference.db";
+
     /**
      * Creates a rooms table in the database to store data pertaining to room entities.
      * If the table has already been created, nothing occurs

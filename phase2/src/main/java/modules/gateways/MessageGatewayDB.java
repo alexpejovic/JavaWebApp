@@ -15,7 +15,8 @@ import java.sql.ResultSet;
  */
 public class MessageGatewayDB implements MessageStrategy {
 
-    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+//    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+    private String filename = "src/main/resources/web/database/conference.db";
 
     /**
      * Creates a messages table in the database that stores data pertaining to message entities.

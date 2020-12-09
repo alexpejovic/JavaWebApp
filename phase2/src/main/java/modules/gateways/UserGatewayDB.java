@@ -1,6 +1,6 @@
 package modules.gateways;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
+//import com.sun.org.apache.xpath.internal.operations.Or;
 import modules.entities.*;
 
 import java.sql.*;
@@ -12,8 +12,9 @@ import java.sql.DatabaseMetaData;
  */
 public class UserGatewayDB implements UserStrategy {
 
-    private String filename = "src\\main\\resources\\web\\database\\conference.db";
-    
+//    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+    private String filename = "src/main/resources/web/database/conference.db";
+
     /**
      * Creates a users table to store user data
      * If a users table has already been created, nothing occurs

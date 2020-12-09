@@ -18,7 +18,8 @@ import java.util.Date;
  */
 public class EventGatewayDB implements EventStrategy{
 
-    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+//    private String filename = "src\\main\\resources\\web\\database\\conference.db";
+    private String filename = "src/main/resources/web/database/conference.db";
 
     /**
      * Creates a relations table which keeps track of the relationships between attendees and the events they are attending
