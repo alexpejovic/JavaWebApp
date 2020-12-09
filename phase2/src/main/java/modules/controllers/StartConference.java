@@ -136,7 +136,8 @@ public class StartConference {
                     messageManager, attendeeOptionsPresenter, stringFormatter,updateInfo);
             OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager,
                                                                     speakerManager, messageManager, attendeeManager,
-                                                                    eventCreator, accountCreator, userID, updateInfo);
+                                                                    eventCreator, accountCreator, userID, updateInfo,
+                                                                    organizerOptionsPresenter, stringFormatter);
             loginPresenter.organizerLogin(organizerController, attendeeController,messageController);
         }
         else if (userID.startsWith("s")) {
