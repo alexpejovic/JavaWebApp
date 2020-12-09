@@ -49,7 +49,7 @@ public class UpdateInfo {
      * Uses a gateway class to update the information for a Event
      * @param event the event to update
      */
-    public void updateEvent(Event event){
+    public void updateEvent(Event event) throws ClassNotFoundException {
         ArrayList<Event> eventUpdate = new ArrayList();
         eventUpdate.add(event);
         eventGateway.writeData(eventUpdate);

@@ -41,7 +41,7 @@ public class EventCreator {
                 eventManager.getEvent(eventID).setAsVIP();
             }
             updateInfo.updateEvent(eventManager.getEvent(eventID)); // updating event info to database
-        } catch (NonUniqueIdException e) {
+        } catch (NonUniqueIdException | ClassNotFoundException e) {
             eventCreated = false;
         }
         return eventCreated;

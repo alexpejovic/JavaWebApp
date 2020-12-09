@@ -43,7 +43,7 @@ public class EventGatewaySerTest {
 
             temp.delete();
 
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

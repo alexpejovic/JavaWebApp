@@ -38,9 +38,10 @@ public class EventGatewayDB implements EventStrategy{
              Statement stmt = conn.createStatement()) {
             // create a new relations table
             stmt.execute(createRel);
-            conn.close();
+
         } catch (SQLException | ClassNotFoundException e4) {
             System.out.println(e4.getMessage());
+        } finally {
         }
     }
 
@@ -160,59 +161,59 @@ public class EventGatewayDB implements EventStrategy{
      */
     @Override
     public void writeData(ArrayList<Event> writeEvents) {
-        //Create event table if it hasn't already been
-        createEvents();
-        //Create relations table if it hasn't already been
-        createRelations();
-        for(Event event: writeEvents){
-            //Query for writing the event to the database
-            int vip = event.getVIPStatus() ? 1 : 0;
-            String sql = "REPLACE INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP)" +
-                    " Values('"+event.getID()+"', '"+event.getRoomNumber()+"', '"+event.getStartTime()+"', '"+event.getEndTime()+"', '"+event.getCapacity()+"', '"+event.getName()+"', '"+vip+"')";
-            try (Connection iConn = DBConnect.connect(this.filename);
-                 Statement stmt = iConn.createStatement()) {
-                stmt.execute(sql);
-                iConn.close();
-            } catch (SQLException | ClassNotFoundException e2) {
-                System.out.println(e2.getMessage());
-            }
-            //For each attendee going to this event, we write this relationship into the database
-            for(String id: event.getAttendees()) {
-                isInvolved(event, id);
-            }
-            //For each speaker talking at this event, we write this relationship into the database
-            for(String id: event.getSpeakers()) {
-                isInvolved(event, id);
-            }
-            //Query for deleting unwanted users
-            String getAttendees = "SELECT eventId, userId FROM relations WHERE eventId == '"+event.getID()+"'";
-            try(Connection dbConn = DBConnect.connect(this.filename);
-                Statement stmt3 = dbConn.createStatement();
-                ResultSet rs3 = stmt3.executeQuery(getAttendees)){
-                while (rs3.next()) {
-                    //Delete unwanted attendee
-                    if(rs3.getString("userId").charAt(0) == 'a' && !(event.getAttendees().contains(rs3.getString("userId")))){
-                        String removeQuery = "DELETE FROM relations WHERE eventId == '"+event.getID()+"' AND userId == '"+rs3.getString("userId")+"'";
-                        try (Statement stmt = dbConn.createStatement()) {
-                            stmt.execute(removeQuery);
-                        } catch (SQLException e2) {
-                            System.out.println(e2.getMessage());
-                        }
-                    }
-                    //Delete unwanted speaker
-                    if(rs3.getString("userId").charAt(0) == 's' && !(event.getSpeakers().contains(rs3.getString("userId")))){
-                        String remove = "DELETE FROM relations WHERE eventId == '"+event.getID()+"' AND userId == '"+rs3.getString("userId")+"'";
-                        try (Statement stmt = dbConn.createStatement()) {
-                            stmt.execute(sql);
-                        } catch (SQLException e2) {
-                            System.out.println(e2.getMessage());
-                        }
-                    }
+        try(Connection dbConn = DBConnect.connect(this.filename);) {
+            //Create event table if it hasn't already been
+            createEvents();
+            //Create relations table if it hasn't already been
+            createRelations();
+            for (Event event : writeEvents) {
+                //Query for writing the event to the database
+                int vip = event.getVIPStatus() ? 1 : 0;
+                String sql = "REPLACE INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP)" +
+                        " Values('" + event.getID() + "', '" + event.getRoomNumber() + "', '" + event.getStartTime() + "', '" + event.getEndTime() + "', '" + event.getCapacity() + "', '" + event.getName() + "', '" + vip + "')";
+                try (Statement stmt = dbConn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (SQLException e2) {
+                    System.out.println(e2.getMessage());
                 }
-                dbConn.close();
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
+                //For each attendee going to this event, we write this relationship into the database
+                for (String id : event.getAttendees()) {
+                    isInvolved(event, id);
+                }
+                //For each speaker talking at this event, we write this relationship into the database
+                for (String id : event.getSpeakers()) {
+                    isInvolved(event, id);
+                }
+                //Query for deleting unwanted users
+                String getAttendees = "SELECT eventId, userId FROM relations WHERE eventId == '" + event.getID() + "'";
+                try (Statement stmt3 = dbConn.createStatement();
+                     ResultSet rs3 = stmt3.executeQuery(getAttendees)) {
+                    while (rs3.next()) {
+                        //Delete unwanted attendee
+                        if (rs3.getString("userId").charAt(0) == 'a' && !(event.getAttendees().contains(rs3.getString("userId")))) {
+                            String removeQuery = "DELETE FROM relations WHERE eventId == '" + event.getID() + "' AND userId == '" + rs3.getString("userId") + "'";
+                            try (Statement stmt = dbConn.createStatement()) {
+                                stmt.execute(removeQuery);
+                            } catch (SQLException e2) {
+                                System.out.println(e2.getMessage());
+                            }
+                        }
+                        //Delete unwanted speaker
+                        if (rs3.getString("userId").charAt(0) == 's' && !(event.getSpeakers().contains(rs3.getString("userId")))) {
+                            String remove = "DELETE FROM relations WHERE eventId == '" + event.getID() + "' AND userId == '" + rs3.getString("userId") + "'";
+                            try (Statement stmt = dbConn.createStatement()) {
+                                stmt.execute(sql);
+                            } catch (SQLException e2) {
+                                System.out.println(e2.getMessage());
+                            }
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (ClassNotFoundException | SQLException e3) {
+            System.out.println(e3.getMessage());
         }
     }
 

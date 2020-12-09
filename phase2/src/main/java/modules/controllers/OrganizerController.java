@@ -80,7 +80,7 @@ public class OrganizerController {
                     updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
                     organizerOptionsPresenter.scheduleEventSuccess(true);
                 }
-                catch(EventNotFoundException e){
+                catch(EventNotFoundException | ClassNotFoundException e){
                     organizerOptionsPresenter.scheduleEventSuccess(false);
                 }
             }
@@ -143,7 +143,7 @@ public class OrganizerController {
      * @param eventName the name of the event taking place in the room
      * precondition: the event with eventName is an existing event
      */
-    public void scheduleSpeaker(String username, String roomNumber, String eventName){
+    public void scheduleSpeaker(String username, String roomNumber, String eventName) throws ClassNotFoundException {
         //check if speaker is available
         if (!roomExists(roomNumber)) {organizerOptionsPresenter.scheduleSpeaker(false);}
         String eventId = eventManager.getEventID(eventName);
@@ -180,7 +180,7 @@ public class OrganizerController {
      * @param eventName the name of the event in question
      * precondition: the event with eventName is an existing event
      */
-    public void removeSpeakerFromEvent(String username, String eventName){
+    public void removeSpeakerFromEvent(String username, String eventName) throws ClassNotFoundException {
         String eventId = eventManager.getEventID(eventName);
         String speakerId = speakerManager.getUserID(username);
         //checking that the speaker is speaking at the given event

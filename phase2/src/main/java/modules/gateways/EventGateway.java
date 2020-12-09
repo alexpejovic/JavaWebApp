@@ -15,7 +15,7 @@ public class EventGateway {
         return this.strategy.readData();
     }
 
-    public void writeData(ArrayList<Event> writeEvents) {
+    public void writeData(ArrayList<Event> writeEvents) throws ClassNotFoundException {
         this.strategy.writeData(writeEvents);
     }
 

@@ -20,7 +20,7 @@ public class PopulateData {
     private static RoomGateway roomGateway = new RoomGateway();
     private static UserGateway userGateway = new UserGateway();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         eventGateway.writeData(getEvents());
         roomGateway.writeData(getRooms());
