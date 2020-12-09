@@ -38,6 +38,7 @@ public class MessageGatewayDB implements MessageStrategy {
              Statement stmt = conn.createStatement()) {
             // creating a new messages table
             stmt.execute(createSql);
+            conn.close();
             //If table has already been created
         } catch (SQLException | ClassNotFoundException e2) {
             System.out.println(e2.getMessage());
@@ -76,6 +77,7 @@ public class MessageGatewayDB implements MessageStrategy {
                 //Add new message to list of messages
                 messageList.add(newMessage);
             }
+            dbConn.close();
             //If message select query fails
         } catch (ClassNotFoundException | SQLException e3) {
             System.out.println(e3.getMessage());
@@ -100,6 +102,7 @@ public class MessageGatewayDB implements MessageStrategy {
             try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
+                iConn.close();
             } catch (SQLException | ClassNotFoundException e2) {
                 System.out.println(e2.getMessage());
             }

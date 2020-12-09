@@ -6,6 +6,7 @@ import modules.gateways.MessageGateway;
 import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
 import modules.usecases.*;
+import modules.views.IOrganizerHomePageView;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class ConfBuild {
         return loginController;
     }
 
-    public OrganizerController getOrgController(String userID) {
+/*    public OrganizerController getOrgController(String userID) {
         EventManager eventManager = new EventManager(readEvents());
         RoomManager roomManager = new RoomManager(readRooms());
         MessageManager messageManager = new MessageManager(readMessages());
@@ -41,7 +42,7 @@ public class ConfBuild {
         AccountCreator accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager, updateInfo);
         OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager, speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID, updateInfo);
         return organizerController;
-    }
+    }*/
 
 
     /**
