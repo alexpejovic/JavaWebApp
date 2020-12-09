@@ -32,6 +32,7 @@ public class RoomGatewayDB implements RoomStrategy {
              Statement stmt = conn.createStatement()) {
             // create a new rooms table
             stmt.execute(createRel);
+            conn.close();
         } catch (SQLException | ClassNotFoundException e4) {
             System.out.println(e4.getMessage());
         }
@@ -80,6 +81,7 @@ public class RoomGatewayDB implements RoomStrategy {
                 //Add new room to list of rooms
                 roomList.add(newRoom);
             }
+            dbConn.close();
             //If room select query fails
         } catch (ClassNotFoundException | SQLException e3) {
             System.out.println(e3.getMessage());
@@ -102,6 +104,7 @@ public class RoomGatewayDB implements RoomStrategy {
             try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
+                iConn.close();
             } catch (SQLException | ClassNotFoundException e2) {
                 System.out.println(e2.getMessage());
             }
