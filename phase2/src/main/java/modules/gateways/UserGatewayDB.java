@@ -33,6 +33,7 @@ public class UserGatewayDB implements UserStrategy {
                 Statement stmt = conn.createStatement()) {
             // creating a new table
             stmt.execute(createSql);
+            conn.close();
             //If table has already been created
         } catch (SQLException | ClassNotFoundException e2) {
             System.out.println(e2.getMessage());
@@ -56,6 +57,7 @@ public class UserGatewayDB implements UserStrategy {
              Statement stmt = conn.createStatement()) {
             // create a new friends table
             stmt.execute(createRel);
+            conn.close();
         } catch (SQLException | ClassNotFoundException e4) {
             System.out.println(e4.getMessage());
         }
@@ -78,6 +80,7 @@ public class UserGatewayDB implements UserStrategy {
             while (rs3.next()) {
                 friendIds.add(rs3.getString("friendId"));
             }
+            dbConn.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -177,6 +180,7 @@ public class UserGatewayDB implements UserStrategy {
                     userList.add(newOrganizer);
                 }
             }
+            dbConn.close();
             //If user select query fails
         } catch (ClassNotFoundException | SQLException e3) {
             System.out.println(e3.getMessage());
@@ -239,6 +243,7 @@ public class UserGatewayDB implements UserStrategy {
                             }
                         }
                     }
+                    iConn.close();
                 } catch (SQLException | ClassNotFoundException e2) {
                     System.out.println(e2.getMessage());
                 }
@@ -250,6 +255,7 @@ public class UserGatewayDB implements UserStrategy {
                 try (Connection iConn = DBConnect.connect(this.filename);
                      Statement stmt = iConn.createStatement()) {
                     stmt.execute(sql);
+                    iConn.close();
                 } catch (SQLException | ClassNotFoundException e2) {
                     System.out.println(e2.getMessage());
                 }
@@ -260,6 +266,7 @@ public class UserGatewayDB implements UserStrategy {
                 try (Connection iConn = DBConnect.connect(this.filename);
                      Statement stmt = iConn.createStatement()) {
                     stmt.execute(friendQuery);
+                    iConn.close();
                 } catch (SQLException | ClassNotFoundException e2) {
                     System.out.println(e2.getMessage());
                 }
@@ -280,6 +287,7 @@ public class UserGatewayDB implements UserStrategy {
                         }
                     }
                 }
+                dbConn.close();
             } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
             }

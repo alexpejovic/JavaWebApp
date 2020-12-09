@@ -38,6 +38,7 @@ public class EventGatewayDB implements EventStrategy{
              Statement stmt = conn.createStatement()) {
             // create a new relations table
             stmt.execute(createRel);
+            conn.close();
         } catch (SQLException | ClassNotFoundException e4) {
             System.out.println(e4.getMessage());
         }
@@ -63,6 +64,7 @@ public class EventGatewayDB implements EventStrategy{
              Statement stmt = conn.createStatement()) {
             // creating a new table
             stmt.execute(createSql);
+            conn.close();
             //If table has already been created
         } catch (SQLException | ClassNotFoundException e2) {
             System.out.println(e2.getMessage());
@@ -80,6 +82,7 @@ public class EventGatewayDB implements EventStrategy{
              Statement stmt = rConn.createStatement()) {
             //Write relationship
             stmt.execute(relationQuery);
+            rConn.close();
         } catch (SQLException | ClassNotFoundException e5) {
             System.out.println(e5.getMessage());
         }
@@ -143,6 +146,7 @@ public class EventGatewayDB implements EventStrategy{
                 //Add new event to list of events
                 eventList.add(newEvent);
             }
+            dbConn.close();
         //If event select query fails
         } catch (ClassNotFoundException | SQLException e3) {
             System.out.println(e3.getMessage());
@@ -168,6 +172,7 @@ public class EventGatewayDB implements EventStrategy{
             try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
+                iConn.close();
             } catch (SQLException | ClassNotFoundException e2) {
                 System.out.println(e2.getMessage());
             }
@@ -204,6 +209,7 @@ public class EventGatewayDB implements EventStrategy{
                         }
                     }
                 }
+                dbConn.close();
             } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
             }
