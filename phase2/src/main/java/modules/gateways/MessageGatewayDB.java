@@ -29,7 +29,8 @@ public class MessageGatewayDB implements MessageStrategy {
                 + "	senderId VARCHAR(20) NOT NULL,\n"
                 + "	receiverId VARCHAR(20) NOT NULL,\n"
                 + "	dateTime TIMESTAMP,\n"
-                + "	hasBeenRead BOOLEAN NOT NULL \n"
+                + "	hasBeenRead BOOLEAN NOT NULL, \n"
+                + "	isArchived BOOLEAN NOT NULL \n"
                 + ");";
         //Check if trying to create messages table results in an error (messages table already exists)
         try (Connection conn = DBConnect.connect(this.filename);
@@ -53,7 +54,7 @@ public class MessageGatewayDB implements MessageStrategy {
         //Create messages table if it hasn't already
         createMessages();
         //Query for selecting contents of messages table
-        String sql = "SELECT messageId, content, senderId, receiverId, dateTime, hasBeenRead FROM messages";
+        String sql = "SELECT messageId, content, senderId, receiverId, dateTime, hasBeenRead, isArchived FROM messages";
         //Executing the query for selecting messages contents
         try (Connection dbConn = DBConnect.connect(this.filename);
              Statement stmt = dbConn.createStatement();
@@ -67,6 +68,9 @@ public class MessageGatewayDB implements MessageStrategy {
                         rs.getTimestamp("dateTime").toLocalDateTime());
                 if(rs.getBoolean("hasBeenRead")) {
                     newMessage.markAsRead();
+                }
+                if(rs.getBoolean("isArchived")) {
+                    newMessage.markAsArchived();
                 }
                 //Add new message to list of messages
                 messageList.add(newMessage);
@@ -88,8 +92,8 @@ public class MessageGatewayDB implements MessageStrategy {
         createMessages();
         for(Message message: writeMessage){
             //Query for writing the message to the database
-            String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead)" +
-                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+message.getHasBeenRead()+"')";
+            String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead, isArchived)" +
+                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+message.getHasBeenRead()+"', '"+message.getIsArchived()+"')";
             try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
