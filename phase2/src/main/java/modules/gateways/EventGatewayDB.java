@@ -161,9 +161,10 @@ public class EventGatewayDB implements EventStrategy{
         createRelations();
         for(Event event: writeEvents){
             //Query for writing the event to the database
+            int vip = event.getVIPStatus() ? 1 : 0;
             String sql = "REPLACE INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP)" +
-                    " Values('"+event.getID()+"', '"+event.getRoomNumber()+"', '"+event.getStartTime()+"', '"+event.getEndTime()+"', '"+event.getCapacity()+"', '"+event.getName()+"', '"+event.getVIPStatus()+"')";
-            try (Connection iConn = DBConnect.connect("this.filename");
+                    " Values('"+event.getID()+"', '"+event.getRoomNumber()+"', '"+event.getStartTime()+"', '"+event.getEndTime()+"', '"+event.getCapacity()+"', '"+event.getName()+"', '"+vip+"')";
+            try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
             } catch (SQLException | ClassNotFoundException e2) {
@@ -179,7 +180,7 @@ public class EventGatewayDB implements EventStrategy{
             }
             //Query for deleting unwanted users
             String getAttendees = "SELECT eventId, userId FROM relations WHERE eventId == '"+event.getID()+"'";
-            try(Connection dbConn = DBConnect.connect("this.filename");
+            try(Connection dbConn = DBConnect.connect(this.filename);
                 Statement stmt3 = dbConn.createStatement();
                 ResultSet rs3 = stmt3.executeQuery(getAttendees)){
                 while (rs3.next()) {

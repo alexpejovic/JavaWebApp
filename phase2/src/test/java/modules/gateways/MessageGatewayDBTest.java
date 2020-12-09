@@ -60,4 +60,22 @@ public class MessageGatewayDBTest {
         assertEquals(messageList.get(1).getContent(), "THIS_IS_A_DUPLICATE");
         assertEquals(messageList.size(), 2);
     }
+    @Test
+    public void testWriteDataArchived(){
+        Message newMessage = new Message("GONNA GET ARCHIVED", "a1111", "s5555", "m8888", LocalDateTime.now());
+        newMessage.markAsRead();
+        newMessage.markAsArchived();
+        ArrayList<Message> messageList = new ArrayList();
+        messageList.add(newMessage);
+        MessageGatewayDB MGDB = new MessageGatewayDB();
+        MGDB.writeData(messageList);
+    }
+
+    @Test
+    public void testWriteDataArchivedTest(){
+        MessageGatewayDB MGDB = new MessageGatewayDB();
+        ArrayList<Message> messageList = MGDB.readData();
+        assertEquals(true, messageList.get(1).getHasBeenRead());
+        assertEquals(true, messageList.get(1).getIsArchived());
+    }
 }
