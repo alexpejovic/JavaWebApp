@@ -1,5 +1,5 @@
 package modules.gateways;
-import com.sun.org.apache.xpath.internal.operations.Or;
+//import com.sun.org.apache.xpath.internal.operations.Or;
 import modules.entities.*;
 import modules.gateways.EventGatewayDB;
 import modules.gateways.UserGatewayDB;
@@ -34,7 +34,7 @@ public class UserGatewayDBTest {
     @Test
     public void testWriteDataOrganizer(){
         UserGatewayDB UGDB = new UserGatewayDB();
-        Organizer organizer1 = new Organizer("Tim", "Squire", "o1234");
+        Organizer organizer1 = new Organizer("SHOULDNT BE HERE", "Squire", "o1234");
         ArrayList<User> userList = new ArrayList<>();
         userList.add(organizer1);
         UGDB.writeData(userList);
@@ -78,6 +78,8 @@ public class UserGatewayDBTest {
         Organizer organizer1 = new Organizer("Tim", "Squire", "o12345");
         Attendee attendee1 = new Attendee("Jon", "Squire", "a00000");
         organizer1.addToFriendList(attendee1.getID());
+        attendee1.addToFriendList(organizer1.getID());
+        attendee1.setAsVIP();
         Event event1 = new Event("r123", LocalDateTime.now(), "e99999");
         Event event2 = new Event("r567", LocalDateTime.now(), "e77777");
         ArrayList<User> userList = new ArrayList<>();
@@ -98,6 +100,38 @@ public class UserGatewayDBTest {
         assertTrue(result.get(5) instanceof Organizer);
         assertTrue(result.get(6) instanceof Attendee);
         assertEquals(((Organizer) result.get(5)).getManagedEvents().size(), 2);
-        assertEquals(result.get(6).getFriendList().size(), 0);
+        assertEquals(result.get(6).getFriendList().size(), 1);
+        assertTrue(((Attendee) result.get(6)).getVIPStatus());
+    }
+
+    @Test
+    public void testWriteDataOrganizerDuplicate(){
+        UserGatewayDB UGDB = new UserGatewayDB();
+        Organizer organizer1 = new Organizer("DUPLICATE", "Squire", "o1234");
+        ArrayList<User> userList = new ArrayList<>();
+        userList.add(organizer1);
+        UGDB.writeData(userList);
+    }
+
+    @Test
+    public void testOrganizerManaging2EventsWithRemovedFriendAndEvent() {
+        UserGatewayDB UGDB = new UserGatewayDB();
+        EventGatewayDB EGDB = new EventGatewayDB();
+        Organizer organizer1 = new Organizer("CHANGED", "Squire", "o12345");
+        Attendee attendee1 = new Attendee("Jon", "Squire", "a00000");
+        attendee1.addToFriendList(organizer1.getID());
+        Event event1 = new Event("r123", LocalDateTime.now(), "e99999");
+        Event event2 = new Event("r567", LocalDateTime.now(), "e77777");
+        ArrayList<User> userList = new ArrayList<>();
+        ArrayList<Event> eventList = new ArrayList<>();
+        userList.add(organizer1);
+        eventList.add(event1);
+        eventList.add(event2);
+        organizer1.addManagedEvent(event1.getID());
+        attendee1.addEvent(event1.getID());
+        event1.addAttendee(attendee1.getID());
+        EGDB.writeData(eventList);
+        UGDB.writeData(userList);
+        ArrayList<User> result = UGDB.readData();
     }
 }

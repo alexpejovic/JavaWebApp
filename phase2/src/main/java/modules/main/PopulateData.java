@@ -20,16 +20,7 @@ public class PopulateData {
     private static RoomGateway roomGateway = new RoomGateway();
     private static UserGateway userGateway = new UserGateway();
 
-    public static void main(String[] args) throws IOException {
-//        eventGateway.setFilename("testres/eventstest.ser");
-//        messageGateway.setFilename("testres/messagestest.ser");
-//        roomGateway.setFilename("testres/rooms.ser");
-//        userGateway.setFilename("testres/users.ser");
-
-        eventGateway.setFilename("ser/events.ser");
-        messageGateway.setFilename("ser/messages.ser");
-        roomGateway.setFilename("ser/rooms.ser");
-        userGateway.setFilename("ser/users.ser");
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         eventGateway.writeData(getEvents());
         roomGateway.writeData(getRooms());

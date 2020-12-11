@@ -7,9 +7,7 @@ import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
 import modules.presenters.*;
 import modules.usecases.*;
-import modules.views.IAttendeeHomePageView;
-import modules.views.ILoginView;
-import modules.views.ISignupView;
+import modules.views.*;
 
 import java.util.ArrayList;
 
@@ -26,14 +24,34 @@ public class ConferenceBuilder {
     // UI interfaces
     private ILoginView iLoginView;
     private ISignupView iSignupView;
+    private IMessageView iMessageView;
     private IAttendeeHomePageView iAttendeeHomePageView;
+    private ISpeakerHomePageView iSpeakerHomePageView;
+    private IOrganizerHomePageView iOrganizerHomePageView;
 
-    public ConferenceBuilder(ILoginView iLoginView, ISignupView iSignupView, IAttendeeHomePageView iAttendeeHomePageView){
+    /**
+     * Constructor for ConferenceBuilder
+     * @param iLoginView the view for the login page
+     * @param iSignupView the view for the signup page
+     * @param iAttendeeHomePageView the view for the homepage for attendee options
+     * @param iSpeakerHomePageView the view for the homepage for speaker options
+     */
+    public ConferenceBuilder(ILoginView iLoginView, ISignupView iSignupView, IAttendeeHomePageView iAttendeeHomePageView,
+                             ISpeakerHomePageView iSpeakerHomePageView, IOrganizerHomePageView iOrganizerHomePageView,
+                             IMessageView iMessageView){
         this.iLoginView = iLoginView;
         this.iSignupView = iSignupView;
         this.iAttendeeHomePageView = iAttendeeHomePageView;
+        this.iSpeakerHomePageView = iSpeakerHomePageView;
+        this.iOrganizerHomePageView = iOrganizerHomePageView;
+        this.iMessageView = iMessageView;
     }
 
+    /**
+     * Builds all the use cases, controllers, and presenters for this conference
+     * except for the user controllers.
+     * @param startConference the place where all the use case, controllers, and presenters are stored
+     */
     public void buildConference(StartConference startConference){
         // Init event, message, and room managers
         EventManager eventManager = new EventManager(this.readEvents());
@@ -51,17 +69,25 @@ public class ConferenceBuilder {
         SpeakerManager speakerManager = new SpeakerManager(readSpeakers());
         startConference.setSpeakerManager(speakerManager);
 
+        //TODO: initialize gateways
+
         // Init controllers
-        startConference.setAccountCreator(new AccountCreator(organizerManager, attendeeManager, speakerManager));
+        UpdateInfo updateInfo = new UpdateInfo(messageGateway, eventGateway,userGateway,roomGateway);
+        startConference.setUpdateInfo(updateInfo);
+        startConference.setAccountCreator(new AccountCreator(organizerManager, attendeeManager,
+                                                                speakerManager, updateInfo));
         startConference.setLoginController(new LoginController(attendeeManager, organizerManager, speakerManager));
         startConference.setStringFormatter(new StringFormatter(eventManager, messageManager));
+        startConference.setScheduleCreator(new ScheduleCreator(eventManager));
+        startConference.setEventCreator(new EventCreator(eventManager, updateInfo));
 
         // Init presenters
-        startConference.setMessagePresenter(new MessagePresenter(messageManager));
-        startConference.setEventPresenter(new EventPresenter(eventManager));
         startConference.setLoginPresenter(new LoginPresenter(iLoginView));
         startConference.setSignupPresenter(new SignupPresenter(iSignupView));
         startConference.setAttendeeOptionsPresenter(new AttendeeOptionsPresenter(iAttendeeHomePageView));
+        startConference.setSpeakerOptionsPresenter(new SpeakerOptionsPresenter(iSpeakerHomePageView));
+        startConference.setOrganizerOptionsPresenter(new OrganizerOptionsPresenter(iOrganizerHomePageView));
+        startConference.setMessagePresenter(new MessagePresenter(iMessageView));
 
     }
 

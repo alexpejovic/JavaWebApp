@@ -14,6 +14,10 @@ import java.sql.ResultSet;
  * write message data to the database.
  */
 public class MessageGatewayDB implements MessageStrategy {
+
+ //   private String filename = "src\\main\\resources\\web\\database\\conference.db";
+    private String filename = "src/main/resources/web/database/conference.db";
+
     /**
      * Creates a messages table in the database that stores data pertaining to message entities.
      * If the messages table has already been created, nothing happens.
@@ -26,13 +30,15 @@ public class MessageGatewayDB implements MessageStrategy {
                 + "	senderId VARCHAR(20) NOT NULL,\n"
                 + "	receiverId VARCHAR(20) NOT NULL,\n"
                 + "	dateTime TIMESTAMP,\n"
-                + "	hasBeenRead BOOLEAN NOT NULL \n"
+                + "	hasBeenRead BOOLEAN NOT NULL, \n"
+                + "	isArchived BOOLEAN NOT NULL \n"
                 + ");";
         //Check if trying to create messages table results in an error (messages table already exists)
-        try (Connection conn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection conn = DBConnect.connect(this.filename);
              Statement stmt = conn.createStatement()) {
             // creating a new messages table
             stmt.execute(createSql);
+            conn.close();
             //If table has already been created
         } catch (SQLException | ClassNotFoundException e2) {
             System.out.println(e2.getMessage());
@@ -50,9 +56,9 @@ public class MessageGatewayDB implements MessageStrategy {
         //Create messages table if it hasn't already
         createMessages();
         //Query for selecting contents of messages table
-        String sql = "SELECT messageId, content, senderId, receiverId, dateTime, hasBeenRead FROM messages";
+        String sql = "SELECT messageId, content, senderId, receiverId, dateTime, hasBeenRead, isArchived FROM messages";
         //Executing the query for selecting messages contents
-        try (Connection dbConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+        try (Connection dbConn = DBConnect.connect(this.filename);
              Statement stmt = dbConn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)){
             //For each row in the messages table, create a new message using the data
@@ -65,9 +71,13 @@ public class MessageGatewayDB implements MessageStrategy {
                 if(rs.getBoolean("hasBeenRead")) {
                     newMessage.markAsRead();
                 }
+                if(rs.getBoolean("isArchived")){
+                    newMessage.markAsArchived();
+                }
                 //Add new message to list of messages
                 messageList.add(newMessage);
             }
+            dbConn.close();
             //If message select query fails
         } catch (ClassNotFoundException | SQLException e3) {
             System.out.println(e3.getMessage());
@@ -85,19 +95,25 @@ public class MessageGatewayDB implements MessageStrategy {
         createMessages();
         for(Message message: writeMessage){
             //Query for writing the message to the database
-            String sql = "INSERT INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead)" +
-                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+message.getHasBeenRead()+"')";
-            try (Connection iConn = DBConnect.connect("src\\main\\resources\\web\\database\\conference.db");
+            int archived = message.getIsArchived() ? 1 : 0;
+            int read = message.getHasBeenRead() ? 1 : 0;
+            String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead, isArchived)" +
+                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+read+"', '"+archived+"')";
+            try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
+                iConn.close();
             } catch (SQLException | ClassNotFoundException e2) {
                 System.out.println(e2.getMessage());
             }
         }
     }
 
+    /**
+     * @param newFilename The new filepath for the database
+     */
     @Override
     public void setFilename(String newFilename) {
-
+        this.filename = newFilename;
     }
 }

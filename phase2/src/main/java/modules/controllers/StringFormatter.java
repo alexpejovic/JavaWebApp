@@ -28,7 +28,7 @@ public class StringFormatter {
      * @param eventIDs a list of eventIDs for the events to be formatted
      * @return a list of JSON strings representing the specified events in this format:
      *          "{'eventID': '...', 'name': '...', 'startTime': 'yyyy-MM-ddTHH:mm',
-     *          'endTime': 'yyyy-MM-ddTHH:mm', 'remainingSeats': ...}"
+     *          'endTime': 'yyyy-MM-ddTHH:mm', 'roomNumber': '...', 'capacity': ..., 'remainingSeats': ...}"
      */
     public ArrayList<String> eventsToJSONString(ArrayList<String> eventIDs){
         ArrayList<String> eventStrings = new ArrayList<>();
@@ -39,12 +39,16 @@ public class StringFormatter {
             }
             String startTime = eventManager.startTimeOfEvent(eventID).toString();
             String endTime = eventManager.endTimeOfEvent(eventID).toString();
+            String roomNumber = eventManager.getRoomNumberOfEvent(eventID);
+            String capacity = String.valueOf(eventManager.getCapacity(eventID));
             String remainingSeats = String.valueOf(eventManager.getRemainingSeats(eventID));
             String eventString =  "{'eventID': '" + eventID
                                  + "', 'name': '" + eventName +
                               "', 'startTime': '" + startTime +
                                 "', 'endTime': '" + endTime +
-                         "', 'remainingSeats': "  + remainingSeats + "}";
+                             "', 'roomNumber': '" + roomNumber +
+                               "', 'capacity': " + capacity+
+                         ", 'remainingSeats': "  + remainingSeats + "}";
             eventStrings.add(eventString);
         }
         return eventStrings;
@@ -55,7 +59,7 @@ public class StringFormatter {
      * @param messageIDs a list of messageIDs for the events to be formatted
      * @return a list of JSON strings representing the specified messages in this format:
      *          "{'messageID': '...', 'senderID': '...', 'receiverID': '...',
-     *            'content': '...', 'time': 'yyyy-MM-ddTHH:mm', 'hasBeenRead': ...}"
+     *            'content': '...', 'time': 'yyyy-MM-ddTHH:mm', 'hasBeenRead': ..., 'isArchived': ...}"
      */
     public ArrayList<String> messageToJSONString(ArrayList<String> messageIDs){
         ArrayList<String> messageStrings = new ArrayList<>();
@@ -65,12 +69,14 @@ public class StringFormatter {
             String receiverID = messageManager.getReceiverIDOfMessage(messageID);
             String time = messageManager.getTimeOfMessage(messageID).toString();
             String hasBeenRead = String.valueOf(messageManager.getHasMessageBeenRead(messageID));
+            String isArchieved = String.valueOf(messageManager.getHasMessageBeenArchived(messageID));
             String messageString =  "{'messageID': '" + messageID
                                  + "', 'senderID': '" + senderID +
                                  "', 'receiverID': '" + receiverID +
                                     "', 'content': '" + messageContent +
                                        "', 'time': "  + time +
-                                "', 'hasBeenRead': "  + hasBeenRead + "}";
+                                "', 'hasBeenRead': "  + hasBeenRead +
+                                "', 'isArchived': "   + isArchieved + "}";
             messageStrings.add(messageString);
         }
         return messageStrings;

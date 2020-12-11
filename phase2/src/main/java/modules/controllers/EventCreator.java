@@ -11,13 +11,15 @@ import java.util.ArrayList;
  */
 public class EventCreator {
     private EventManager eventManager;
+    private UpdateInfo updateInfo;
 
     /**
      * Constructor for EventCreator
      * @param eventManager the corresponding Manager needed to enter events into the system
      */
-    public EventCreator(EventManager eventManager) {
+    public EventCreator(EventManager eventManager, UpdateInfo updateInfo) {
         this.eventManager = eventManager;
+        this.updateInfo = updateInfo;
     }
 
     /**
@@ -32,13 +34,14 @@ public class EventCreator {
                                boolean isVIP) {
         boolean eventCreated = true;
         try {
-            String eventId = "e" + eventManager.getNumberOfEvents();
-            eventManager.createEvent(roomNumber, startTime, endTime, eventId, capacity);
-            eventManager.getEvent(eventId).setName(eventName);
+            String eventID = "e" + eventManager.getNumberOfEvents();
+            eventManager.createEvent(roomNumber, startTime, endTime, eventID, capacity);
+            eventManager.getEvent(eventID).setName(eventName);
             if (isVIP){
-                eventManager.getEvent(eventId).setAsVIP();
+                eventManager.getEvent(eventID).setAsVIP();
             }
-        } catch (NonUniqueIdException e) {
+            updateInfo.updateEvent(eventManager.getEvent(eventID)); // updating event info to database
+        } catch (NonUniqueIdException | ClassNotFoundException e) {
             eventCreated = false;
         }
         return eventCreated;
