@@ -16,6 +16,7 @@ public class LoginController {
 
     /** the unique userID of the User logged into this program*/
     private String loggedUser;
+    private String userType;
 
     /**
      * Constructor for LoginController
@@ -66,15 +67,30 @@ public class LoginController {
 
         // checking if this user is an attendee
         if (attendeeManager.isUser(username)){
-            return attendeeManager.validatePassword(username, password);
+//            return attendeeManager.validatePassword(username, password);
+            boolean login = attendeeManager.validatePassword(username, password);
+            if (login) {
+                userType = "attendee";
+            }
+            return login;
         }
         // checking if this user is an organizer
         else if (organizerManager.isUser(username)){
-            return organizerManager.validatePassword(username, password);
+//            return organizerManager.validatePassword(username, password);
+            boolean login = organizerManager.validatePassword(username, password);
+            if (login) {
+                userType = "organizer";
+            }
+            return login;
         }
         // checking if this user is an speaker
         else if (speakerManager.isUser(username)){
-            return speakerManager.validatePassword(username, password);
+//            return speakerManager.validatePassword(username, password);
+            boolean login = speakerManager.validatePassword(username, password);
+            if (login) {
+                userType = "speaker";
+            }
+            return login;
         }
         //user is not found
         return false;
@@ -103,5 +119,7 @@ public class LoginController {
         throw new UserNotFoundException();
     }
 
-
+    public String getUserType() {
+        return userType;
+    }
 }
