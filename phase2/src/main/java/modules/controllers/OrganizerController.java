@@ -284,6 +284,34 @@ public class OrganizerController {
         organizerManager.removeFromOrganizedEvents(eventId);
         // removes event from the hosting lists of all speakers in the conference
         speakerManager.removeEventFromAllSpeakers(eventId);
+        cancelEnrollment(eventName);
+    }
+
+    /**
+     * creates a new organizer account and inputs it into the system
+     * @param username the username of the organizer
+     * @param password the password of the organizer
+     */
+    public void createOrganizerAccount(String username, String password){
+        accountCreator.createOrganizerAccount(username, password);
+    }
+
+    /**
+     * creates new attendee account (non-VIP) and inputs it into the system
+     * @param username the username of attendee user
+     * @param password the password of attendee user
+     */
+    public void createAttendeeAccount(String username, String password){
+        accountCreator.createAttendeeAccount(username, password, new ArrayList<>(), false);
+    }
+
+    /**
+     * creates new vip attendee account and inputs it into the system
+     * @param username the username of the account user
+     * @param password the password of the account user
+     */
+    public void createVIPAttendeeAccount(String username, String password){
+        accountCreator.createAttendeeAccount(username, password, new ArrayList<>(), true);
     }
 
     /**
