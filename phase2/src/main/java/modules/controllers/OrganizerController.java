@@ -1,6 +1,7 @@
 package modules.controllers;
 import modules.entities.*;
 import modules.exceptions.EventNotFoundException;
+import modules.exceptions.UserNotFoundException;
 import modules.presenters.OrganizerOptionsPresenter;
 import modules.usecases.*;
 
@@ -373,6 +374,13 @@ public class OrganizerController {
         try{
             String eventId = eventManager.getEventID(eventName);
             eventManager.removeAttendee(eventId, organizerId);
+            // update user info in database
+            ArrayList<User> users = new ArrayList<>();
+            users.addAll(attendeeManager.getAttendeeList());
+            users.addAll(organizerManager.getListOfOrganizers());
+            users.addAll(speakerManager.getSpeakers());
+            updateInfo.updateUser(users);
+            organizerOptionsPresenter.cancelEvent(true);
             return "Your Cancellation was successful";
         }
         catch(UserNotFoundException e){
@@ -381,13 +389,6 @@ public class OrganizerController {
         catch(EventNotFoundException e){
             return "This event doesn't exist. Please select a new existing event.";
         }
-        // update user info in database
-        ArrayList<User> users = new ArrayList<>();
-        users.addAll(attendeeManager.getAttendeeList());
-        users.addAll(organizerManager.getListOfOrganizers());
-        users.addAll(speakerManager.getSpeakers());
-        updateInfo.updateUser(users);
-        organizerOptionsPresenter.cancelEvent(true);
     }
 
 }

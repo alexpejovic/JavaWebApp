@@ -68,6 +68,7 @@ public class Event implements Comparable<Event>, Serializable {
      */
     public Event(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventId, int capacity){
         this.capacity = capacity;
+        this.speakerCapacity = 1;
         this.roomNumber = roomNumber;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -142,6 +143,14 @@ public class Event implements Comparable<Event>, Serializable {
             return "Talk";
         }
         return "Panel";
+    }
+
+    /**
+     * Returns the speaker capacity
+     * @return speaker capacity
+     */
+    public int getSpeakerCapacity(){
+        return speakerCapacity;
     }
 
     /** Checks if there is a speaker presenting at the Event

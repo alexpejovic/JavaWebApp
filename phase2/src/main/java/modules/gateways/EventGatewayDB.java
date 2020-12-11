@@ -58,7 +58,8 @@ public class EventGatewayDB implements EventStrategy{
                 + "	endTime TIMESTAMP NOT NULL,\n"
                 + "	name VARCHAR(250),\n"
                 + "	isVIP BOOLEAN NOT NULL,\n"
-                + "	capacity INTEGER(20) NOT NULL \n"
+                + "	capacity INTEGER(20) NOT NULL, \n"
+                + "	speakerCapacity INTEGER(20) NOT NULL \n"
                 + ");";
         //Check if trying to create event table results in an error (event table already exists)
         try (Connection conn = DBConnect.connect(this.filename);
@@ -102,7 +103,7 @@ public class EventGatewayDB implements EventStrategy{
         //Create relations table if it hasn't already
         createRelations();
         //Query for selecting contents of event table
-        String sql = "SELECT roomNumber, startTime, endTime, eventId, capacity, name, isVIP FROM events";
+        String sql = "SELECT roomNumber, startTime, endTime, eventId, capacity, name, isVIP, speakerCapacity FROM events";
         //Executing the query for selecting event contents
         try (Connection dbConn = DBConnect.connect(this.filename);
              Statement stmt = dbConn.createStatement();
@@ -144,6 +145,16 @@ public class EventGatewayDB implements EventStrategy{
                 for(String id: speakerIds){
                     newEvent.scheduleSpeaker(id);
                 }
+                //Setting speakerCapacity
+                String eventType = "";
+                if (rs.getInt("speakerCapacity") == 0){
+                    eventType = "Party";
+                }
+                else if (rs.getInt("speakerCapacity") == 1){
+                    eventType =  "Talk";
+                }
+                eventType = "Panel";
+                newEvent.declareEventType(eventType);
                 //Add new event to list of events
                 eventList.add(newEvent);
             }
@@ -169,8 +180,8 @@ public class EventGatewayDB implements EventStrategy{
             for (Event event : writeEvents) {
                 //Query for writing the event to the database
                 int vip = event.getVIPStatus() ? 1 : 0;
-                String sql = "REPLACE INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP)" +
-                        " Values('" + event.getID() + "', '" + event.getRoomNumber() + "', '" + event.getStartTime() + "', '" + event.getEndTime() + "', '" + event.getCapacity() + "', '" + event.getName() + "', '" + vip + "')";
+                String sql = "REPLACE INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP, speakerCapacity)" +
+                        " Values('" + event.getID() + "', '" + event.getRoomNumber() + "', '" + event.getStartTime() + "', '" + event.getEndTime() + "', '" + event.getCapacity() + "', '" + event.getName() + "', '" + vip + "', '" + event.getSpeakerCapacity() + "')";
                 try (Statement stmt = dbConn.createStatement()) {
                     stmt.execute(sql);
                 } catch (SQLException e2) {
