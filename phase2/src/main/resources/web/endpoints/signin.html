@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Main Menu</title>
-    <link href="../css/style.css" rel="stylesheet" type="text/css">
+    <link href="../css/mainStyle.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
-<div class="main">
-    <p>Click on one of the tabs to view more actions!</p>
+<div class="main" id="top">
+    <h1>Welcome to our scheduling service!</h1>
+    <h3>Scroll down to view your messages or upcoming events, or click on one of the tabs to view more actions!</h3>
     <div class="extratabs">
         <!-- Tabs for all Users -->
         <div class="tab">
@@ -135,14 +136,21 @@
 
     </div>
 
-    <!-- Information to the User -->
-    <div class="nav">
-        <p>Welcome, </p><a href="#user">{{user}}</a>
-        <a href="/logout">Logout</a>
+    <!-- Navigation bar stuck to the top of the screen -->
+    <div class="nav" id="nav">
+        <p id="nav-text">Welcome, {{user}}</p>
+        <div class="nav-right">
+            <a id="nav-text" href="#top">More Actions</a>
+            <a id="nav-text" href="#messages">My Messages</a>
+            <a id="nav-text" href="#myEvents">My Schedule</a>
+            <a id="nav-text" href="#moreEvents">Upcoming Events</a>
+            <a id="nav-text" href="/logout">Logout</a>
+        </div>
     </div>
 
-    <h3>My Messages:</h3>
-    <div class="maintable">
+    <!-- Information to the User -->
+    <h2>My Messages:</h2>
+    <div class="maintable" id="messages">
         <table>
             <tr>
                 <th>Read?</th>
@@ -156,12 +164,12 @@
                 <th>X</th>
                 <th>
                     <form>
-                        <button>Delete</button>
+                        <button class="delete">Delete</button>
                     </form>
                 </th>
                 <th>
                     <form>
-                        <button>Archive</button>
+                        <button class="archive">Archive</button>
                     </form>
                 </th>
                 <th>Someone</th>
@@ -176,8 +184,8 @@
         </table>
     </div>
 
-    <h3>My Schedule:</h3>
-    <div class="maintable">
+    <h2>My Schedule:</h2>
+    <div class="maintable" id="myEvents">
         <table>
             <tr>
                 <th>Title:</th>
@@ -191,15 +199,15 @@
                 <th>January, 25, 2036</th>
                 <th>
                     <form>
-                        <button>Cancel</button>
+                        <button class="delete">Cancel</button>
                     </form>
                 </th>
             </tr>
         </table>
     </div>
 
-    <h3>Upcoming Events:</h3>
-    <div class="maintable">
+    <h2>Upcoming Events:</h2>
+    <div class="maintable" id="moreEvents">
         <table>
             <tr>
                 <th>Title:</th>

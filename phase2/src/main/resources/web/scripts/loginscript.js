@@ -49,3 +49,18 @@ function openTab(event, tabName) {
     document.getElementById(tabName).style.display = "block";
     event.currentTarget.className += " active";
 }
+
+/* Resize the top navigation bar when the user scrolls down the page */
+window.onscroll = function() {
+    resizeNav();
+}
+
+function resizeNav() {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("nav").style.padding = "30px 10px";
+        document.getElementById("nav-text").style.fontSize = "25px";
+    } else {
+        document.getElementById("nav").style.padding = "80px 10px";
+        document.getElementById("nav-text").style.fontSize = "35px";
+    }
+}
