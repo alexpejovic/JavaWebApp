@@ -240,6 +240,25 @@ public class EventManager {
     }
 
     /**
+     * Changes the event's type
+     * @param eventId the id of the event
+     * @param eventType the type the event will be changed to
+     */
+    public void changeEventType(String eventId, String eventType){
+        Event event = getEvent(eventId);
+        event.declareEventType(eventType);
+    }
+
+    /**
+     * returns the type of event this event is
+     * @param eventId the event's id
+     * @return the events type
+     */
+    public String eventType(String eventId){
+        Event event = getEvent(eventId);
+        return event.getEventType();
+    }
+    /**
      * removes event from event from
      * @param eventName
      */
