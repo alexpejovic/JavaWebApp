@@ -36,6 +36,8 @@ public class Event implements Comparable<Event>, Serializable {
     private ArrayList<String> speakerList = new ArrayList<>();
    /** Indicates whether this event only permits VIP attendees, defaults to false**/
     private boolean isVIP;
+    /** The maximum number of speakers who canpresent at the event**/
+    private int speakerCapacity;
 
 
     /**
@@ -47,6 +49,7 @@ public class Event implements Comparable<Event>, Serializable {
      */
     public Event(String roomNumber, LocalDateTime time, String eventId){
         this.capacity = 2;
+        this.speakerCapacity = 1;
         this.roomNumber = roomNumber;
         this.startTime = time;
         this.endTime = time.plusHours(1);
@@ -101,9 +104,45 @@ public class Event implements Comparable<Event>, Serializable {
     public void setStartTime(LocalDateTime time){this.startTime = time;}
 
     /** Set a speaker to present at this Event
+     * speaker can only be scheduled if the event has available slots for another speaker
      * @param speaker the speaker who is assigned to present at this Event
      */
-    public void scheduleSpeaker(String speaker){this.speakerList.add(speaker);}
+    public void scheduleSpeaker(String speaker){
+        if (speakerList.size() < this.speakerCapacity) {
+            this.speakerList.add(speaker);
+        }
+    }
+
+    /**
+     * Changes the type of event, by updating speaker capacity
+     * @param type the type of event the event will become
+     */
+    public void declareEventType(String type){
+        if (type.equalsIgnoreCase("panel")){
+            speakerCapacity = 8;
+        }
+        else if (type.equalsIgnoreCase("party")){
+            speakerList = new ArrayList<>();
+            speakerCapacity = 0;
+        }
+        else if (type.toLowerCase().equalsIgnoreCase("talk")){
+            speakerCapacity = 1;
+        }
+    }
+
+    /**
+     * informs what the event type is
+     * @return the event's type ("Talk, "Panel", "Party")
+     */
+    public String getEventType(){
+        if (speakerList.size() == 0){
+            return "Party";
+        }
+        else if (speakerList.size() == 1){
+            return "Talk";
+        }
+        return "Panel";
+    }
 
     /** Checks if there is a speaker presenting at the Event
      * @return true if the event has a speaker scheduled, false if not
