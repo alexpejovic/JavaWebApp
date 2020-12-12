@@ -1,4 +1,4 @@
-console.log("homecsript");
+var userType;
 const http = new XMLHttpRequest();
 url = "/getmodel";
 http.open("GET", url, true);
@@ -15,6 +15,7 @@ http.onreadystatechange = function() {
 
 function populateData(httpResponse) {
     var response = JSON.parse(httpResponse);
+    userType = response.userType;
     addMessages(response);
     addAttendingEvents(response);
     addMoreEvents(response);
@@ -65,11 +66,16 @@ function addMessages(response) {
 function makeEvent(data, fragment, attending) {
     var eventTable = document.createElement("table");
     var headings = ["ID:", "Title:", "Time:"];
-    if (attending) {
-        headings.push("Cancel?");
+    if (userType === "attendee" || userType === "organizer") {
+        if (attending == true) {
+            headings.push("Remove?");
+        }
+        else {
+            headings.push("Join?");
+        }
     }
-    else {
-        headings.push("Join?");
+    if (userType === "organizer") {
+        headings.push("Cancel?");
     }
     var tableHeadings = [];
     headings.forEach(heading => {
@@ -81,7 +87,7 @@ function makeEvent(data, fragment, attending) {
         firstRow.appendChild(tableHeading);
     });
     var secondRow = document.createElement("tr");
-    var tableElements = makeTableHeadings(getEventHeadingsFromData(data));
+    var tableElements = makeTableHeadings(getEventHeadingsFromData(data, attending));
     tableElements.forEach(tableElement => {
         secondRow.appendChild(tableElement);
     })
@@ -121,11 +127,16 @@ function getEventHeadingsFromData(data, attending) {
     headings.push(createPElem(data.eventID));
     headings.push(createPElem(data.name));
     headings.push(createPElem(data.startTime));
-    if (attending) {
-        headings.push(createButtonForm("Cancel"));
+    if (userType === "attendee" || userType === "organizer") {
+        if (attending == true) {
+            headings.push(createButtonForm("Remove"));
+        }
+        else {
+            headings.push(createButtonForm("Join"));
+        }
     }
-    else {
-        headings.push(createButtonForm("Join"));
+    if (userType === "organizer") {
+        headings.push(createButtonForm("Cancel"));
     }
     return headings;
 }
@@ -138,16 +149,22 @@ function getMessageHeadingsFromData(data) {
     headings.push(createButtonForm("Archive"));
     headings.push(createPElem(data.senderID));
     headings.push(createPElem(data.content));
-    headings.push(createReplyForm());
+    headings.push(createReplyForm(data.senderID));
     return headings;
 }
 
-function createReplyForm() {
+function createReplyForm(recipient) {
     var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", "../sendreply");
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("name", "reply");
     input.setAttribute("placeholder", "Reply");
+    var hiddenInput = document.createElement("input");
+    hiddenInput.setAttribute("type", "hidden");
+    hiddenInput.setAttribute("name", "recipient");
+    hiddenInput.setAttribute("value", recipient);
     var btn = document.createElement("button");
     btn.innerText = "Send";
     form.appendChild(input);
