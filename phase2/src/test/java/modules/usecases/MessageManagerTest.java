@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -81,15 +82,15 @@ public class MessageManagerTest {
         manager.sendMessage("user1", "user2", "never gonna give you up");
         manager.sendMessage("user2", "user1", "never gonna let you down");
 
-        ArrayList<String> conversation = manager.getConversation("user1", "user2");
+        ArrayList<HashMap<String, String>> conversation = manager.getConversation("user1", "user2");
 
-        assertEquals("user1", manager.getSenderIDOfMessage(conversation.get(0)));
-        assertEquals("user1", manager.getSenderIDOfMessage(conversation.get(1)));
-        assertEquals("user2", manager.getSenderIDOfMessage(conversation.get(2)));
+        assertEquals("user1", manager.getSenderIDOfMessage(conversation.get(0).get("senderID")));
+        assertEquals("user1", manager.getSenderIDOfMessage(conversation.get(1).get("senderID")));
+        assertEquals("user2", manager.getSenderIDOfMessage(conversation.get(2).get("senderID")));
 
-        assertEquals("yo event 2 is lit!",  manager.getContentOfMessage(conversation.get(0)));
-        assertEquals("never gonna give you up", manager.getContentOfMessage(conversation.get(1)));
-        assertEquals("never gonna let you down", manager.getContentOfMessage(conversation.get(2)));
+        assertEquals("yo event 2 is lit!",  manager.getContentOfMessage(conversation.get(0).get("content")));
+        assertEquals("never gonna give you up", manager.getContentOfMessage(conversation.get(1).get("content")));
+        assertEquals("never gonna let you down", manager.getContentOfMessage(conversation.get(2).get("content")));
     }
 
     @Test
