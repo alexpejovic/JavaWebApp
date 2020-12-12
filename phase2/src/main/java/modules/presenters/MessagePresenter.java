@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * Presenter class for the Message actions that every user has access to
  */
-public class MessagePresenter implements IModelHandler {
+public class MessagePresenter implements IMessageModelHandler {
     private Model model;
 
     /**
@@ -44,15 +44,5 @@ public class MessagePresenter implements IModelHandler {
     @Override
     public void setMessages(ArrayList<HashMap<String, String>> messages) {
         model.addMessages(messages);
-    }
-
-    @Override
-    public void setEvents(ArrayList<HashMap<String, String>> events) {
-
-    }
-
-    @Override
-    public Model getModel() {
-        return model;
     }
 }

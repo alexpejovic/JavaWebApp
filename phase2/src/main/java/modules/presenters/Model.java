@@ -9,37 +9,24 @@ import java.util.HashMap;
 public class Model {
     private String status;
     private String statusMessage;
-    private JSONArray allEvents = new JSONArray();
+    private String userType;
     private JSONArray attending = new JSONArray();
     private JSONArray notAttending = new JSONArray();
     private JSONArray speaking = new JSONArray();
     private JSONArray messages = new JSONArray();
 
-    public void setStatus(String newStatus) {
-        status = newStatus;
+    public void setErrorStatus(boolean status, String statusMessage) {
+        this.status = status ? "ok" : "error";
+        this.statusMessage = statusMessage;
     }
 
-    public void setStatusMessage(String newMessage) {
-        statusMessage = newMessage;
-    }
-
-    public void clearStatus() {
-        status = null;
-    }
-
-    public void clearStatusMessage() {
-        statusMessage = null;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public void addMessages(ArrayList<HashMap<String,String>> messages) {
         for (HashMap<String, String> message : messages) {
             this.messages.add(makeMessage(message));
-        }
-    }
-
-    public void addEvents(ArrayList<HashMap<String, String>> events) {
-        for (HashMap<String, String> event : events) {
-            allEvents.add(makeEvent(event));
         }
     }
 
@@ -84,7 +71,9 @@ public class Model {
     }
 
     public void clear() {
-        allEvents = new JSONArray();
+        status = null;
+        statusMessage = null;
+        userType = null;
         attending = new JSONArray();
         notAttending = new JSONArray();
         speaking = new JSONArray();
@@ -95,7 +84,7 @@ public class Model {
         JSONObject json = new JSONObject();
         json.put("status", status);
         json.put("statusMessage", statusMessage);
-        json.put("allEvents", allEvents);
+        json.put("userType", userType);
         json.put("attending", attending);
         json.put("notAttending", notAttending);
         json.put("speaking", speaking);

@@ -10,8 +10,7 @@ import java.util.HashMap;
 /**
  * Presenter class for the Organizer actions
  */
-public class OrganizerOptionsPresenter implements IModelHandler {
-    private IOrganizerHomePageView iOrganizerHomePageView;
+public class OrganizerOptionsPresenter implements IUserModelHandler, IMessageModelHandler {
     private Model model;
 
     /**
@@ -21,6 +20,7 @@ public class OrganizerOptionsPresenter implements IModelHandler {
      */
     public OrganizerOptionsPresenter(Model model) {
         this.model = model;
+        model.setUserType("organizer");
     }
 
     /** Presents to the user a message regarding the scheduling of an event
@@ -29,10 +29,10 @@ public class OrganizerOptionsPresenter implements IModelHandler {
      */
     public void scheduleEventSuccess(boolean isSuccessful) {
         if (isSuccessful){
-            iOrganizerHomePageView.displayMessage("Event has been successfully scheduled");
+            model.setErrorStatus(true, "Event has been successfully scheduled");
         }
         else{
-            iOrganizerHomePageView.displayMessage("Something went wrong scheduling the event. Check if the room" +
+            model.setErrorStatus(false, "Something went wrong scheduling the event. Check if the room" +
                     " is available and can meet all your requirements");
         }
     }
@@ -43,10 +43,10 @@ public class OrganizerOptionsPresenter implements IModelHandler {
      */
     public void isRoomCapacityEnough(boolean hasCapacity) {
         if (hasCapacity){
-            iOrganizerHomePageView.displayMessage("The room has the required capacity");
+            model.setErrorStatus(true, "The room has the required capacity");
         }
         else{
-            iOrganizerHomePageView.displayMessage("The room does not have the required capacity");
+            model.setErrorStatus(false, "The room does not have the required capacity");
         }
     }
 
@@ -54,7 +54,7 @@ public class OrganizerOptionsPresenter implements IModelHandler {
      * Presents to the user a message regarding the creation of a speaker account
      */
     public void createSpeakerAccount(){
-        iOrganizerHomePageView.displayMessage("Speaker account was created");
+        model.setErrorStatus(true, "Speaker account was created");
     }
 
     /** Presents to the user a message regarding the success of a speaker scheduling
@@ -63,11 +63,10 @@ public class OrganizerOptionsPresenter implements IModelHandler {
      */
     public void scheduleSpeaker(boolean isSuccessful){
         if(isSuccessful){
-            iOrganizerHomePageView.displayMessage("Speaker was successfully scheduled for the event");
+            model.setErrorStatus(true, "Speaker was successfully scheduled for the event");
         }
         else {
-            iOrganizerHomePageView.displayMessage("Speaker was not scheduled. Check the requirements for the room " +
-                    "and speaker");
+            model.setErrorStatus(false, "Speaker was not scheduled. Check the requirements for the room and speaker");
         }
     }
 
@@ -77,20 +76,12 @@ public class OrganizerOptionsPresenter implements IModelHandler {
      */
     public void removeSpeakerFromEvent(boolean isSuccessful){
         if(isSuccessful){
-            iOrganizerHomePageView.displayMessage("Speaker was successfully removed from the event");
+            model.setErrorStatus(true, "Speaker was successfully removed from the event");
         }
         else{
-            iOrganizerHomePageView.displayMessage("Speaker was not successfully removed. Check if the speaker was " +
+            model.setErrorStatus(false, "Speaker was not successfully removed. Check if the speaker was " +
                     "speaking originally");
         }
-    }
-
-    /** Presents to the user list of messages
-     *
-     * @param formattedEvents List of JSON Strings in the form of events
-     */
-    public void viewMessages(ArrayList<String> formattedEvents){
-        iOrganizerHomePageView.displayMessages(formattedEvents);
     }
 
     /** Presents to the user a message regarding the success of a message being sent
@@ -99,10 +90,10 @@ public class OrganizerOptionsPresenter implements IModelHandler {
      */
     public void sendMessage(boolean isSuccessful){
         if(isSuccessful){
-            iOrganizerHomePageView.displayMessage("Message sent");
+            model.setErrorStatus(true, "Message sent");
         }
         else{
-            iOrganizerHomePageView.displayMessage("Message sending unsuccessful");
+            model.setErrorStatus(false, "Message sending unsuccessful");
         }
     }
 
@@ -113,11 +104,10 @@ public class OrganizerOptionsPresenter implements IModelHandler {
      */
     public void cancelEvent(boolean isSuccessful){
         if(isSuccessful)
-        iOrganizerHomePageView.displayMessage("Event cancelled");
+            model.setErrorStatus(true, "Event cancelled");
         else
-            iOrganizerHomePageView.displayMessage("Event cancellation was unsuccessful");
+            model.setErrorStatus(false, "Event cancellation was unsuccessful");
     }
-
 
     @Override
     public void setMessages(ArrayList<HashMap<String, String>> messages) {
@@ -125,21 +115,13 @@ public class OrganizerOptionsPresenter implements IModelHandler {
     }
 
     @Override
-    public void setEvents(ArrayList<HashMap<String, String>> events) {
-        model.addEvents(events);
-    }
-
     public void setAttendingEvents(ArrayList<HashMap<String, String>> attending) {
         model.addAttendingEvents(attending);
     }
 
+    @Override
     public void setNotAttendingEvents(ArrayList<HashMap<String, String>> notAttending) {
         model.addNotAttendingEvents(notAttending);
-    }
-
-    @Override
-    public Model getModel() {
-        return model;
     }
 }
 
