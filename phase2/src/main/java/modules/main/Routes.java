@@ -1,8 +1,6 @@
 package modules.main;
 
-import modules.controllers.ConfBuild;
-import modules.controllers.LoginController;
-import modules.controllers.OrganizerController;
+import modules.controllers.*;
 import modules.presenters.Model;
 import org.apache.log4j.BasicConfigurator;
 import org.json.simple.JSONObject;
@@ -25,6 +23,10 @@ public class Routes {
     static String currentUser;
     static String userType;
 
+    static OrganizerController orgController;
+    static AttendeeController attController;
+    static SpeakerController spkController;
+
     public static void main(String[] args) {
 
         BasicConfigurator.configure();
@@ -46,7 +48,7 @@ public class Routes {
         get("/logout", (req, res) -> {
            req.session().removeAttribute("currentUser");
            model.clear();
-           model.setStatus("logout");
+           model.setErrorStatus(true, "logout");
            res.redirect("/home"); return "";
         });
 
@@ -55,11 +57,33 @@ public class Routes {
         });
 
         post("/signin", Routes::handleLogin);
+
+        post("/sendreply", Routes::handleReply);
     }
 
     private static String render(Map<String, Object> model, String templatePath) {
         System.out.println("rendering");
         return new MustacheTemplateEngine().render(new ModelAndView(model, templatePath));
+    }
+
+    private static String handleReply(Request request, Response response) {
+        if (userType.equals("organizer")) {
+            orgController = confBuild.getOrgController(currentUser);
+            orgController.sendMessage(request.queryParams("recipient"), request.queryParams("reply"));
+            orgController.updateModel();
+        }
+        else if (userType.equals("attendee")) {
+            attController = confBuild.getAttController(currentUser);
+            attController.sendMessage(request.queryParams("recipient"), request.queryParams("reply"));
+            attController.updateModel();
+        }
+        else if (userType.equals("speaker")) {
+            spkController = confBuild.getSpkController(currentUser);
+            spkController.sendMessage(request.queryParams("recipient"), request.queryParams("reply"));
+            spkController.updateModel();
+        }
+        response.redirect("/home");
+        return "";
     }
 
     private static String handleLogin(Request request, Response response) {
@@ -74,9 +98,7 @@ public class Routes {
             response.redirect("/home");
             return "";
         }
-        JSONObject stat = new JSONObject();
-        model.setStatus("error");
-        model.setStatusMessage("Invalid username or password");
+        model.setErrorStatus(false, "Invalid username or password");
         response.redirect("/home");
         return "";
     }
@@ -85,9 +107,16 @@ public class Routes {
         System.out.println("fetching");
         System.out.println(userType);
         if (userType.equals("organizer")) {
-            System.out.println("condition holds");
-            OrganizerController controller = confBuild.getOrgController(currentUser);
-            controller.updateModel();
+            orgController = confBuild.getOrgController(currentUser);
+            orgController.updateModel();
+        }
+        else if (userType.equals("attendee")) {
+            attController = confBuild.getAttController(currentUser);
+            attController.updateModel();
+        }
+        else if (userType.equals("speaker")) {
+            spkController = confBuild.getSpkController(currentUser);
+            spkController.updateModel();
         }
     }
 }
