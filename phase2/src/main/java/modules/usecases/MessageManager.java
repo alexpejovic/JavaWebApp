@@ -8,6 +8,8 @@ import java.util.HashMap;
 import modules.entities.Message;
 import modules.exceptions.MessageNotFoundException;
 
+import javax.swing.*;
+
 
 /**
  * A use case that performs actions on Message entities and gives important information about all Messages
@@ -102,7 +104,7 @@ public class MessageManager {
      * @param user2 The ID string of the second user
      * @return An ArrayList of messageIDs of messages between two users sorted by date
      */
-    public ArrayList<String> getConversation(String user1, String user2) {
+    public ArrayList<HashMap<String, String>> getConversation(String user1, String user2) {
         ArrayList<Message> conversation = new ArrayList<>();
         for (Message message : messages.get(user1)) {
             if (message.getReceiverID().equals(user2) && !message.getIsArchived()) {
@@ -116,11 +118,69 @@ public class MessageManager {
         }
 
         Collections.sort(conversation);
-        ArrayList<String> conversationIDs = new ArrayList<>();
-        for (Message message: conversation){
-            conversationIDs.add(message.getID());
+        ArrayList<HashMap<String, String>> convo = new ArrayList<>();
+        for (Message message : conversation) {
+            HashMap<String, String> msg = new HashMap<>();
+            msg.put("messageID", message.getID());
+            msg.put("senderID", message.getSenderID());
+            msg.put("receiverID", message.getReceiverID());
+            msg.put("content", message.getContent());
+            msg.put("time", message.getDateTime().toString());
+            if (message.getHasBeenRead())
+                msg.put("hasBeenRead", "true");
+            else
+                msg.put("hasBeenRead", "false");
+
+            if (message.getIsArchived())
+                msg.put("isArchived", "true");
+            else
+                msg.put("isArchived", "false");
+
+            convo.add(msg);
         }
-        return conversationIDs;
+        return convo;
+//        ArrayList<String> conversationIDs = new ArrayList<>();
+//        for (Message message: conversation){
+//            conversationIDs.add(message.getID());
+//        }
+//        return conversationIDs;
+    }
+
+    public ArrayList<HashMap<String, String>> getMessages(String userID) {
+        Collection<ArrayList<Message>> allUserMessages = messages.values();
+        ArrayList<HashMap<String, String>> userMessages = new ArrayList<>();
+
+        for (ArrayList<Message> list : allUserMessages) {
+            for (Message message : list) {
+                if (message.getReceiverID().equals(userID)) {
+                    HashMap<String, String> messageMap = objToMap(message);
+                    if (!userMessages.contains(messageMap)) {
+                        userMessages.add(messageMap);
+                    }
+                }
+            }
+        }
+
+        return userMessages;
+    }
+
+    private HashMap<String, String> objToMap(Message message) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("messageID", message.getID());
+        map.put("senderID", message.getSenderID());
+        map.put("receiverID", message.getReceiverID());
+        map.put("content", message.getContent());
+        map.put("time", message.getDateTime().toString());
+        if (message.getHasBeenRead())
+            map.put("hasBeenRead", "true");
+        else
+            map.put("hasBeenRead", "false");
+
+        if (message.getIsArchived())
+            map.put("isArchived", "true");
+        else
+            map.put("isArchived", "false");
+        return map;
     }
 
     /**
@@ -287,7 +347,7 @@ public class MessageManager {
      * @param user2 the unique ID of the second user involved in this conversation
      * @return an ArrayList of unique IDs of messages that have been archived
      */
-    public ArrayList<String> getArchivedMessages(String user1, String user2) {
+    public ArrayList<HashMap<String, String>> getArchivedMessages(String user1, String user2) {
         ArrayList<Message> archivedMessages = new ArrayList<>();
         for (Message message : messages.get(user1)) {
             if (message.getReceiverID().equals(user2) && message.getIsArchived()) {
@@ -301,11 +361,11 @@ public class MessageManager {
         }
 
         Collections.sort(archivedMessages);
-        ArrayList<String> archivedIDs = new ArrayList<>();
+        ArrayList<HashMap<String, String>> archivedMsg = new ArrayList<>();
         for (Message message: archivedMessages){
-            archivedIDs.add(message.getID());
+            archivedMsg.add(objToMap(message));
         }
-        return archivedIDs;
+        return archivedMsg;
     }
 
     /**
