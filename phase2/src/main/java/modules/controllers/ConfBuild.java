@@ -5,8 +5,10 @@ import modules.gateways.EventGateway;
 import modules.gateways.MessageGateway;
 import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
+import modules.presenters.AttendeeOptionsPresenter;
 import modules.presenters.Model;
 import modules.presenters.OrganizerOptionsPresenter;
+import modules.presenters.SpeakerOptionsPresenter;
 import modules.usecases.*;
 
 import java.util.ArrayList;
@@ -18,17 +20,26 @@ public class ConfBuild {
     private AttendeeManager attendeeManager;
     private OrganizerManager organizerManager;
     private SpeakerManager speakerManager;
+    private EventManager eventManager;
+    private MessageManager messageManager;
 
     private MessageGateway messageGateway = new MessageGateway();
     private EventGateway eventGateway = new EventGateway();
     private UserGateway userGateway = new UserGateway();
     private RoomGateway roomGateway = new RoomGateway();
 
+    private StringFormatter stringFormatter;
+    private UpdateInfo updateInfo;
+
     public ConfBuild(Model model) {
         this.model = model;
         attendeeManager = new AttendeeManager(readAttendees());
         organizerManager = new OrganizerManager(readOrganizers());
         speakerManager = new SpeakerManager(readSpeakers());
+        eventManager = new EventManager(readEvents());
+        messageManager = new MessageManager(readMessages());
+        updateInfo = new UpdateInfo(messageGateway, eventGateway, userGateway, roomGateway);
+        stringFormatter = new StringFormatter(eventManager, messageManager);
     }
 
 
@@ -38,18 +49,28 @@ public class ConfBuild {
     }
 
     public OrganizerController getOrgController(String userID) {
-        EventManager eventManager = new EventManager(readEvents());
         RoomManager roomManager = new RoomManager(readRooms());
-        MessageManager messageManager = new MessageManager(readMessages());
-        UpdateInfo updateInfo = new UpdateInfo(messageGateway, eventGateway, userGateway, roomGateway);
         EventCreator eventCreator = new EventCreator(eventManager, updateInfo);
         AccountCreator accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager, updateInfo);
         OrganizerOptionsPresenter organizerOptionsPresenter = new OrganizerOptionsPresenter(model);
-        StringFormatter stringFormatter = new StringFormatter(eventManager, messageManager);
         return new OrganizerController(
                 organizerManager, eventManager, roomManager, speakerManager,
                 messageManager, attendeeManager, eventCreator, accountCreator,
                 userID, updateInfo, organizerOptionsPresenter, stringFormatter);
+    }
+
+    public AttendeeController getAttController(String userID) {
+        AttendeeOptionsPresenter attendeeOptionsPresenter = new AttendeeOptionsPresenter(model);
+        return new AttendeeController(
+                attendeeManager, eventManager, userID, messageManager, attendeeOptionsPresenter,
+                stringFormatter, updateInfo);
+    }
+
+    public SpeakerController getSpkController(String userID) {
+        SpeakerOptionsPresenter speakerOptionsPresenter = new SpeakerOptionsPresenter(model);
+        return new SpeakerController(
+                userID, eventManager, speakerManager, attendeeManager,
+                messageManager, speakerOptionsPresenter, stringFormatter, updateInfo);
     }
 
 

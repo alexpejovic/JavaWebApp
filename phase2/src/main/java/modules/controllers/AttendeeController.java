@@ -1,6 +1,5 @@
 package modules.controllers;
 
-import modules.entities.*;
 import modules.exceptions.EventNotFoundException;
 import modules.exceptions.UserNotFoundException;
 import modules.presenters.AttendeeOptionsPresenter;
@@ -9,6 +8,7 @@ import modules.usecases.EventManager;
 import modules.usecases.MessageManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AttendeeController {
     private String attendeeID;
@@ -29,25 +29,6 @@ public class AttendeeController {
         this.attendeeOptionsPresenter = attendeeOptionsPresenter;
         this.stringFormatter = stringFormatter;
         this.updateInfo = updateInfo;
-    }
-
-    /**
-     * Passes a list of all events in this conference to user
-     */
-    public void displayEvents(){
-        ArrayList<String> eventIDList = eventManager.getAllEventIDs();
-        ArrayList<String> formattedEvents = stringFormatter.eventsToJSONString(eventIDList);
-        attendeeOptionsPresenter.showAllEvents(formattedEvents);
-    }
-
-
-    /**
-     * Passes a list of attending events in this conference to user
-     */
-    public void getAttendingEvents() {
-        ArrayList<String> eventIDList = attendeeManager.getEventsList(attendeeID);
-        ArrayList<String> formattedEvents = stringFormatter.eventsToJSONString(eventIDList);
-        attendeeOptionsPresenter.showAttendingEvents(formattedEvents);
     }
 
     /**
@@ -158,6 +139,24 @@ public class AttendeeController {
             // the specified userID is already in this attendee's friendList
             attendeeOptionsPresenter.addToFriendList(false);
         }
+    }
+
+    public void updateModel() {
+        updateModelMessages();
+        updateModelEvents();
+    }
+
+    private void updateModelMessages() {
+        ArrayList<HashMap<String, String>> messages = messageManager.getMessages(attendeeID);
+        attendeeOptionsPresenter.setMessages(messages);
+    }
+
+    private void updateModelEvents() {
+        ArrayList<HashMap<String, String>> attendingEvents = eventManager.getAttendingEvents(attendeeID, true);
+        ArrayList<HashMap<String, String>> notAttendingEvents = eventManager.getAttendingEvents(attendeeID, false);
+
+        attendeeOptionsPresenter.setAttendingEvents(attendingEvents);
+        attendeeOptionsPresenter.setNotAttendingEvents(notAttendingEvents);
     }
 
 }

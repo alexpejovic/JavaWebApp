@@ -81,14 +81,14 @@ public class OrganizerController {
                     roomManager.addEventToRoom(roomNumber, eventId);
                     organizerManager.addToOrganizedEvents(organizerId, eventId);
                     updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
-                    organizerOptionsPresenter.scheduleEventSuccess(true);
+//                    organizerOptionsPresenter.scheduleEventSuccess(true);
                 }
                 catch(EventNotFoundException | ClassNotFoundException e){
-                    organizerOptionsPresenter.scheduleEventSuccess(false);
+//                    organizerOptionsPresenter.scheduleEventSuccess(false);
                 }
             }
         }
-        organizerOptionsPresenter.scheduleEventSuccess(false);
+//        organizerOptionsPresenter.scheduleEventSuccess(false);
     }
 
     /**
@@ -110,7 +110,7 @@ public class OrganizerController {
     public void createSpeakerAccount(String userName, String password){
         ArrayList<String> listOfEvents = eventManager.getAllEventIDs();
         accountCreator.createSpeakerAccount(userName, password, listOfEvents);
-        organizerOptionsPresenter.createSpeakerAccount();
+//        organizerOptionsPresenter.createSpeakerAccount();
     }
 
     /**
@@ -148,11 +148,11 @@ public class OrganizerController {
      */
     public void scheduleSpeaker(String username, String roomNumber, String eventName) throws ClassNotFoundException {
         //check if speaker is available
-        if (!roomExists(roomNumber)) {organizerOptionsPresenter.scheduleSpeaker(false);}
+//        if (!roomExists(roomNumber)) {organizerOptionsPresenter.scheduleSpeaker(false);}
         String eventId = eventManager.getEventID(eventName);
-        if (!roomManager.getEventsInRoom(roomNumber).contains(eventId)){
-            organizerOptionsPresenter.scheduleSpeaker(false);
-        }
+//        if (!roomManager.getEventsInRoom(roomNumber).contains(eventId)){
+//            organizerOptionsPresenter.scheduleSpeaker(false);
+//        }
         LocalDateTime startTime = eventManager.startTimeOfEvent(eventId);
         LocalDateTime endTime = eventManager.endTimeOfEvent(eventId);
         String speakerId = speakerManager.getUserID(username);
@@ -171,10 +171,10 @@ public class OrganizerController {
             speakerManager.addEventToSpeaker(eventId,speakerId);
             // update event info in database
             updateInfo.updateEvent(eventManager.getEvent(eventId));
-            organizerOptionsPresenter.scheduleSpeaker(true);
+//            organizerOptionsPresenter.scheduleSpeaker(true);
         }
         //return if speaker was not scheduled
-        organizerOptionsPresenter.scheduleSpeaker(false);
+//        organizerOptionsPresenter.scheduleSpeaker(false);
     }
 
     /**
@@ -196,10 +196,10 @@ public class OrganizerController {
             speakerManager.removeEventFromSpeaker(eventId, speakerId);
             // update event info in database
             updateInfo.updateEvent(eventManager.getEvent(eventId));
-            organizerOptionsPresenter.removeSpeakerFromEvent(true);
+//            organizerOptionsPresenter.removeSpeakerFromEvent(true);
         }
         //speaker was not speaking at event
-        organizerOptionsPresenter.removeSpeakerFromEvent(false);
+//        organizerOptionsPresenter.removeSpeakerFromEvent(false);
     }
 
 
@@ -260,7 +260,7 @@ public class OrganizerController {
     public void sendMessage(String receiverID, String message){
         String messageID = messageManager.sendMessage(organizerId, receiverID, message);
         updateInfo.updateMessage(messageManager.getMessage(messageID));   // updating message info in database
-        organizerOptionsPresenter.sendMessage(true);
+//        organizerOptionsPresenter.sendMessage(true);
     }
 
     public void updateModel() {
@@ -271,17 +271,15 @@ public class OrganizerController {
     /**
      * Adds all messages this user has received to the model
      */
-    public void updateModelMessages(){
+    private void updateModelMessages(){
         ArrayList<HashMap<String, String>> messages = messageManager.getMessages(organizerId);
         organizerOptionsPresenter.setMessages(messages);
     }
 
-    public void updateModelEvents() {
-        ArrayList<HashMap<String, String>> allEvents = eventManager.getAllEvents();
+    private void updateModelEvents() {
         ArrayList<HashMap<String, String>> attendingEvents = eventManager.getAttendingEvents(organizerId, true);
         ArrayList<HashMap<String, String>> notAttendingEvents = eventManager.getAttendingEvents(organizerId, false);
 
-        organizerOptionsPresenter.setEvents(allEvents);
         organizerOptionsPresenter.setAttendingEvents(attendingEvents);
         organizerOptionsPresenter.setNotAttendingEvents(notAttendingEvents);
 
@@ -329,7 +327,7 @@ public class OrganizerController {
         users.addAll(organizerManager.getListOfOrganizers());
         users.addAll(speakerManager.getSpeakers());
         updateInfo.updateUser(users);
-        organizerOptionsPresenter.cancelEvent(true);
+//        organizerOptionsPresenter.cancelEvent(true);
     }
 
     /**
@@ -396,7 +394,7 @@ public class OrganizerController {
             users.addAll(organizerManager.getListOfOrganizers());
             users.addAll(speakerManager.getSpeakers());
             updateInfo.updateUser(users);
-            organizerOptionsPresenter.cancelEvent(true);
+//            organizerOptionsPresenter.cancelEvent(true);
             return "Your Cancellation was successful";
         }
         catch(UserNotFoundException e){
@@ -406,9 +404,4 @@ public class OrganizerController {
             return "This event doesn't exist. Please select a new existing event.";
         }
     }
-
-    public Model getModel() {
-        return organizerOptionsPresenter.getModel();
-    }
-
 }
