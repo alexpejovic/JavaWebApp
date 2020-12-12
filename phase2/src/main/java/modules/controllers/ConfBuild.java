@@ -28,7 +28,6 @@ public class ConfBuild {
     private UserGateway userGateway = new UserGateway();
     private RoomGateway roomGateway = new RoomGateway();
 
-    private StringFormatter stringFormatter;
     private UpdateInfo updateInfo;
 
     public ConfBuild(Model model) {
@@ -39,7 +38,6 @@ public class ConfBuild {
         eventManager = new EventManager(readEvents());
         messageManager = new MessageManager(readMessages());
         updateInfo = new UpdateInfo(messageGateway, eventGateway, userGateway, roomGateway);
-        stringFormatter = new StringFormatter(eventManager, messageManager);
     }
 
 
@@ -56,21 +54,20 @@ public class ConfBuild {
         return new OrganizerController(
                 organizerManager, eventManager, roomManager, speakerManager,
                 messageManager, attendeeManager, eventCreator, accountCreator,
-                userID, updateInfo, organizerOptionsPresenter, stringFormatter);
+                userID, updateInfo, organizerOptionsPresenter);
     }
 
     public AttendeeController getAttController(String userID) {
         AttendeeOptionsPresenter attendeeOptionsPresenter = new AttendeeOptionsPresenter(model);
         return new AttendeeController(
-                attendeeManager, eventManager, userID, messageManager, attendeeOptionsPresenter,
-                stringFormatter, updateInfo);
+                attendeeManager, eventManager, userID, messageManager, attendeeOptionsPresenter, updateInfo);
     }
 
     public SpeakerController getSpkController(String userID) {
         SpeakerOptionsPresenter speakerOptionsPresenter = new SpeakerOptionsPresenter(model);
         return new SpeakerController(
                 userID, eventManager, speakerManager, attendeeManager,
-                messageManager, speakerOptionsPresenter, stringFormatter, updateInfo);
+                messageManager, speakerOptionsPresenter, updateInfo);
     }
 
 

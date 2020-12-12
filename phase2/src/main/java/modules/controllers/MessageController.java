@@ -15,7 +15,6 @@ public class MessageController {
     private String userID;
     private MessageManager messageManager;
     private MessagePresenter messagePresenter;
-    private StringFormatter stringFormatter;
     private UpdateInfo updateInfo;
 
     /**
@@ -27,11 +26,10 @@ public class MessageController {
      * @param updateInfo a class to update database info
      */
     public MessageController(String userID, MessageManager messageManager, MessagePresenter messagePresenter,
-                             StringFormatter stringFormatter, UpdateInfo updateInfo){
+                             UpdateInfo updateInfo){
         this.userID = userID;
         this.messageManager = messageManager;
         this.messagePresenter = messagePresenter;
-        this.stringFormatter = stringFormatter;
         this.updateInfo = updateInfo;
     }
     /**

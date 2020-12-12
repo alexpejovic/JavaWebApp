@@ -9,7 +9,6 @@ import modules.usecases.EventManager;
 import modules.usecases.MessageManager;
 import modules.usecases.SpeakerManager;
 import org.junit.Test;
-import modules.controllers.StringFormatter;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;

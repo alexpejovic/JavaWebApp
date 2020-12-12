@@ -3,7 +3,6 @@ package modules.main;
 import modules.controllers.*;
 import modules.presenters.Model;
 import org.apache.log4j.BasicConfigurator;
-import org.json.simple.JSONObject;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;

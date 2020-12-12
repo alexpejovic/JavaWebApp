@@ -23,13 +23,12 @@ public class OrganizerController {
     private final AccountCreator accountCreator;
     private final UpdateInfo updateInfo;
     private final OrganizerOptionsPresenter organizerOptionsPresenter;
-    private final StringFormatter stringFormatter;
 
     public OrganizerController(OrganizerManager organizerManager, EventManager eventManager,
                                RoomManager roomManager, SpeakerManager speakerManager,
                                MessageManager messageManager, AttendeeManager attendeeManager, EventCreator eventCreator,
                                AccountCreator accountCreator, String organizerId, UpdateInfo updateInfo,
-                               OrganizerOptionsPresenter organizerOptionsPresenter, StringFormatter stringFormatter){
+                               OrganizerOptionsPresenter organizerOptionsPresenter){
 
         this.organizerManager = organizerManager;
         this.eventManager = eventManager;
@@ -42,7 +41,6 @@ public class OrganizerController {
         this.organizerId = organizerId;
         this.updateInfo = updateInfo;
         this.organizerOptionsPresenter = organizerOptionsPresenter;
-        this.stringFormatter = stringFormatter;
     }
 
 

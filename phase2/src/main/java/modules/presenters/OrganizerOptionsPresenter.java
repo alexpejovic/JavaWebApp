@@ -1,8 +1,5 @@
 package modules.presenters;
 
-import modules.entities.Message;
-import modules.views.IOrganizerHomePageView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

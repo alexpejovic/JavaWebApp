@@ -16,18 +16,16 @@ public class AttendeeController {
     private EventManager eventManager;
     private MessageManager messageManager;
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
-    private StringFormatter stringFormatter;
     private UpdateInfo updateInfo;
 
     public AttendeeController(AttendeeManager attendeeManager, EventManager eventManager,String attendeeID,
                               MessageManager messageManager, AttendeeOptionsPresenter attendeeOptionsPresenter,
-                              StringFormatter stringFormatter, UpdateInfo updateInfo){
+                              UpdateInfo updateInfo){
         this.attendeeManager = attendeeManager;
         this.eventManager = eventManager;
         this.attendeeID = attendeeID;
         this.messageManager = messageManager;
         this.attendeeOptionsPresenter = attendeeOptionsPresenter;
-        this.stringFormatter = stringFormatter;
         this.updateInfo = updateInfo;
     }
 

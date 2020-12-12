@@ -19,7 +19,6 @@ public class SpeakerController {
     private final EventManager eventManager;
     private final AttendeeManager attendeeManager;
     private final MessageManager messageManager;
-    private final StringFormatter stringFormatter;
     private final SpeakerOptionsPresenter speakerOptionsPresenter;
     private final UpdateInfo updateInfo;
 
@@ -34,14 +33,12 @@ public class SpeakerController {
      */
     public SpeakerController(String speakerId, EventManager eventManager, SpeakerManager speakerManager,
                              AttendeeManager attendeeManager, MessageManager messageManager,
-                             SpeakerOptionsPresenter speakerOptionsPresenter, StringFormatter stringFormatter,
-                             UpdateInfo updateInfo){
+                             SpeakerOptionsPresenter speakerOptionsPresenter, UpdateInfo updateInfo){
         this.speakerId = speakerId;
         this.eventManager = eventManager;
         this.speakerManager = speakerManager;
         this.attendeeManager = attendeeManager;
         this.messageManager = messageManager;
-        this.stringFormatter = stringFormatter;
         this.speakerOptionsPresenter = speakerOptionsPresenter;
         this.updateInfo = updateInfo;
     }

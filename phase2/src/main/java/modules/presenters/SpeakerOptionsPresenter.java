@@ -1,7 +1,5 @@
 package modules.presenters;
 
-import modules.views.ISpeakerHomePageView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
