@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import modules.gateways.*;
 import modules.presenters.AttendeeOptionsPresenter;
+import modules.presenters.Model;
 import modules.testviews.TestAttendeeHomepageView;
 import modules.usecases.AttendeeManager;
 import modules.usecases.EventManager;
@@ -19,8 +20,9 @@ import java.util.ArrayList;
 public class AttendeeControllerTest {
 
     TestAttendeeHomepageView testAttendeeHomepageView = new TestAttendeeHomepageView();
+    Model model = new Model();
     // a test class representing the view with the strings that should be passes to UI in variable returnValue
-    AttendeeOptionsPresenter attendeeOptionsPresenter = new AttendeeOptionsPresenter(testAttendeeHomepageView);
+    AttendeeOptionsPresenter attendeeOptionsPresenter = new AttendeeOptionsPresenter(model);
     UpdateInfo updateInfo = new UpdateInfo(new MessageGateway(), new EventGateway(),
                                                 new UserGateway(), new RoomGateway());
 
@@ -48,7 +50,7 @@ public class AttendeeControllerTest {
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234",2);
-        attendeeController.displayEvents();
+//        attendeeController.displayEvents();
         ArrayList<String> actual = testAttendeeHomepageView.returnValueList;
         ArrayList<String> expected = new ArrayList<>();
         expected.add("{'eventID': 'e1234', 'name': 'unnamed event', 'startTime': '2020-01-01T01:00'," +
