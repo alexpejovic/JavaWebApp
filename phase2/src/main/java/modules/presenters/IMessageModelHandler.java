@@ -5,10 +5,6 @@ import modules.entities.Message;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public interface IModelHandler {
+public interface IMessageModelHandler {
     public void setMessages(ArrayList<HashMap<String, String>> messages);
-
-    public void setEvents(ArrayList<HashMap<String, String>> events);
-
-    public Model getModel();
 }
