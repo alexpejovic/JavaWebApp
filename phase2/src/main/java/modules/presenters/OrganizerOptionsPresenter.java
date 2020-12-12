@@ -1,23 +1,26 @@
 package modules.presenters;
 
+import modules.entities.Message;
 import modules.views.IOrganizerHomePageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
  * Presenter class for the Organizer actions
  */
-public class OrganizerOptionsPresenter {
+public class OrganizerOptionsPresenter implements IModelHandler {
     private IOrganizerHomePageView iOrganizerHomePageView;
+    private Model model;
 
     /**
      * Constructor for OrganizerOptionsPresenter
      *
-     * @param iOrganizerHomePageView interface for the organizer home page
+     * @param model Model object that formats data to json
      */
-    public OrganizerOptionsPresenter(IOrganizerHomePageView iOrganizerHomePageView) {
-        this.iOrganizerHomePageView = iOrganizerHomePageView;
+    public OrganizerOptionsPresenter(Model model) {
+        this.model = model;
     }
 
     /** Presents to the user a message regarding the scheduling of an event
@@ -116,7 +119,28 @@ public class OrganizerOptionsPresenter {
     }
 
 
+    @Override
+    public void setMessages(ArrayList<HashMap<String, String>> messages) {
+        model.addMessages(messages);
+    }
 
+    @Override
+    public void setEvents(ArrayList<HashMap<String, String>> events) {
+        model.addEvents(events);
+    }
+
+    public void setAttendingEvents(ArrayList<HashMap<String, String>> attending) {
+        model.addAttendingEvents(attending);
+    }
+
+    public void setNotAttendingEvents(ArrayList<HashMap<String, String>> notAttending) {
+        model.addNotAttendingEvents(notAttending);
+    }
+
+    @Override
+    public Model getModel() {
+        return model;
+    }
 }
 
 

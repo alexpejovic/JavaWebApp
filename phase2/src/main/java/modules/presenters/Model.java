@@ -1,15 +1,17 @@
-package modules.main;
+package modules.presenters;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Model {
     private String status;
     private String statusMessage;
     private JSONArray allEvents = new JSONArray();
     private JSONArray attending = new JSONArray();
+    private JSONArray notAttending = new JSONArray();
     private JSONArray speaking = new JSONArray();
     private JSONArray messages = new JSONArray();
 
@@ -19,15 +21,6 @@ public class Model {
 
     public void setStatusMessage(String newMessage) {
         statusMessage = newMessage;
-//        ArrayList<String> evt = new ArrayList<>();
-//        evt.add("abcd");
-//        evt.add("name");
-//        evt.add("12:35");
-//        evt.add("13:45");
-//        evt.add("d10");
-//        evt.add("100");
-//        evt.add("23");
-//        addEvent(evt);
     }
 
     public void clearStatus() {
@@ -38,10 +31,42 @@ public class Model {
         statusMessage = null;
     }
 
-    public void addEvents(ArrayList<ArrayList<String>> events) {
-        for (ArrayList<String> event : events) {
+    public void addMessages(ArrayList<HashMap<String,String>> messages) {
+        for (HashMap<String, String> message : messages) {
+            this.messages.add(makeMessage(message));
+        }
+    }
+
+    public void addEvents(ArrayList<HashMap<String, String>> events) {
+        for (HashMap<String, String> event : events) {
             allEvents.add(makeEvent(event));
         }
+    }
+
+    public void addAttendingEvents(ArrayList<HashMap<String, String>> events) {
+        for (HashMap<String, String> event : events) {
+            attending.add(makeEvent(event));
+        }
+    }
+
+    public void addNotAttendingEvents(ArrayList<HashMap<String, String>> events) {
+        for (HashMap<String, String> event : events) {
+            notAttending.add(makeEvent(event));
+        }
+    }
+
+    /**
+     * @param message an arraylist containing information about a message formatted like:
+     *                messageID, senderID, receiverID, content, time, hasBeenRead, isArchived
+     * @return a JSONObject containing the above keys and their corresponding values
+     */
+    private JSONObject makeMessage(HashMap<String, String> message) {
+        String[] keys = {"messageID", "senderID", "receiverID", "content", "time", "hasBeenRead", "isArchived"};
+        JSONObject newMessage = new JSONObject();
+        for (String key : keys) {
+            newMessage.put(key, message.get(key));
+        }
+        return newMessage;
     }
 
     /**
@@ -49,16 +74,21 @@ public class Model {
      *        eventID, name, startTime, endTime, roomNumber, capacity, remainingSeats
      * @return a JSONObject containing the above keys and their corresponding values
      */
-    private JSONObject makeEvent(ArrayList<String> event) {
+    private JSONObject makeEvent(HashMap<String, String> event) {
+        String[] keys = {"eventID", "name", "startTime", "endTime", "roomNumber", "capacity", "remainingSeats"};
         JSONObject newEvent = new JSONObject();
-        newEvent.put("eventID", event.get(0));
-        newEvent.put("name", event.get(1));
-        newEvent.put("startTime", event.get(2));
-        newEvent.put("endTime", event.get(3));
-        newEvent.put("roomNumber", event.get(4));
-        newEvent.put("capacity", event.get(5));
-        newEvent.put("remainingSeats", event.get(6));
+        for (String key : keys) {
+            newEvent.put(key, event.get(key));
+        }
         return newEvent;
+    }
+
+    public void clear() {
+        allEvents = new JSONArray();
+        attending = new JSONArray();
+        notAttending = new JSONArray();
+        speaking = new JSONArray();
+        messages = new JSONArray();
     }
 
     public JSONObject toJSON() {
@@ -67,6 +97,7 @@ public class Model {
         json.put("statusMessage", statusMessage);
         json.put("allEvents", allEvents);
         json.put("attending", attending);
+        json.put("notAttending", notAttending);
         json.put("speaking", speaking);
         json.put("messages", messages);
         return json;
