@@ -2,11 +2,13 @@ package modules.controllers;
 import modules.entities.*;
 import modules.exceptions.EventNotFoundException;
 import modules.exceptions.UserNotFoundException;
+import modules.presenters.Model;
 import modules.presenters.OrganizerOptionsPresenter;
 import modules.usecases.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class OrganizerController {
@@ -261,14 +263,28 @@ public class OrganizerController {
         organizerOptionsPresenter.sendMessage(true);
     }
 
+    public void updateModel() {
+        updateModelMessages();
+        updateModelEvents();
+    }
+
     /**
-     * Shows all messages exchanged with other user (i.e the entire conversation)
-     * @param senderID the userId of the user whom the organizer shared the conversation
+     * Adds all messages this user has received to the model
      */
-    public void viewMessage(String senderID){
-        ArrayList<String> messages = messageManager.getConversation(organizerId, senderID);
-        messages = stringFormatter.messageToJSONString(messages);
-        organizerOptionsPresenter.viewMessages(messages);
+    public void updateModelMessages(){
+        ArrayList<HashMap<String, String>> messages = messageManager.getMessages(organizerId);
+        organizerOptionsPresenter.setMessages(messages);
+    }
+
+    public void updateModelEvents() {
+        ArrayList<HashMap<String, String>> allEvents = eventManager.getAllEvents();
+        ArrayList<HashMap<String, String>> attendingEvents = eventManager.getAttendingEvents(organizerId, true);
+        ArrayList<HashMap<String, String>> notAttendingEvents = eventManager.getAttendingEvents(organizerId, false);
+
+        organizerOptionsPresenter.setEvents(allEvents);
+        organizerOptionsPresenter.setAttendingEvents(attendingEvents);
+        organizerOptionsPresenter.setNotAttendingEvents(notAttendingEvents);
+
     }
 
     /**
@@ -389,6 +405,10 @@ public class OrganizerController {
         catch(EventNotFoundException e){
             return "This event doesn't exist. Please select a new existing event.";
         }
+    }
+
+    public Model getModel() {
+        return organizerOptionsPresenter.getModel();
     }
 
 }

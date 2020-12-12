@@ -42,6 +42,15 @@ public class LoginController {
 
         if(validateUsernamePassword(username, password)) {
             loggedUser = returnUserID(username);
+            if (loggedUser.startsWith("a")) {
+                userType = "attendee";
+            }
+            else if (loggedUser.startsWith("o")) {
+                userType = "organizer";
+            }
+            else if (loggedUser.startsWith("s")) {
+                userType = "speaker";
+            }
             return true;
         }
         else
@@ -67,30 +76,30 @@ public class LoginController {
 
         // checking if this user is an attendee
         if (attendeeManager.isUser(username)){
-//            return attendeeManager.validatePassword(username, password);
-            boolean login = attendeeManager.validatePassword(username, password);
-            if (login) {
-                userType = "attendee";
-            }
-            return login;
+            return attendeeManager.validatePassword(username, password);
+//            boolean login = attendeeManager.validatePassword(username, password);
+//            if (login) {
+//                userType = "attendee";
+//            }
+//            return login;
         }
         // checking if this user is an organizer
         else if (organizerManager.isUser(username)){
-//            return organizerManager.validatePassword(username, password);
-            boolean login = organizerManager.validatePassword(username, password);
-            if (login) {
-                userType = "organizer";
-            }
-            return login;
+            return organizerManager.validatePassword(username, password);
+//            boolean login = organizerManager.validatePassword(username, password);
+//            if (login) {
+//                userType = "organizer";
+//            }
+//            return login;
         }
         // checking if this user is an speaker
         else if (speakerManager.isUser(username)){
-//            return speakerManager.validatePassword(username, password);
-            boolean login = speakerManager.validatePassword(username, password);
-            if (login) {
-                userType = "speaker";
-            }
-            return login;
+            return speakerManager.validatePassword(username, password);
+//            boolean login = speakerManager.validatePassword(username, password);
+//            if (login) {
+//                userType = "speaker";
+//            }
+//            return login;
         }
         //user is not found
         return false;
