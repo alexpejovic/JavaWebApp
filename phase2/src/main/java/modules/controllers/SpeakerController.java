@@ -106,11 +106,11 @@ public class SpeakerController implements Messageable {
     }
 
     private void updateModelEvents() {
-        ArrayList<HashMap<String, String>> attendingEvents = eventManager.getAttendingEvents(speakerId, true);
-        ArrayList<HashMap<String, String>> notAttendingEvents = eventManager.getAttendingEvents(speakerId, false);
+        ArrayList<HashMap<String, String>> speakingEvents = eventManager.getSpeakingEvents(speakerId, true);
+        ArrayList<HashMap<String, String>> notSpeakingEvents = eventManager.getSpeakingEvents(speakerId, false);
 
-        speakerOptionsPresenter.setAttendingEvents(attendingEvents);
-        speakerOptionsPresenter.setNotAttendingEvents(notAttendingEvents);
+        speakerOptionsPresenter.setAttendingEvents(speakingEvents);
+        speakerOptionsPresenter.setNotAttendingEvents(notSpeakingEvents);
     }
 
 

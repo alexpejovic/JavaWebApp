@@ -50,7 +50,7 @@ public class AttendeeController implements Attendable, Messageable {
                 signUpSuccessful = true;
             }
         }
-        catch (EventNotFoundException | ClassNotFoundException e){
+        catch (EventNotFoundException e){
             attendeeOptionsPresenter.eventNotFound();
         }
         finally {
@@ -72,7 +72,7 @@ public class AttendeeController implements Attendable, Messageable {
                 updateInfo.updateEvent(eventManager.getEvent(eventID)); // updating event info to database
                 updateInfo.updateUser(attendeeManager.getAttendee(attendeeID)); // updating attendee info
                 attendeeOptionsPresenter.cancelAttendanceToEventMessage(true);
-            }catch (UserNotFoundException | ClassNotFoundException e){
+            }catch (UserNotFoundException e){
                 // event did not have attendee in attending list
                 // still send success since removed event from attendee's list of attending events
                 attendeeOptionsPresenter.cancelAttendanceToEventMessage(true);

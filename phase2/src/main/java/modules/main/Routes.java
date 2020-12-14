@@ -67,6 +67,8 @@ public class Routes {
         post("/createevent", Routes::createEvent);
         post("/createaccount", Routes::createAccount);
         post("/createroom", Routes::createRoom);
+        post("/bookspeaker", Routes::bookSpeaker);
+        post("/cancelspeaker", Routes::cancelSpeaker);
     }
 
     private static String attendEvent(Request request, Response response) {
@@ -150,6 +152,22 @@ public class Routes {
     private static String createRoom(Request request, Response response) {
         int capacity = Integer.parseInt(request.queryParams("capacity"));
         orgController.addNewRoom(request.queryParams("room"), capacity);
+
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String bookSpeaker(Request request, Response response) {
+        orgController.scheduleSpeaker(request.queryParams("name"), request.queryParams("event"));
+
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String cancelSpeaker(Request request, Response response) {
+        orgController.removeSpeakerFromEvent(request.queryParams("name"), request.queryParams("event"));
 
         updateModel(false);
         response.redirect("/home");

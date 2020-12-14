@@ -81,7 +81,7 @@ public class OrganizerController implements Attendable, Messageable {
                         organizerManager.addToOrganizedEvents(organizerId, eventId);
                         updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
 //                    organizerOptionsPresenter.scheduleEventSuccess(true);
-                    } catch (EventNotFoundException | ClassNotFoundException e) {
+                    } catch (EventNotFoundException e) {
 //                    organizerOptionsPresenter.scheduleEventSuccess(false);
                     }
                 }
@@ -141,11 +141,10 @@ public class OrganizerController implements Attendable, Messageable {
      * Schedules speaker to speak at an existing event if speaker, event and room are available
      * and if the speaker is not already speaking at the specified event
      * @param username the id of the Speaker being scheduled for the Event
-     * @param roomNumber the number of the room where the event will be held and where the speaker will present
-     * @param eventId the ID of the event taking place in the room
+     * @param eventId the name of the event taking place in the room
      * precondition: the event with eventName is an existing event
      */
-    public void scheduleSpeaker(String username, String roomNumber, String eventId) throws ClassNotFoundException {
+    public void scheduleSpeaker(String username, String eventId) {
         //check if speaker is available
 //        if (!roomExists(roomNumber)) {organizerOptionsPresenter.scheduleSpeaker(false);}
 //        if (!roomManager.getEventsInRoom(roomNumber).contains(eventId)){
@@ -181,7 +180,7 @@ public class OrganizerController implements Attendable, Messageable {
      * @param eventId the ID of the event in question
      * precondition: the event with eventID is an existing event
      */
-    public void removeSpeakerFromEvent(String username, String eventId) throws ClassNotFoundException {
+    public void removeSpeakerFromEvent(String username, String eventId) {
         String speakerId = speakerManager.getUserID(username);
         //checking that the speaker is speaking at the given event
         if (eventManager.isSpeakerSpeakingAtEvent(eventId,speakerId)){
