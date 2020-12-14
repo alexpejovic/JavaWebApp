@@ -62,7 +62,7 @@ public class PopulateData {
                 "e2",2);
         event2.setName("Therapy dog");
         event2.scheduleSpeaker("s2");
-        event2.addAttendee("oO");
+        event2.addAttendee("o0");
         events.add(event2);
 
         Event event3 = new Event("r1",
