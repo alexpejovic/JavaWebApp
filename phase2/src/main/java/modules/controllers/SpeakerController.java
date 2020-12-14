@@ -8,6 +8,7 @@ import modules.usecases.MessageManager;
 import modules.usecases.SpeakerManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * SpeakerController class allows speakers to message attendees and also get a list of the events they are hosting
@@ -18,7 +19,6 @@ public class SpeakerController {
     private final EventManager eventManager;
     private final AttendeeManager attendeeManager;
     private final MessageManager messageManager;
-    private final StringFormatter stringFormatter;
     private final SpeakerOptionsPresenter speakerOptionsPresenter;
     private final UpdateInfo updateInfo;
 
@@ -33,27 +33,15 @@ public class SpeakerController {
      */
     public SpeakerController(String speakerId, EventManager eventManager, SpeakerManager speakerManager,
                              AttendeeManager attendeeManager, MessageManager messageManager,
-                             SpeakerOptionsPresenter speakerOptionsPresenter, StringFormatter stringFormatter,
-                             UpdateInfo updateInfo){
+                             SpeakerOptionsPresenter speakerOptionsPresenter, UpdateInfo updateInfo){
         this.speakerId = speakerId;
         this.eventManager = eventManager;
         this.speakerManager = speakerManager;
         this.attendeeManager = attendeeManager;
         this.messageManager = messageManager;
-        this.stringFormatter = stringFormatter;
         this.speakerOptionsPresenter = speakerOptionsPresenter;
         this.updateInfo = updateInfo;
     }
-
-    /**
-     * Display the events which the Speaker is hosting
-     */
-    public void showEvents(){
-        ArrayList<String> eventIDs = speakerManager.getSpeaker(speakerId).getHostEvents();
-        ArrayList<String> formattedEvents = stringFormatter.eventsToJSONString(eventIDs);
-        speakerOptionsPresenter.showSpeakingEvents(formattedEvents);
-    }
-
 
     /**
      * Sends a message to all Attendees coming to an event this speaker is hosting
@@ -88,21 +76,6 @@ public class SpeakerController {
     }
 
     /**
-     * Displays all the messages that this speaker has ever sent or received
-     */
-    public void showAllMessages(){
-        ArrayList<String> messageIDs = messageManager.getUserMessages(speakerId);
-        // mark as read
-        for(String ID: messageIDs){
-            if(messageManager.getReceiverIDOfMessage(ID).equals(ID)){
-                messageManager.markMessageAsRead(ID);
-            }
-        }
-        ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(messageIDs);
-        speakerOptionsPresenter.showAllMessages(formattedMessages);
-    }
-
-    /**
      * Return a list of Attendees that are attending at least 1 event this speaker is hosting
      * @return a list of Attendees that are attending at least 1 event this speaker is hosting
      */
@@ -121,6 +94,24 @@ public class SpeakerController {
         return myAttendees;
     }
 
+
+    public void updateModel() {
+        updateModelMessages();
+        updateModelEvents();
+    }
+
+    private void updateModelMessages() {
+        ArrayList<HashMap<String, String>> messages = messageManager.getMessages(speakerId);
+        speakerOptionsPresenter.setMessages(messages);
+    }
+
+    private void updateModelEvents() {
+        ArrayList<HashMap<String, String>> attendingEvents = eventManager.getAttendingEvents(speakerId, true);
+        ArrayList<HashMap<String, String>> notAttendingEvents = eventManager.getAttendingEvents(speakerId, false);
+
+        speakerOptionsPresenter.setAttendingEvents(attendingEvents);
+        speakerOptionsPresenter.setNotAttendingEvents(notAttendingEvents);
+    }
 
 
 }

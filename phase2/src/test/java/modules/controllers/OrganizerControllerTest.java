@@ -1,23 +1,15 @@
 package modules.controllers;
 
-import modules.entities.Attendee;
-import modules.entities.Organizer;
-import modules.entities.Speaker;
-import modules.entities.User;
-import modules.exceptions.NonUniqueIdException;
 import modules.gateways.EventGateway;
 import modules.gateways.MessageGateway;
 import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
+import modules.presenters.Model;
 import modules.presenters.OrganizerOptionsPresenter;
-import modules.testviews.TestOrganizerHomepageView;
 import modules.usecases.*;
-import org.junit.Test;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
 
 // tests would affect database info if connected to database
 // tests pass but since we are not connecting there is an SQLException message that is printed
@@ -32,15 +24,15 @@ public class OrganizerControllerTest{
     SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
     UpdateInfo updateInfo = new UpdateInfo(new MessageGateway(),new EventGateway(),
                                             new UserGateway(), new RoomGateway());
-    TestOrganizerHomepageView testOrganizerHomepageView = new TestOrganizerHomepageView();
-    OrganizerOptionsPresenter organizerOptionsPresenter = new OrganizerOptionsPresenter(testOrganizerHomepageView);
-    StringFormatter stringFormatter;
+//    TestOrganizerHomepageView testOrganizerHomepageView = new TestOrganizerHomepageView();
+    Model model = new Model();
+    OrganizerOptionsPresenter organizerOptionsPresenter = new OrganizerOptionsPresenter(model);
     EventCreator eventCreator = new EventCreator(eventManager,updateInfo);
     AccountCreator accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager,updateInfo);
     OrganizerController organizerController = new OrganizerController(organizerManager, eventManager,
                                                     roomManager, speakerManager, messageManager, attendeeManager,
                                                     eventCreator, accountCreator, "o123", updateInfo,
-                                                    organizerOptionsPresenter, stringFormatter);
+                                                    organizerOptionsPresenter);
 
 /*    @Test (expected = NonUniqueIdException.class)
     public void testAddNewRoom(){

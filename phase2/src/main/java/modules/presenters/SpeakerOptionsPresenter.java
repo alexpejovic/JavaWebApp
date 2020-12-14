@@ -1,34 +1,33 @@
 package modules.presenters;
 
-import modules.views.ISpeakerHomePageView;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Presenter class for all Speaker actions
  */
-public class SpeakerOptionsPresenter {
+public class SpeakerOptionsPresenter implements IUserModelHandler, IMessageModelHandler{
 
-    private ISpeakerHomePageView iSpeakerHomePageView;
+    private Model model;
 
-    public SpeakerOptionsPresenter(ISpeakerHomePageView iSpeakerHomePageView){
-        this.iSpeakerHomePageView = iSpeakerHomePageView;
+    public SpeakerOptionsPresenter(Model model){
+        this.model = model;
+        model.setUserType("speaker");
     }
 
-    /**
-     * Sends list of event info to homepage to display
-     * @param formattedEvents a list of json strings representing the events that a specific user is speaking at
-     */
-    public void showSpeakingEvents(ArrayList<String> formattedEvents){
-        iSpeakerHomePageView.displaySpeakingEvents(formattedEvents);
+    @Override
+    public void setMessages(ArrayList<HashMap<String, String>> messages) {
+        model.addMessages(messages);
     }
 
-    /**
-     * Sends a list of messages to the UI to display
-     * @param formattedMessages a list of json string representing the messages that the speaker sent and received
-     */
-    public void showAllMessages(ArrayList<String> formattedMessages){
-        iSpeakerHomePageView.displayMessages(formattedMessages);
+    @Override
+    public void setAttendingEvents(ArrayList<HashMap<String, String>> attendingEvents) {
+        model.addAttendingEvents(attendingEvents);
+    }
+
+    @Override
+    public void setNotAttendingEvents(ArrayList<HashMap<String, String>> notAttendingEvents) {
+        model.addNotAttendingEvents(notAttendingEvents);
     }
 
     /**
@@ -37,18 +36,18 @@ public class SpeakerOptionsPresenter {
      */
     public void sendMessageSuccess(boolean isSuccessful){
         if (isSuccessful){
-            iSpeakerHomePageView.displayMessage("Message sent!");
+            model.setErrorStatus(true, "Message sent!");
         }
         else{
-            iSpeakerHomePageView.displayMessage("Sorry, that message did not go through.");
+            model.setErrorStatus(false, "Sorry, that message did not go through.");
         }
     }
 
     public void sendMessageAllSuccess(boolean isSuccessful){
         if (isSuccessful)
-            iSpeakerHomePageView.displayMessage("All users attending all your talks have received your message!");
+            model.setErrorStatus(true, "All users attending all your talks have received your message!");
         else
-            iSpeakerHomePageView.displayMessage("No messages went through. Check if you are hosting any events and " +
+            model.setErrorStatus(false, "No messages went through. Check if you are hosting any events and " +
                     "check if your events have any attendees.");
     }
 

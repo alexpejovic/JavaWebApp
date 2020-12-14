@@ -1,37 +1,21 @@
 package modules.presenters;
 
-import modules.views.IAttendeeHomePageView;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Presenter class for the Attendee actions
  */
-public class AttendeeOptionsPresenter {
-    private IAttendeeHomePageView iAttendeeHomePageView;
+public class AttendeeOptionsPresenter implements IUserModelHandler, IMessageModelHandler {
+    private Model model;
 
     /**
      * Constructor for AttendeeOptionsPresenter
-     * @param iAttendeeHomePageView interface for the attendee home page
+     * @param model Model object that formats data to json
      */
-    public AttendeeOptionsPresenter(IAttendeeHomePageView iAttendeeHomePageView){
-        this.iAttendeeHomePageView = iAttendeeHomePageView;
-    }
-
-    /**
-     * Sends list of event info to homepage to display
-     * @param formattedEvents a list of json strings representing all events in the conference
-     */
-    public void showAllEvents(ArrayList<String> formattedEvents){
-        iAttendeeHomePageView.displayAllEvents(formattedEvents);
-    }
-
-    /**
-     * Sends list of event info to homepage to display
-     * @param formattedEvents a list of son strings representing the events that a specific user is attending
-     */
-    public void showAttendingEvents(ArrayList<String> formattedEvents){
-        iAttendeeHomePageView.displayAttendingEvents(formattedEvents);
+    public AttendeeOptionsPresenter(Model model){
+        this.model = model;
+        model.setUserType("attendee");
     }
 
     /**
@@ -40,10 +24,10 @@ public class AttendeeOptionsPresenter {
      */
     public void signUpToEventMessage(boolean isSuccessful){
         if (isSuccessful){
-            iAttendeeHomePageView.displayMessage("Successfully signed up for event");
+            model.setErrorStatus(true, "Successfully signed up for event");
         }
         else{
-            iAttendeeHomePageView.displayMessage("Sorry you cannot signup to that event");
+            model.setErrorStatus(false, "Sorry you cannot signup to that event");
         }
     }
 
@@ -53,10 +37,10 @@ public class AttendeeOptionsPresenter {
      */
     public void cancelAttendanceToEventMessage(boolean isCancellationSuccessful){
         if (isCancellationSuccessful){
-            iAttendeeHomePageView.displayMessage("Successfully canceled attendance to event");
+            model.setErrorStatus(true, "Successfully canceled attendance to event");
         }
         else{
-            iAttendeeHomePageView.displayMessage("Sorry, you were not signed up for that event");
+            model.setErrorStatus(false, "Sorry, you were not signed up for that event");
         }
     }
 
@@ -66,10 +50,10 @@ public class AttendeeOptionsPresenter {
      */
     public void addToFriendList(boolean isSuccessful){
         if (isSuccessful){
-            iAttendeeHomePageView.displayMessage("Successfully added to friends list");
+            model.setErrorStatus(true, "Successfully added to friends list");
         }
         else{
-            iAttendeeHomePageView.displayMessage("Sorry, that user is already in your friends list");
+            model.setErrorStatus(false, "Sorry, that user is already in your friends list");
         }
     }
 
@@ -79,10 +63,10 @@ public class AttendeeOptionsPresenter {
      */
     public void sendMessage(boolean isSuccessful){
         if (isSuccessful){
-            iAttendeeHomePageView.displayMessage("Message sent!");
+            model.setErrorStatus(true, "Message sent!");
         }
         else{
-            iAttendeeHomePageView.displayMessage("Sorry, that user is not in your friends list");
+            model.setErrorStatus(false, "Sorry, that user is not in your friends list");
         }
     }
 
@@ -92,10 +76,10 @@ public class AttendeeOptionsPresenter {
      */
     public void replyMessage(boolean isSuccessful){
         if (isSuccessful){
-            iAttendeeHomePageView.displayMessage("Message sent!");
+            model.setErrorStatus(true, "Message sent!");
         }
         else{
-            iAttendeeHomePageView.displayMessage("Sorry, no messages exist between you two");
+            model.setErrorStatus(false, "Sorry, no messages exist between you two");
         }
     }
 
@@ -104,16 +88,28 @@ public class AttendeeOptionsPresenter {
      * Displays a message that a specified event was not in the system
      */
     public void eventNotFound(){
-        iAttendeeHomePageView.displayMessage("That event does not exist");
+        model.setErrorStatus(false, "That event does not exist");
     }
 
     /**
      * Displays a message that a specified user was not in the system
      */
     public void userNotFound(){
-        iAttendeeHomePageView.displayMessage("That user does not exist");
+        model.setErrorStatus(false, "That user does not exist");
     }
 
+    @Override
+    public void setMessages(ArrayList<HashMap<String, String>> messages) {
+        model.addMessages(messages);
+    }
 
+    @Override
+    public void setAttendingEvents(ArrayList<HashMap<String, String>> attending) {
+        model.addAttendingEvents(attending);
+    }
 
+    @Override
+    public void setNotAttendingEvents(ArrayList<HashMap<String, String>> notAttending) {
+        model.addNotAttendingEvents(notAttending);
+    }
 }

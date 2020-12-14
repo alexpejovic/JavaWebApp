@@ -5,26 +5,39 @@ import modules.gateways.EventGateway;
 import modules.gateways.MessageGateway;
 import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
+import modules.presenters.AttendeeOptionsPresenter;
+import modules.presenters.Model;
+import modules.presenters.OrganizerOptionsPresenter;
+import modules.presenters.SpeakerOptionsPresenter;
 import modules.usecases.*;
-import modules.views.IOrganizerHomePageView;
 
 import java.util.ArrayList;
 
 public class ConfBuild {
 
-    AttendeeManager attendeeManager;
-    OrganizerManager organizerManager;
-    SpeakerManager speakerManager;
+    private Model model;
 
-    MessageGateway messageGateway = new MessageGateway();
-    EventGateway eventGateway = new EventGateway();
-    UserGateway userGateway = new UserGateway();
-    RoomGateway roomGateway = new RoomGateway();
+    private AttendeeManager attendeeManager;
+    private OrganizerManager organizerManager;
+    private SpeakerManager speakerManager;
+    private EventManager eventManager;
+    private MessageManager messageManager;
 
-    public ConfBuild() {
+    private MessageGateway messageGateway = new MessageGateway();
+    private EventGateway eventGateway = new EventGateway();
+    private UserGateway userGateway = new UserGateway();
+    private RoomGateway roomGateway = new RoomGateway();
+
+    private UpdateInfo updateInfo;
+
+    public ConfBuild(Model model) {
+        this.model = model;
         attendeeManager = new AttendeeManager(readAttendees());
         organizerManager = new OrganizerManager(readOrganizers());
         speakerManager = new SpeakerManager(readSpeakers());
+        eventManager = new EventManager(readEvents());
+        messageManager = new MessageManager(readMessages());
+        updateInfo = new UpdateInfo(messageGateway, eventGateway, userGateway, roomGateway);
     }
 
 
@@ -33,23 +46,35 @@ public class ConfBuild {
         return loginController;
     }
 
-/*    public OrganizerController getOrgController(String userID) {
-        EventManager eventManager = new EventManager(readEvents());
+    public OrganizerController getOrgController(String userID) {
         RoomManager roomManager = new RoomManager(readRooms());
-        MessageManager messageManager = new MessageManager(readMessages());
-        UpdateInfo updateInfo = new UpdateInfo(messageGateway, eventGateway, userGateway, roomGateway);
         EventCreator eventCreator = new EventCreator(eventManager, updateInfo);
         AccountCreator accountCreator = new AccountCreator(organizerManager, attendeeManager, speakerManager, updateInfo);
-        OrganizerController organizerController = new OrganizerController(organizerManager, eventManager, roomManager, speakerManager, messageManager, attendeeManager, eventCreator, accountCreator, userID, updateInfo);
-        return organizerController;
-    }*/
+        OrganizerOptionsPresenter organizerOptionsPresenter = new OrganizerOptionsPresenter(model);
+        return new OrganizerController(
+                organizerManager, eventManager, roomManager, speakerManager,
+                messageManager, attendeeManager, eventCreator, accountCreator,
+                userID, updateInfo, organizerOptionsPresenter);
+    }
+
+    public AttendeeController getAttController(String userID) {
+        AttendeeOptionsPresenter attendeeOptionsPresenter = new AttendeeOptionsPresenter(model);
+        return new AttendeeController(
+                attendeeManager, eventManager, userID, messageManager, attendeeOptionsPresenter, updateInfo);
+    }
+
+    public SpeakerController getSpkController(String userID) {
+        SpeakerOptionsPresenter speakerOptionsPresenter = new SpeakerOptionsPresenter(model);
+        return new SpeakerController(
+                userID, eventManager, speakerManager, attendeeManager,
+                messageManager, speakerOptionsPresenter, updateInfo);
+    }
 
 
     /**
      * @return an arraylist of Event entities
      */
     private ArrayList<Event> readEvents() {
-//        EventGatewayDB eventGateway = new EventGatewayDB();
         EventGateway eventGateway = new EventGateway();
         return eventGateway.readData();
     }
@@ -57,7 +82,6 @@ public class ConfBuild {
      * @return an arraylist of Message entities
      */
     private ArrayList<Message> readMessages() {
-//        MessageGatewayDB messageGateway = new MessageGatewayDB();
         MessageGateway messageGateway = new MessageGateway();
         return messageGateway.readData();
     }
@@ -66,7 +90,6 @@ public class ConfBuild {
      * @return an arraylist of Room entities
      */
     private ArrayList<Room> readRooms() {
-//        RoomGatewayDB roomGateway = new RoomGatewayDB();
         RoomGateway roomGateway = new RoomGateway();
         return roomGateway.readData();
     }
@@ -75,7 +98,6 @@ public class ConfBuild {
      * @return an arraylist of Attendee entities
      */
     private ArrayList<Attendee> readAttendees() {
-//        UserGatewayDB userGateway = new UserGatewayDB();
         UserGateway userGateway = new UserGateway();
         ArrayList<User> users = userGateway.readData();
         return getAttendeesFromUsers(users);
@@ -85,7 +107,6 @@ public class ConfBuild {
      * @return an arraylist of Organizer entities
      */
     private ArrayList<Organizer> readOrganizers() {
-//        UserGatewayDB userGateway = new UserGatewayDB();
         UserGateway userGateway = new UserGateway();
         ArrayList<User> users = userGateway.readData();
         return getOrganizersFromUsers(users);
@@ -95,7 +116,6 @@ public class ConfBuild {
      * @return an arraylist of Speaker entities
      */
     private ArrayList<Speaker> readSpeakers() {
-//        UserGatewayDB userGateway = new UserGatewayDB();
         UserGateway userGateway = new UserGateway();
         ArrayList<User> users = userGateway.readData();
         return getSpeakersFromUsers(users);

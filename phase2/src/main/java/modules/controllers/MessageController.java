@@ -5,6 +5,7 @@ import modules.presenters.MessagePresenter;
 import modules.usecases.MessageManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A controller class for message options that are available to every type of user
@@ -14,7 +15,6 @@ public class MessageController {
     private String userID;
     private MessageManager messageManager;
     private MessagePresenter messagePresenter;
-    private StringFormatter stringFormatter;
     private UpdateInfo updateInfo;
 
     /**
@@ -26,11 +26,10 @@ public class MessageController {
      * @param updateInfo a class to update database info
      */
     public MessageController(String userID, MessageManager messageManager, MessagePresenter messagePresenter,
-                             StringFormatter stringFormatter, UpdateInfo updateInfo){
+                             UpdateInfo updateInfo){
         this.userID = userID;
         this.messageManager = messageManager;
         this.messagePresenter = messagePresenter;
-        this.stringFormatter = stringFormatter;
         this.updateInfo = updateInfo;
     }
     /**
@@ -43,7 +42,7 @@ public class MessageController {
             updateInfo.updateMessage(messageManager.getMessage(messageID));  // updating message info to database
         }
         catch (MessageNotFoundException e){
-            messagePresenter.messageDoesNotExist();
+//            messagePresenter.messageDoesNotExist();
         }
 
     }
@@ -58,7 +57,7 @@ public class MessageController {
             updateInfo.updateMessage(messageManager.getMessage(messageID));  // updating message info to database
         }
         catch (MessageNotFoundException e){
-            messagePresenter.messageDoesNotExist();
+//            messagePresenter.messageDoesNotExist();
         }
 
     }
@@ -73,7 +72,7 @@ public class MessageController {
             updateInfo.updateMessage(messageManager.getMessage(messageID));  // updating message info to database
         }
         catch (MessageNotFoundException e){
-            messagePresenter.messageDoesNotExist();
+//            messagePresenter.messageDoesNotExist();
         }
 
     }
@@ -87,7 +86,7 @@ public class MessageController {
             messageManager.deleteMessage(messageID, userID);
         }
         catch (MessageNotFoundException e){
-            messagePresenter.messageDoesNotExist();
+//            messagePresenter.messageDoesNotExist();
         }
 
     }
@@ -97,9 +96,10 @@ public class MessageController {
      * @param user2ID the id of the other user involved in the archived messages to be presented
      */
     public void seeArchivedMessages(String user2ID){
-        ArrayList<String> archivedMessages = messageManager.getArchivedMessages(userID, user2ID);
-        ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(archivedMessages);
-        messagePresenter.seeMessages(formattedMessages);
+        ArrayList<HashMap<String, String>> archivedMessages = messageManager.getArchivedMessages(userID, user2ID);
+//        ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(archivedMessages);
+//        messagePresenter.seeMessages(formattedMessages);
+        messagePresenter.setMessages(archivedMessages);
     }
 
     /**
@@ -107,20 +107,24 @@ public class MessageController {
      * @param senderId the id of the user who sends the message
      */
     public void seeMessages(String senderId){
-        ArrayList<String> conversation = messageManager.getConversation(userID, senderId);
-        for(String ID: conversation){
-            if(messageManager.getReceiverIDOfMessage(ID).equals(userID)){
-                messageManager.markMessageAsRead(ID);
+        ArrayList<HashMap<String, String>> conversation = messageManager.getConversation(userID, senderId);
+        for(HashMap<String, String> message: conversation){
+//            if(messageManager.getReceiverIDOfMessage(ID).equals(userID)){
+//                messageManager.markMessageAsRead(ID);
+//            }
+            if (message.get("receiverID").equals(userID)) {
+                messageManager.markMessageAsRead(message.get("messageID"));
             }
         }
         // message is presented to user if there is no messages found between the two
-        if(conversation.isEmpty()){
-            messagePresenter.noMessagesFound();
-        }
-        else{
-            ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(conversation);
-            messagePresenter.seeMessages(formattedMessages);
-        }
+//        if(conversation.isEmpty()){
+//            messagePresenter.noMessagesFound();
+//        }
+//        else{
+//            ArrayList<String> formattedMessages = stringFormatter.messageToJSONString(conversation);
+//            messagePresenter.seeMessages(formattedMessages);
+//        }
+        messagePresenter.setMessages(conversation);
 
     }
 }

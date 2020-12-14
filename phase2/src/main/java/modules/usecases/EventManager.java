@@ -166,6 +166,37 @@ public class EventManager {
         return copy;
     }
 
+    public ArrayList<HashMap<String, String>> getAllEvents() {
+        ArrayList<HashMap<String, String>> eventList = new ArrayList<>();
+        for (Event event : getEventList()) {
+            eventList.add(objToMap(event));
+        }
+        return eventList;
+    }
+
+    public ArrayList<HashMap<String, String>> getAttendingEvents(String userID, boolean attending) {
+        ArrayList<HashMap<String, String>> eventList = new ArrayList<>();
+        for (Event event : getEventList()) {
+            if (event.getAttendees().contains(userID) == attending) {
+                eventList.add(objToMap(event));
+            }
+        }
+        return eventList;
+    }
+
+    private HashMap<String, String> objToMap(Event event) {
+//     *        eventID, name, startTime, endTime, roomNumber, capacity, remainingSeats
+        HashMap<String, String> map = new HashMap<>();
+        map.put("eventID", event.getID());
+        map.put("name", event.getName());
+        map.put("startTime", event.getStartTime().toString());
+        map.put("endTime", event.getEndTime().toString());
+        map.put("roomNumber", event.getRoomNumber());
+        map.put("capacity", String.valueOf(event.getCapacity()));
+        map.put("remainingSeats", String.valueOf(event.getAvailableSeats()));
+        return map;
+    }
+
     /**
      * Checks if an event can allow another attendee to attend
      * @param eventID the unique ID of the event

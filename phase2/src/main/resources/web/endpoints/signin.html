@@ -124,6 +124,12 @@
             Event Name: <input name="evt" type="text" placeholder="event"/>
             <button>Book!</button>
         </form>
+        <h3>Cancel Speaker</h3>
+        <form class="register-form" method="post">
+            Speaker Name: <input name="name" type="text" placeholder="name"/>
+            Event Name: <input name="evt" type="text" placeholder="event"/>
+            <button class="delete">Cancel!</button>
+        </form>
 
     </div>
     <div id="createRoom" class="tabcontent">
@@ -138,96 +144,32 @@
 
     <!-- Navigation bar stuck to the top of the screen -->
     <div class="nav" id="nav">
-        <p id="nav-text">Welcome, {{user}}</p>
+        <p class="nav-text">Welcome, {{user}}</p>
         <div class="nav-right">
-            <a id="nav-text" href="#top">More Actions</a>
-            <a id="nav-text" href="#messages">My Messages</a>
-            <a id="nav-text" href="#myEvents">My Schedule</a>
-            <a id="nav-text" href="#moreEvents">Upcoming Events</a>
-            <a id="nav-text" href="/logout">Logout</a>
+            <a class="nav-text" href="#top">More Actions</a>
+            <a class="nav-text" href="#messages">My Messages</a>
+            <a class="nav-text" href="#myEvents">My Schedule</a>
+            <a class="nav-text" href="#moreEvents">Upcoming Events</a>
+            <a class="nav-text" href="/logout">Logout</a>
         </div>
     </div>
 
     <!-- Information to the User -->
     <h2>My Messages:</h2>
     <div class="maintable" id="messages">
-        <table>
-            <tr>
-                <th>Read?</th>
-                <th>Delete?</th>
-                <th>Archive?</th>
-                <th>From:</th>
-                <th>Message:</th>
-                <th>Reply?</th>
-            </tr>
-            <tr>
-                <th>X</th>
-                <th>
-                    <form>
-                        <button class="delete">Delete</button>
-                    </form>
-                </th>
-                <th>
-                    <form>
-                        <button class="archive">Archive</button>
-                    </form>
-                </th>
-                <th>Someone</th>
-                <th>Hey there! Delete this part when ready</th>
-                <th>
-                    <form>
-                        <input name="reply" type="text" placeholder="Reply">
-                        <button>Send</button>
-                    </form>
-                </th>
-            </tr>
-        </table>
+<!--       Template Space -->
     </div>
 
     <h2>My Schedule:</h2>
     <div class="maintable" id="myEvents">
-        <table>
-            <tr>
-                <th>Title:</th>
-                <th>Description:</th>
-                <th>Time:</th>
-                <th>Cancel?</th>
-            </tr>
-            <tr>
-                <th>Some Random Event!</th>
-                <th>Attend a completely random and unnecessary event that doesn't even exist!</th>
-                <th>January, 25, 2036</th>
-                <th>
-                    <form>
-                        <button class="delete">Cancel</button>
-                    </form>
-                </th>
-            </tr>
-        </table>
+<!--       Template Space-->
     </div>
 
     <h2>Upcoming Events:</h2>
     <div class="maintable" id="moreEvents">
-        <table>
-            <tr>
-                <th>Title:</th>
-                <th>Description:</th>
-                <th>Time:</th>
-                <th>Join?</th>
-            </tr>
-            <tr>
-                <th>Some Random Event!</th>
-                <th>Attend a completely random and unnecessary event that doesn't even exist!</th>
-                <th>January, 25, 2036</th>
-                <th>
-                    <form>
-                        <button>Join</button>
-                    </form>
-                </th>
-            </tr>
-        </table>
+<!--       Template Space-->
     </div>
 </div>
-<script src="../scripts/script.js"></script>
+<script src="../scripts/homescript.js"></script>
 </body>
 </html>
