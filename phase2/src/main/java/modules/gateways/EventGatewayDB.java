@@ -3,14 +3,12 @@ package modules.gateways;
 import modules.entities.Event;
 import modules.gateways.DBConnect;
 import modules.usecases.EventManager;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.sql.Statement;
-import java.sql.ResultSet;
 import java.util.Date;
 
 /**
@@ -54,8 +52,8 @@ public class EventGatewayDB implements EventStrategy{
         String createSql = "CREATE TABLE IF NOT EXISTS events (\n"
                 + "	eventId VARCHAR(20) PRIMARY KEY,\n"
                 + "	roomNumber VARCHAR(20) NOT NULL,\n"
-                + "	startTime TIMESTAMP NOT NULL,\n"
-                + "	endTime TIMESTAMP NOT NULL,\n"
+                + "	startTime VARCHAR(20) NOT NULL,\n"
+                + "	endTime VARCHAR(20) NOT NULL,\n"
                 + "	name VARCHAR(250),\n"
                 + "	isVIP BOOLEAN NOT NULL,\n"
                 + "	capacity INTEGER(20) NOT NULL, \n"
@@ -130,8 +128,9 @@ public class EventGatewayDB implements EventStrategy{
                 }
                 //Use the data retrieved from the tables to create Event entity
                 Event newEvent = new Event(rs.getString("roomNumber"),
-                        rs.getTimestamp("startTime").toLocalDateTime(),
-                        rs.getTimestamp("endTime").toLocalDateTime(), rs.getString("eventId"),
+                        LocalDateTime.parse(rs.getString("startTime")),
+                        LocalDateTime.parse(rs.getString("endTime")),
+                        rs.getString("eventId"),
                         rs.getInt("capacity"));
                 newEvent.setName(rs.getString("name"));
                 if(rs.getBoolean("isVIP")) {
@@ -181,7 +180,11 @@ public class EventGatewayDB implements EventStrategy{
                 //Query for writing the event to the database
                 int vip = event.getVIPStatus() ? 1 : 0;
                 String sql = "REPLACE INTO events (eventId, roomNumber, startTime, endTime, capacity, name, isVIP, speakerCapacity)" +
-                        " Values('" + event.getID() + "', '" + event.getRoomNumber() + "', '" + event.getStartTime() + "', '" + event.getEndTime() + "', '" + event.getCapacity() + "', '" + event.getName() + "', '" + vip + "', '" + event.getSpeakerCapacity() + "')";
+                        " Values('" + event.getID() + "', '" + event.getRoomNumber() + "', '" +
+                        event.getStartTime().format(DateTimeFormatter.ISO_DATE_TIME) + "', '" +
+                        event.getEndTime().format(DateTimeFormatter.ISO_DATE_TIME) + "', '" +
+                        event.getCapacity() + "', '" + event.getName() + "', '" +
+                        vip + "', '" + event.getSpeakerCapacity() + "')";
                 try (Statement stmt = dbConn.createStatement()) {
                     stmt.execute(sql);
                 } catch (SQLException e2) {
