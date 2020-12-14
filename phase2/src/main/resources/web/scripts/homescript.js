@@ -37,6 +37,7 @@ function populateData(httpResponse) {
 }
 
 function setTabs(userType) {
+    var notspeakertab = document.querySelector(".notspeakertab");
     if (userType === "organizer") {
         var orgtabs = document.querySelectorAll(".orgtab");
         orgtabs.forEach(orgtab => {
@@ -46,6 +47,10 @@ function setTabs(userType) {
     else if (userType === "speaker") {
         var speakertab = document.querySelector(".speakertab");
         speakertab.removeAttribute("hidden");
+        notspeakertab.setAttribute("hidden");
+    }
+    else {
+        notspeakertab.removeAttribute("hidden");
     }
 }
 
@@ -102,7 +107,7 @@ function addEventsToTab(response) {
 
 function makeFriend(data, fragment) {
     var friendTable = document.createElement("table");
-    var headings = ["Name", "Send Message?"];
+    var headings = ["UserID", "Name", "Send Message?"];
     var tableHeadings = [];
     headings.forEach(heading => {
         tableHeadings.push(createPElem(heading));
@@ -243,7 +248,10 @@ function makeEvent(data, fragment, attending) {
 
 function makeMessage(data, fragment) {
     var messageTable = document.createElement("table");
-    var headings = ["Read?", "Delete?", "Archive?", "From:", "Message:", "Reply?"];
+    var headings = ["Read?", "Delete?", "Archive?", "From:", "Message:"];
+    if (data.isArchived === "false") {
+        headings.push("Reply?");
+    }
     var tableHeadings = [];
     headings.forEach(heading => {
         tableHeadings.push(createPElem(heading));
@@ -267,6 +275,8 @@ function makeMessage(data, fragment) {
 
 function getFriendHeadingsFromData(data) {
     var headings = [];
+    headings.push(createPElem(data.ID));
+    //headings.push(createPElem(data.name));
     headings.push(createPElem(data.name));
     headings.push(createMessageForm(data.ID, "Message"));
     return headings;
@@ -297,10 +307,17 @@ function getMessageHeadingsFromData(data) {
     text = data.hasBeenRead === "true" ? "O" : "X";
     headings.push(createPElem(text));
     headings.push(createButtonForm("Delete", requests.deleteMessage, "message", data.messageID));
-    headings.push(createButtonForm("Archive", requests.archiveMessage, "message", data.messageID));
-    headings.push(createPElem(data.senderID));
-    headings.push(createPElem(data.content));
-    headings.push(createMessageForm(data.senderID, "Reply"));
+    if (data.isArchived === "true") {
+        headings.push(createButtonForm("Unarchive", requests.unarchiveMessage, "message", data.messageID));
+        headings.push(createPElem(data.senderID));
+        headings.push(createPElem(data.content));
+    }
+    else {
+        headings.push(createButtonForm("Archive", requests.archiveMessage, "message", data.messageID));
+        headings.push(createPElem(data.senderID));
+        headings.push(createPElem(data.content));
+        headings.push(createMessageForm(data.senderID, "Reply"));
+    }
     return headings;
 }
 
@@ -385,10 +402,9 @@ function makeTableHeadings(headings) {
 }
 
 /*
-    Opens tab to access organizer-specific functions. NOTE: Still requires code to check if user is an organizer.
+    Opens tab to access and display more user actions functions specific to the logged in user
 */
 function openTab(event, tabName) {
-//    if (isOrg == 0 || (isOrg == 1 && (userType == "organizer" || userType == "speaker"))) {
     var i;
     var content = document.getElementsByClassName("tabcontent");
     var userLinks = document.getElementsByClassName("tablinks");
@@ -403,7 +419,6 @@ function openTab(event, tabName) {
 
     document.getElementById(tabName).style.display = "block";
     event.currentTarget.className += " active";
-//    }
 }
 
 /* Resize the top navigation bar when the user scrolls down the page */
