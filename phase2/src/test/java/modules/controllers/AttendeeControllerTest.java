@@ -2,12 +2,11 @@ package modules.controllers;
 
 import static org.junit.Assert.*;
 
+import modules.entities.Speaker;
 import modules.gateways.*;
 import modules.presenters.AttendeeOptionsPresenter;
 import modules.presenters.Model;
-import modules.usecases.AttendeeManager;
-import modules.usecases.EventManager;
-import modules.usecases.MessageManager;
+import modules.usecases.*;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -28,20 +27,22 @@ public class AttendeeControllerTest {
     public void testAttendeeController(){
         EventManager eventManager = new EventManager(new ArrayList<>());
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
+        SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
         attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
         MessageManager messageManager = new MessageManager(new ArrayList<>());
-        AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, updateInfo);
     }
 
     @Test
     public void testDisplayEvents(){
         EventManager eventManager = new EventManager(new ArrayList<>());
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
+        SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
         attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
         MessageManager messageManager = new MessageManager(new ArrayList<>());
-        AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, updateInfo);
+        AttendeeController attendeeController = new AttendeeController(attendeeManager, organizerManager, speakerManager,
+                eventManager, "a1234", messageManager, attendeeOptionsPresenter, updateInfo);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234",2);
@@ -54,10 +55,12 @@ public class AttendeeControllerTest {
     public void testSignUp(){
         EventManager eventManager = new EventManager(new ArrayList<>());
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
+        SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
         attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
         MessageManager messageManager = new MessageManager(new ArrayList<>());
-        AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, updateInfo);
+        AttendeeController attendeeController = new AttendeeController(attendeeManager, organizerManager, speakerManager,
+                eventManager, "a1234", messageManager, attendeeOptionsPresenter, updateInfo);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234",2);
@@ -71,10 +74,12 @@ public class AttendeeControllerTest {
     public void testCancelEnrollment(){
         EventManager eventManager = new EventManager(new ArrayList<>());
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
+        SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
         attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
         MessageManager messageManager = new MessageManager(new ArrayList<>());
-        AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, updateInfo);
+        AttendeeController attendeeController = new AttendeeController(attendeeManager, organizerManager, speakerManager,
+                eventManager, "a1234", messageManager, attendeeOptionsPresenter, updateInfo);
         LocalDateTime time1 = LocalDateTime.of(2020, 1, 1, 1, 0);
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234",2);
@@ -90,13 +95,15 @@ public class AttendeeControllerTest {
     public void testSendMessage(){
         EventManager eventManager = new EventManager(new ArrayList<>());
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
+        SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
         ArrayList<String> friendsList = new ArrayList<>();
         attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
         attendeeManager.addAttendee("username2", "password2", "a2345", new ArrayList<>());
         attendeeManager.getAttendee("a1234").addToFriendList("a2345");
         MessageManager messageManager = new MessageManager(new ArrayList<>());
-        AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, updateInfo);
+        AttendeeController attendeeController = new AttendeeController(attendeeManager, organizerManager, speakerManager,
+                eventManager, "a1234", messageManager, attendeeOptionsPresenter, updateInfo);
         attendeeController.sendMessage("a2345", "heyyyy");
         attendeeController.sendMessage("a4567", "uh oh"); // message not sent user since not on friendList
     }
@@ -105,12 +112,14 @@ public class AttendeeControllerTest {
     public void testAddUserToFriendList(){
         EventManager eventManager = new EventManager(new ArrayList<>());
         AttendeeManager attendeeManager = new AttendeeManager(new ArrayList<>());
+        OrganizerManager organizerManager = new OrganizerManager(new ArrayList<>());
+        SpeakerManager speakerManager = new SpeakerManager(new ArrayList<>());
         ArrayList<String> friendsList = new ArrayList<>();
         attendeeManager.addAttendee("username", "password", "a1234", new ArrayList<>());
         attendeeManager.addAttendee("username2", "password2", "a2345", new ArrayList<>());
         MessageManager messageManager = new MessageManager(new ArrayList<>());
-        AttendeeController attendeeController = new AttendeeController(attendeeManager, eventManager, "a1234",
-                messageManager, attendeeOptionsPresenter, updateInfo);
+        AttendeeController attendeeController = new AttendeeController(attendeeManager, organizerManager, speakerManager,
+                eventManager, "a1234", messageManager, attendeeOptionsPresenter, updateInfo);
         attendeeController.addUserToFriendList("a2345");
         attendeeController.addUserToFriendList("a2345");
     }
