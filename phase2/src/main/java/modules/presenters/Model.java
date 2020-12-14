@@ -81,13 +81,13 @@ public class Model {
     }
 
     public void clear(boolean all) {
-        status = null;
-        statusMessage = null;
         participating = new JSONArray();
         notParticipating = new JSONArray();
         messages = new JSONArray();
         friends = new JSONArray();
         if (all) {
+            status = null;
+            statusMessage = null;
             userType = null;
         }
     }
