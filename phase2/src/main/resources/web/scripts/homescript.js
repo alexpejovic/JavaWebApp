@@ -27,10 +27,20 @@ http.onreadystatechange = function() {
 function populateData(httpResponse) {
     var response = JSON.parse(httpResponse);
     userType = response.userType;
+    setTabs(userType);
     addFriends(response);
     addMessages(response);
     addAttendingEvents(response);
     addMoreEvents(response);
+}
+
+function setTabs(userType) {
+    if (userType === "organizer") {
+        var orgtabs = document.querySelectorAll(".orgtab");
+        orgtabs.forEach(orgtab => {
+            orgtab.removeAttribute("hidden");
+        });
+    }
 }
 
 function addFriends(response) {

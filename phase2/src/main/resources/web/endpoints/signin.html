@@ -18,19 +18,19 @@
 
         <!-- Tabs for Organizers -->
         <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'create', 1)">Create Event</button>
+            <button class="tablinks orgtab" onclick="openTab(event, 'create', 1)" hidden>Create Event</button>
         </div>
         <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'manage', 1)">Manage My Events</button>
+            <button class="tablinks orgtab" onclick="openTab(event, 'manage', 1)" hidden>Manage My Events</button>
         </div>
         <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'account', 1)">Create Account</button>
+            <button class="tablinks orgtab" onclick="openTab(event, 'account', 1)" hidden>Create Account</button>
         </div>
         <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'bookSpeaker', 1)">Book Speaker</button>
+            <button class="tablinks orgtab" onclick="openTab(event, 'bookSpeaker', 1)" hidden>Book Speaker</button>
         </div>
         <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'createRoom', 1)">Create Room</button>
+            <button class="tablinks orgtab" onclick="openTab(event, 'createRoom', 1)" hidden>Create Room</button>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
     <div id="friends" class="tabcontent">
 <!--        Template Space-->
         <h3>Add Friend:</h3>
-        <form>
+        <form method="post" action="../addfriend">
             <p>Type the ID of the attendee of whom which you'd like to add as a friend</p>
             <input name="friendId" type="text" placeholder="Friend ID"/>
             <button>Add Friend</button>
