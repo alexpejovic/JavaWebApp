@@ -168,6 +168,22 @@ public class OrganizerManager extends UserManager {
     }
 
     /**
+     * Returns the specific Organizer's username with user ID
+     *
+     * @param userId the user ID we want to check
+     * @return the username of the specific Organizer entity that has the given user ID
+     * @throws UserNotFoundException if there is no organizer with UserID in this conference
+     */
+    @Override
+    public String getUsername(String userId) {
+        for (Organizer organizer : listOfOrganizers) {
+            if (organizer.getID().equals(userId)) {
+                return organizer.getUsername();
+            }
+        }
+        throw new UserNotFoundException();
+    }
+    /**
      * Adds the given event's eventID to the given organizer's list of events
      * @param organizerID the ID of the organizer whose events list we want to alter
      * @param eventID the ID of the event that we want to add to the organizer's attending events list

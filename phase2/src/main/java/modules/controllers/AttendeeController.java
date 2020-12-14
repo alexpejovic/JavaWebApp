@@ -10,7 +10,7 @@ import modules.usecases.MessageManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AttendeeController {
+public class AttendeeController implements Attendable {
     private String attendeeID;
     private AttendeeManager attendeeManager;
     private EventManager eventManager;
