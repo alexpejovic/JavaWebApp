@@ -1,7 +1,18 @@
 var userType;
+
+// HTTP request server endpoints
+var requests = {
+    "getModel": "/getmodel",
+    "sendReply": "../sendreply",
+    "unattendEvent": "../unattendevent",
+    "attendEvent": "../attendevent",
+    "cancelEvent": "../cancelevent",
+    "archiveMessage": "../archivemessage",
+    "deleteMessage": "../deletemessage"
+}
+
 const http = new XMLHttpRequest();
-url = "/getmodel";
-http.open("GET", url, true);
+http.open("GET", requests.getModel, true);
 http.send();
 
 http.onreadystatechange = function() {
@@ -65,7 +76,7 @@ function addMessages(response) {
 
 function makeEvent(data, fragment, attending) {
     var eventTable = document.createElement("table");
-    var headings = ["ID:", "Title:", "Time:"];
+    var headings = ["ID:", "Title:", "Start:", "End:"];
     if (userType === "attendee" || userType === "organizer") {
         if (attending == true) {
             headings.push("Remove?");
@@ -127,16 +138,17 @@ function getEventHeadingsFromData(data, attending) {
     headings.push(createPElem(data.eventID));
     headings.push(createPElem(data.name));
     headings.push(createPElem(data.startTime));
+    headings.push(createPElem(data.endTime));
     if (userType === "attendee" || userType === "organizer") {
         if (attending == true) {
-            headings.push(createButtonForm("Remove"));
+            headings.push(createButtonForm("Remove", requests.unattendEvent, "event", data.name));
         }
         else {
-            headings.push(createButtonForm("Join"));
+            headings.push(createButtonForm("Join", requests.attendEvent, "event", data.name));
         }
     }
     if (userType === "organizer") {
-        headings.push(createButtonForm("Cancel"));
+        headings.push(createButtonForm("Cancel", requests.cancelEvent, "event", data.name));
     }
     return headings;
 }
@@ -145,8 +157,8 @@ function getMessageHeadingsFromData(data) {
     var headings = [];
     text = data.hasBeenRead === "true" ? "O" : "X";
     headings.push(createPElem(text));
-    headings.push(createButtonForm("Delete"));
-    headings.push(createButtonForm("Archive"));
+    headings.push(createButtonForm("Delete", requests.deleteMessage, "message", data.messageID));
+    headings.push(createButtonForm("Archive", requests.archiveMessage, "message", data.messageID));
     headings.push(createPElem(data.senderID));
     headings.push(createPElem(data.content));
     headings.push(createReplyForm(data.senderID));
@@ -156,7 +168,7 @@ function getMessageHeadingsFromData(data) {
 function createReplyForm(recipient) {
     var form = document.createElement("form");
     form.setAttribute("method", "post");
-    form.setAttribute("action", "../sendreply");
+    form.setAttribute("action", requests.sendReply);
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("name", "reply");
@@ -168,6 +180,7 @@ function createReplyForm(recipient) {
     var btn = document.createElement("button");
     btn.innerText = "Send";
     form.appendChild(input);
+    form.appendChild(hiddenInput);
     form.appendChild(btn);
     return form;
 }
@@ -178,11 +191,19 @@ function createPElem(text) {
     return elem;
 }
 
-function createButtonForm(name) {
+function createButtonForm(name, action, hiddenName, hiddenData) {
     var elem = document.createElement("form");
+    elem.setAttribute("method", "post");
+    elem.setAttribute("action", action);
     var btn = document.createElement("button");
     btn.classList.add(name.toLowerCase());
     btn.innerText = name;
+    var hiddenElem = document.createElement("input");
+    hiddenElem.setAttribute("type", "hidden");
+    hiddenElem.setAttribute("name", hiddenName);
+    hiddenElem.setAttribute("value", hiddenData);
+
+    elem.appendChild(hiddenElem);
     elem.appendChild(btn);
     return elem;
 }
