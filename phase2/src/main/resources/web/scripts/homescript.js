@@ -337,6 +337,7 @@ function createScheduleForm(eventID) {
     form.setAttribute("action", requests.reschedule);
     var input = document.createElement("input");
     input.setAttribute("type", "datetime-local");
+    input.setAttribute("name", "date");
     input.setAttribute("placeholder", "day/month/year hour:minute");
     var hiddenInput = document.createElement("input");
     hiddenInput.setAttribute("type", "hidden");

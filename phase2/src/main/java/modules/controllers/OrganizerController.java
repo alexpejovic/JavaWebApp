@@ -61,7 +61,7 @@ public class OrganizerController implements Attendable, Messageable {
      * @param endTime the time when the event ends
      * @param capacity the maximum number of attendees allowed in the event
      */
-    public void scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName, int capacity,
+    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName, int capacity,
                                  boolean isVIP){
         if (roomExists(roomNumber)) {
             //check room is available at this time, doesn't have other event
@@ -80,13 +80,26 @@ public class OrganizerController implements Attendable, Messageable {
                         roomManager.addEventToRoom(roomNumber, eventId);
                         organizerManager.addToOrganizedEvents(organizerId, eventId);
                         updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
+                        return true;
 //                    organizerOptionsPresenter.scheduleEventSuccess(true);
                     } catch (EventNotFoundException e) {
+                        return false;
 //                    organizerOptionsPresenter.scheduleEventSuccess(false);
                     }
                 }
             }
 //        organizerOptionsPresenter.scheduleEventSuccess(false);
+        }
+        return false;
+    }
+
+    public void rescheduleEvent(String eventID, LocalDateTime startTime, LocalDateTime endTime) {
+        String roomNum = eventManager.getRoomNumberOfEvent(eventID);
+        String name = eventManager.getName(eventID);
+        int capacity = eventManager.getCapacity(eventID);
+        boolean isVIP = eventManager.getVIPStatus(eventID);
+        if (scheduleEvent(roomNum, startTime, endTime, name, capacity, isVIP)) {
+            cancelEvent(eventID);
         }
     }
 
@@ -232,9 +245,10 @@ public class OrganizerController implements Attendable, Messageable {
      * Sends a singular message to all attendees in the program
      * @param message the content of the message being sent
      */
-    public void messageAllAttendees(String message){
-        for (String attendeeID: attendeeManager.getUserIDOfAllAttendees()){
-            sendMessage(attendeeID, message);
+    public void messageAllAttendees(String message, String eventID){
+        for (String attendeeID: eventManager.getAttendeesOfEvent(eventID)) {
+            String messageID = messageManager.sendMessage(organizerId, attendeeID, message);
+            updateInfo.updateMessage(messageManager.getMessage(messageID));
         }
     }
 

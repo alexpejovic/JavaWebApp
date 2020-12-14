@@ -69,6 +69,7 @@ public class Routes {
         post("/createroom", Routes::createRoom);
         post("/bookspeaker", Routes::bookSpeaker);
         post("/cancelspeaker", Routes::cancelSpeaker);
+        post("/reschedule", Routes::reschedule);
     }
 
     private static String attendEvent(Request request, Response response) {
@@ -115,6 +116,24 @@ public class Routes {
         orgController.scheduleEvent(request.queryParams("roomNum"), startTime, endTime,
                 request.queryParams("name"), capacity, isVIP);
 
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String reschedule(Request request, Response response) {
+        String[] dateTime = request.queryParams("date").split(" ");
+        String[] date = dateTime[0].split("/");
+        String[] time = dateTime[1].split(":");
+        int day = Integer.parseInt(date[0]);
+        int month = Integer.parseInt(date[1]);
+        int year = Integer.parseInt(date[2]);
+        int hour = Integer.parseInt(time[0]);
+        int minute = Integer.parseInt(time[1]);
+        LocalDateTime startTime = LocalDateTime.of(year, month, day, hour, minute);
+        LocalDateTime endTime = startTime.plusHours(1);
+
+        orgController.rescheduleEvent(request.queryParams("event"), startTime, endTime);
         updateModel(false);
         response.redirect("/home");
         return "";
@@ -178,7 +197,12 @@ public class Routes {
         String recipient = request.queryParams("recipient");
         String message = request.queryParams("message");
         if (recipient.equals("all")) {
-            spkController.messageAll(message, request.queryParams("event"));
+            if (userType.equals("speaker")) {
+                spkController.messageAll(message, request.queryParams("event"));
+            }
+            else {
+                orgController.messageAllAttendees(message, request.queryParams("event"));
+            }
         }
         messageableController.sendMessage(recipient, message);
         updateModel(false);
