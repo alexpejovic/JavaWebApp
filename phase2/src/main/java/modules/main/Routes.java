@@ -23,7 +23,7 @@ public class Routes {
     static String userType;
 
     static OrganizerController orgController;
-//    static AttendeeController attController;
+    static AttendeeController attController;
 //    static SpeakerController spkController;
     static Attendable attendableController;
     static Messageable messageableController;
@@ -60,6 +60,7 @@ public class Routes {
         post("/unattendevent", Routes::unattendEvent);
         post("/attendevent", Routes::attendEvent);
         post("/cancelevent", Routes::cancelEvent);
+        post("/addfriend", Routes::addFriend);
         post("/archivemessage", (req, res) -> "Archive Message");
         post("/deletemessage", (req, res) -> "Delete Message");
     }
@@ -81,6 +82,13 @@ public class Routes {
     private static String cancelEvent(Request request, Response response) {
         // The request for this method can only be sent if the user is an organizer so no check is needed
         orgController.cancelEvent(request.queryParams("event"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String addFriend(Request request, Response response) {
+        attController.addUserToFriendList(request.queryParams("friendId"));
         updateModel(false);
         response.redirect("/home");
         return "";
@@ -111,16 +119,16 @@ public class Routes {
     }
 
     private static void initController() {
-        if (userType.equals("organizer")) {
+        if (userType.equals("attendee")) {
+            attController = confBuild.getAttController(currentUser);
+            attendableController = attController;
+            messageableController = attController;
+            updateModel(false);
+        }
+        else if (userType.equals("organizer")) {
             orgController = confBuild.getOrgController(currentUser);
             attendableController = orgController;
             messageableController = orgController;
-            updateModel(false);
-        }
-        else if (userType.equals("attendee")) {
-            AttendeeController attController = confBuild.getAttController(currentUser);
-            attendableController = attController;
-            messageableController = attController;
             updateModel(false);
         }
         else if (userType.equals("speaker")) {
