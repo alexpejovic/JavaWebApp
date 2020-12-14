@@ -76,5 +76,11 @@ public abstract class UserManager {
         return true;
     }
 
+    /**
+     * Returns the specific username matching a user ID
+     * @param userId the user ID we want to check
+     * @return the specific username of a User that has the given user ID
+     */
+    public abstract String getUsername(String userId);
 
 }
