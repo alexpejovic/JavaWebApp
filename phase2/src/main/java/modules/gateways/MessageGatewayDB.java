@@ -5,6 +5,8 @@ import modules.entities.Event;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -29,7 +31,7 @@ public class MessageGatewayDB implements MessageStrategy {
                 + "	content VARCHAR(3000) NOT NULL,\n"
                 + "	senderId VARCHAR(20) NOT NULL,\n"
                 + "	receiverId VARCHAR(20) NOT NULL,\n"
-                + "	dateTime TIMESTAMP,\n"
+                + "	dateTime VARCHAR(20),\n"
                 + "	hasBeenRead BOOLEAN NOT NULL, \n"
                 + "	isArchived BOOLEAN NOT NULL \n"
                 + ");";
@@ -67,7 +69,7 @@ public class MessageGatewayDB implements MessageStrategy {
                 Message newMessage = new Message(rs.getString("content"),
                         rs.getString("senderId"),
                         rs.getString("receiverId"), rs.getString("messageId"),
-                        rs.getTimestamp("dateTime").toLocalDateTime());
+                        LocalDateTime.parse(rs.getString("dateTime")));
                 if(rs.getBoolean("hasBeenRead")) {
                     newMessage.markAsRead();
                 }
@@ -98,7 +100,9 @@ public class MessageGatewayDB implements MessageStrategy {
             int archived = message.getIsArchived() ? 1 : 0;
             int read = message.getHasBeenRead() ? 1 : 0;
             String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead, isArchived)" +
-                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"+message.getReceiverID()+"', '"+message.getDateTime()+"', '"+read+"', '"+archived+"')";
+                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"
+                    +message.getReceiverID()+"', '"+message.getDateTime().format(DateTimeFormatter.ISO_DATE_TIME)+
+                    "', '"+read+"', '"+archived+"')";
             try (Connection iConn = DBConnect.connect(this.filename);
                  Statement stmt = iConn.createStatement()) {
                 stmt.execute(sql);
