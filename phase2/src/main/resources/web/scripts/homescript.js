@@ -221,21 +221,23 @@ function makeTableHeadings(headings) {
 /*
     Opens tab to access organizer-specific functions. NOTE: Still requires code to check if user is an organizer.
 */
-function openTab(event, tabName) {
-    var i;
-    var content = document.getElementsByClassName("tabcontent");
-    var links = document.getElementsByClassName("tablinks");
+function openTab(event, tabName, isOrg) {
+    if (isOrg == 0 || (isOrg == 1 && userType == "organizer")) {
+        var i;
+        var content = document.getElementsByClassName("tabcontent");
+        var userLinks = document.getElementsByClassName("tablinks");
 
-    for (i = 0; i < content.length; i++) {
-        content[i].style.display = "none";
+        for (i = 0; i < content.length; i++) {
+            content[i].style.display = "none";
+        }
+
+        for (i = 0; i < userLinks.length; i++) {
+            userLinks[i].className = userLinks[i].className.replace(" active", "");
+        }
+
+        document.getElementById(tabName).style.display = "block";
+        event.currentTarget.className += " active";
     }
-
-    for (i = 0; i < links.length; i++) {
-        links[i].className = links[i].className.replace(" active", "");
-    }
-
-    document.getElementById(tabName).style.display = "block";
-    event.currentTarget.className += " active";
 }
 
 /* Resize the top navigation bar when the user scrolls down the page */
