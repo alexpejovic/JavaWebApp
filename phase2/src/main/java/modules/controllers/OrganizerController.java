@@ -260,8 +260,29 @@ public class OrganizerController implements Attendable, Messageable {
     }
 
     public void updateModel() {
+        updateModelFriends();
         updateModelMessages();
         updateModelEvents();
+    }
+
+    private void updateModelFriends() {
+        ArrayList<HashMap<String, String>> friends = new ArrayList<>();
+        ArrayList<String> friendIDs = attendeeManager.getFriendList(organizerId);
+        for (String friendID : friendIDs) {
+            HashMap<String, String> friend = new HashMap<>();
+            friend.put("ID", friendID);
+            if (friendID.startsWith("o")) {
+                friend.put("name", organizerManager.getUsername(friendID));
+            }
+            else if (friendID.startsWith("a")) {
+                friend.put("name", attendeeManager.getUsername(friendID));
+            }
+            else {
+                friend.put("name", speakerManager.getUsername(friendID));
+            }
+            friends.add(friend);
+        }
+        organizerOptionsPresenter.setFriends(friends);
     }
 
     /**

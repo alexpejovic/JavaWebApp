@@ -106,6 +106,10 @@ public class OrganizerOptionsPresenter implements IUserModelHandler, IMessageMod
             model.setErrorStatus(false, "Event cancellation was unsuccessful");
     }
 
+    public void setFriends(ArrayList<HashMap<String, String>> friends) {
+        model.addFriends(friends);
+    }
+
     @Override
     public void setMessages(ArrayList<HashMap<String, String>> messages) {
         model.addMessages(messages);

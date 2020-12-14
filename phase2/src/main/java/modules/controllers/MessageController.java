@@ -22,7 +22,6 @@ public class MessageController {
      * @param userID the userID of the user logged in currently
      * @param messageManager the messageManager for this conference
      * @param messagePresenter the messageManager for this conference
-     * @param stringFormatter a class that
      * @param updateInfo a class to update database info
      */
     public MessageController(String userID, MessageManager messageManager, MessagePresenter messagePresenter,

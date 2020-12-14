@@ -98,6 +98,10 @@ public class AttendeeOptionsPresenter implements IUserModelHandler, IMessageMode
         model.setErrorStatus(false, "That user does not exist");
     }
 
+    public void setFriends(ArrayList<HashMap<String, String>> friends) {
+        model.addFriends(friends);
+    }
+
     @Override
     public void setMessages(ArrayList<HashMap<String, String>> messages) {
         model.addMessages(messages);

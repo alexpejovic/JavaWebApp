@@ -60,7 +60,7 @@ public class ConfBuild {
     public AttendeeController getAttController(String userID) {
         AttendeeOptionsPresenter attendeeOptionsPresenter = new AttendeeOptionsPresenter(model);
         return new AttendeeController(
-                attendeeManager, eventManager, userID, messageManager, attendeeOptionsPresenter, updateInfo);
+                attendeeManager, organizerManager, speakerManager, eventManager, userID, messageManager, attendeeOptionsPresenter, updateInfo);
     }
 
     public SpeakerController getSpkController(String userID) {
