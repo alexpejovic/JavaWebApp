@@ -163,28 +163,33 @@ public class OrganizerController implements Attendable, Messageable {
 //        if (!roomManager.getEventsInRoom(roomNumber).contains(eventId)){
 //            organizerOptionsPresenter.scheduleSpeaker(false);
 //        }
-        LocalDateTime startTime = eventManager.startTimeOfEvent(eventId);
-        LocalDateTime endTime = eventManager.endTimeOfEvent(eventId);
-        String speakerId = speakerManager.getUserID(username);
-        boolean isSpeakerAvailable = speakerManager.isSpeakerAvailable(speakerId, startTime, endTime, eventManager);
-        //check if room is available
-        boolean isEventAvailable = !eventManager.hasSpeaker(eventId);
-        //check if speaker is already speaking at event
-        boolean isSpeakerSpeakingAtEvent = eventManager.isSpeakerSpeakingAtEvent(eventId,speakerId);
-        //schedule the speaker
-        if (isSpeakerAvailable && isEventAvailable && !isSpeakerSpeakingAtEvent){
-            // add speaker to event's properties
-            eventManager.addSpeakerToEvent(speakerId,eventId);
-            // update speaker info in database
-            updateInfo.updateUser(speakerManager.getSpeaker(speakerId));
-            // add event to speaker's properties
-            speakerManager.addEventToSpeaker(eventId,speakerId);
-            // update event info in database
-            updateInfo.updateEvent(eventManager.getEvent(eventId));
-            organizerOptionsPresenter.scheduleSpeaker(true);
+        try {
+            LocalDateTime startTime = eventManager.startTimeOfEvent(eventId);
+            LocalDateTime endTime = eventManager.endTimeOfEvent(eventId);
+            String speakerId = speakerManager.getUserID(username);
+            boolean isSpeakerAvailable = speakerManager.isSpeakerAvailable(speakerId, startTime, endTime, eventManager);
+            //check if room is available
+            boolean isEventAvailable = !eventManager.hasSpeaker(eventId);
+            //check if speaker is already speaking at event
+            boolean isSpeakerSpeakingAtEvent = eventManager.isSpeakerSpeakingAtEvent(eventId, speakerId);
+            //schedule the speaker
+            if (isSpeakerAvailable && isEventAvailable && !isSpeakerSpeakingAtEvent) {
+                // add speaker to event's properties
+                eventManager.addSpeakerToEvent(speakerId, eventId);
+                // update speaker info in database
+                updateInfo.updateUser(speakerManager.getSpeaker(speakerId));
+                // add event to speaker's properties
+                speakerManager.addEventToSpeaker(eventId, speakerId);
+                // update event info in database
+                updateInfo.updateEvent(eventManager.getEvent(eventId));
+                organizerOptionsPresenter.scheduleSpeaker(true);
+            }
+            //return if speaker was not scheduled
+            organizerOptionsPresenter.scheduleSpeaker(false);
         }
-        //return if speaker was not scheduled
-        organizerOptionsPresenter.scheduleSpeaker(false);
+        catch (UserNotFoundException | EventNotFoundException e) {
+            organizerOptionsPresenter.scheduleSpeaker(false);
+        }
     }
 
     /**
@@ -194,21 +199,26 @@ public class OrganizerController implements Attendable, Messageable {
      * precondition: the event with eventID is an existing event
      */
     public void removeSpeakerFromEvent(String username, String eventId) {
-        String speakerId = speakerManager.getUserID(username);
-        //checking that the speaker is speaking at the given event
-        if (eventManager.isSpeakerSpeakingAtEvent(eventId,speakerId)){
-            //remove speaker from event
-            eventManager.removeSpeakerFromEvent(eventId,speakerId);
-            // update speaker info in database
-            updateInfo.updateUser(speakerManager.getSpeaker(speakerId));
-            //remove event from speaker
-            speakerManager.removeEventFromSpeaker(eventId, speakerId);
-            // update event info in database
-            updateInfo.updateEvent(eventManager.getEvent(eventId));
-            organizerOptionsPresenter.removeSpeakerFromEvent(true);
+        try {
+            String speakerId = speakerManager.getUserID(username);
+            //checking that the speaker is speaking at the given event
+            if (eventManager.isSpeakerSpeakingAtEvent(eventId, speakerId)) {
+                //remove speaker from event
+                eventManager.removeSpeakerFromEvent(eventId, speakerId);
+                // update speaker info in database
+                updateInfo.updateUser(speakerManager.getSpeaker(speakerId));
+                //remove event from speaker
+                speakerManager.removeEventFromSpeaker(eventId, speakerId);
+                // update event info in database
+                updateInfo.updateEvent(eventManager.getEvent(eventId));
+                organizerOptionsPresenter.removeSpeakerFromEvent(true);
+            }
+            //speaker was not speaking at event
+            organizerOptionsPresenter.removeSpeakerFromEvent(false);
         }
-        //speaker was not speaking at event
-        organizerOptionsPresenter.removeSpeakerFromEvent(false);
+        catch (UserNotFoundException | EventNotFoundException e) {
+            organizerOptionsPresenter.removeSpeakerFromEvent(false);
+        }
     }
 
 
