@@ -60,4 +60,9 @@ public class MessageGatewaySer implements MessageStrategy {
     public void setFilename(String newFilename) {
         filename = newFilename;
     }
+
+    @Override
+    public void deleteData(String messageID) {
+
+    }
 }

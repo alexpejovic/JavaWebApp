@@ -9,4 +9,5 @@ public interface EventStrategy {
     public ArrayList<Event> readData();
     public void writeData(ArrayList<Event> writeEvents) ;
     public void setFilename(String newFilename);
+    public void deleteData(String eventID);
 }

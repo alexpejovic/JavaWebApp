@@ -21,6 +21,10 @@ public class MessageGateway {
         this.strategy.writeData(writeMessages);
     }
 
+    public void deleteData(String messageID) {
+        this.strategy.deleteData(messageID);
+    }
+
     public void setStrategy(MessageStrategy newStrat) {
         this.strategy = newStrat;
     }
