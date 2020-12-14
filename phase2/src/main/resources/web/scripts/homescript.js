@@ -3,7 +3,7 @@ var userType;
 // HTTP request server endpoints
 var requests = {
     "getModel": "/getmodel",
-    "sendReply": "../sendreply",
+    "sendMessage": "../sendmessage",
     "unattendEvent": "../unattendevent",
     "attendEvent": "../attendevent",
     "cancelEvent": "../cancelevent",
@@ -27,9 +27,61 @@ http.onreadystatechange = function() {
 function populateData(httpResponse) {
     var response = JSON.parse(httpResponse);
     userType = response.userType;
+    addFriends(response);
     addMessages(response);
     addAttendingEvents(response);
     addMoreEvents(response);
+}
+
+function addFriends(response) {
+    var friends = document.querySelector("#friends");
+    var fragment = document.createDocumentFragment();
+    var title = document.createElement("h3");
+    title.innerText = "My Friends:";
+    fragment.appendChild(title);
+
+    if (response.friends.length == 0) {
+        var nothing = document.createElement("h4");
+        nothing.innerText = "No friends yet. Add one below!";
+        fragment.appendChild(nothing);
+    }
+    else {
+        var div = document.createElement("div");
+        div.classList.add("subtable");
+        for (var i=0; i<response.friends.length; i++) {
+            var newTable = makeFriend(response.friends[i], fragment);
+            div.appendChild(newTable);
+        }
+        fragment.appendChild(div);
+    }
+
+    friends.insertBefore(fragment, friends.firstChild);
+}
+
+function makeFriend(data, fragment) {
+    var friendTable = document.createElement("table");
+    var headings = ["Name", "Send Message?"];
+    var tableHeadings = [];
+    headings.forEach(heading => {
+        tableHeadings.push(createPElem(heading));
+    });
+
+    var firstRow = document.createElement("tr");
+    tableHeadings = makeTableHeadings(tableHeadings);
+    tableHeadings.forEach(tableHeading => {
+        firstRow.appendChild(tableHeading);
+    });
+
+    var secondRow = document.createElement("tr");
+    var tableElements = makeTableHeadings(getFriendHeadingsFromData(data));
+    tableElements.forEach(tableElement => {
+        secondRow.appendChild(tableElement);
+    });
+
+    friendTable.appendChild(firstRow);
+    friendTable.appendChild(secondRow);
+    fragment.appendChild(friendTable);
+    return fragment;
 }
 
 function addAttendingEvents(response) {
@@ -133,6 +185,13 @@ function makeMessage(data, fragment) {
     return fragment;
 }
 
+function getFriendHeadingsFromData(data) {
+    var headings = [];
+    headings.push(createPElem(data.name));
+    headings.push(createMessageForm(data.ID, "Message"));
+    return headings;
+}
+
 function getEventHeadingsFromData(data, attending) {
     var headings = [];
     headings.push(createPElem(data.eventID));
@@ -141,14 +200,14 @@ function getEventHeadingsFromData(data, attending) {
     headings.push(createPElem(data.endTime));
     if (userType === "attendee" || userType === "organizer") {
         if (attending == true) {
-            headings.push(createButtonForm("Remove", requests.unattendEvent, "event", data.name));
+            headings.push(createButtonForm("Remove", requests.unattendEvent, "event", data.eventID));
         }
         else {
-            headings.push(createButtonForm("Join", requests.attendEvent, "event", data.name));
+            headings.push(createButtonForm("Join", requests.attendEvent, "event", data.eventID));
         }
     }
     if (userType === "organizer") {
-        headings.push(createButtonForm("Cancel", requests.cancelEvent, "event", data.name));
+        headings.push(createButtonForm("Cancel", requests.cancelEvent, "event", data.eventID));
     }
     return headings;
 }
@@ -161,18 +220,18 @@ function getMessageHeadingsFromData(data) {
     headings.push(createButtonForm("Archive", requests.archiveMessage, "message", data.messageID));
     headings.push(createPElem(data.senderID));
     headings.push(createPElem(data.content));
-    headings.push(createReplyForm(data.senderID));
+    headings.push(createMessageForm(data.senderID, "Reply"));
     return headings;
 }
 
-function createReplyForm(recipient) {
+function createMessageForm(recipient, placeholder) {
     var form = document.createElement("form");
     form.setAttribute("method", "post");
-    form.setAttribute("action", requests.sendReply);
+    form.setAttribute("action", requests.sendMessage);
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("name", "reply");
-    input.setAttribute("placeholder", "Reply");
+    input.setAttribute("placeholder", placeholder);
     var hiddenInput = document.createElement("input");
     hiddenInput.setAttribute("type", "hidden");
     hiddenInput.setAttribute("name", "recipient");
