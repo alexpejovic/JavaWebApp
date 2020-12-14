@@ -8,7 +8,6 @@ var requests = {
     "attendEvent": "../attendevent",
     "cancelEvent": "../cancelevent",
     "archiveMessage": "../archivemessage",
-    "unarchiveMessage": "../unarchivemessage",
     "deleteMessage": "../deletemessage",
     "reschedule": "../reschedule"
 }
@@ -38,6 +37,7 @@ function populateData(httpResponse) {
 }
 
 function setTabs(userType) {
+    var notspeakertab = document.querySelector(".notspeakertab");
     if (userType === "organizer") {
         var orgtabs = document.querySelectorAll(".orgtab");
         orgtabs.forEach(orgtab => {
@@ -47,6 +47,10 @@ function setTabs(userType) {
     else if (userType === "speaker") {
         var speakertab = document.querySelector(".speakertab");
         speakertab.removeAttribute("hidden");
+        notspeakertab.setAttribute("hidden");
+    }
+    else {
+        notspeakertab.removeAttribute("hidden");
     }
 }
 
@@ -396,10 +400,9 @@ function makeTableHeadings(headings) {
 }
 
 /*
-    Opens tab to access organizer-specific functions. NOTE: Still requires code to check if user is an organizer.
+    Opens tab to access and display more user actions functions specific to the logged in user
 */
 function openTab(event, tabName) {
-//    if (isOrg == 0 || (isOrg == 1 && (userType == "organizer" || userType == "speaker"))) {
     var i;
     var content = document.getElementsByClassName("tabcontent");
     var userLinks = document.getElementsByClassName("tablinks");
@@ -414,7 +417,6 @@ function openTab(event, tabName) {
 
     document.getElementById(tabName).style.display = "block";
     event.currentTarget.className += " active";
-//    }
 }
 
 /* Resize the top navigation bar when the user scrolls down the page */
