@@ -159,7 +159,7 @@ public class PopulateData {
         attendee0.addToFriendList("s0");
         attendee0.addToFriendList("s2");
         attendee0.addToFriendList("a2");
-        attendee0.addToFriendList("oO");
+        attendee0.addToFriendList("o0");
         users.add(attendee0);
 
         Attendee attendee1 = new Attendee("lemon", "chirp", "a1");
