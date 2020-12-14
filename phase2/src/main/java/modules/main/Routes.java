@@ -66,6 +66,7 @@ public class Routes {
         post("/addfriend", Routes::addFriend);
         post("/createevent", Routes::createEvent);
         post("/createaccount", Routes::createAccount);
+        post("/createroom", Routes::createRoom);
     }
 
     private static String attendEvent(Request request, Response response) {
@@ -102,7 +103,13 @@ public class Routes {
         LocalDateTime startTime = LocalDateTime.of(year, month, day, hour, minute);
         LocalDateTime endTime = startTime.plusHours(1);
         int capacity = Integer.parseInt(request.queryParams("capacity"));
-        boolean isVIP = request.queryParams("vip").equals("on");
+        boolean isVIP;
+        try {
+            isVIP = request.queryParams("vip").equals("on");
+        }
+        catch (NullPointerException e){
+            isVIP = false;
+        }
         orgController.scheduleEvent(request.queryParams("roomNum"), startTime, endTime,
                 request.queryParams("name"), capacity, isVIP);
 
@@ -134,6 +141,15 @@ public class Routes {
         else if (accountType.equals("vip")) {
             orgController.createVIPAttendeeAccount(username, password);
         }
+
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String createRoom(Request request, Response response) {
+        int capacity = Integer.parseInt(request.queryParams("capacity"));
+        orgController.addNewRoom(request.queryParams("room"), capacity);
 
         updateModel(false);
         response.redirect("/home");

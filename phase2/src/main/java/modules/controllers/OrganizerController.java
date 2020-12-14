@@ -63,30 +63,31 @@ public class OrganizerController implements Attendable, Messageable {
      */
     public void scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName, int capacity,
                                  boolean isVIP){
-        //check room is available at this time, doesn't have other event
-        boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
-        //check event not already in another room
-        boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
-        //check that room capacity can handle the capacity of the event
-        boolean canRoomHold = this.isRoomCapacityEnough(roomNumber,capacity);
-        if (isRoomAvailable && canBook && canRoomHold) {
-            //create the Event
-            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName,capacity, isVIP);
-            if (created){
-                try {
-                    String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
-                    eventManager.renameEvent(eventId, eventName);
-                    roomManager.addEventToRoom(roomNumber, eventId);
-                    organizerManager.addToOrganizedEvents(organizerId, eventId);
-                    updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
+        if (roomExists(roomNumber)) {
+            //check room is available at this time, doesn't have other event
+            boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
+            //check event not already in another room
+            boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
+            //check that room capacity can handle the capacity of the event
+            boolean canRoomHold = this.isRoomCapacityEnough(roomNumber, capacity);
+            if (isRoomAvailable && canBook && canRoomHold) {
+                //create the Event
+                boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName, capacity, isVIP);
+                if (created) {
+                    try {
+                        String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
+                        eventManager.renameEvent(eventId, eventName);
+                        roomManager.addEventToRoom(roomNumber, eventId);
+                        organizerManager.addToOrganizedEvents(organizerId, eventId);
+                        updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
 //                    organizerOptionsPresenter.scheduleEventSuccess(true);
-                }
-                catch(EventNotFoundException | ClassNotFoundException e){
+                    } catch (EventNotFoundException | ClassNotFoundException e) {
 //                    organizerOptionsPresenter.scheduleEventSuccess(false);
+                    }
                 }
             }
-        }
 //        organizerOptionsPresenter.scheduleEventSuccess(false);
+        }
     }
 
     /**
