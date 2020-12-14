@@ -69,8 +69,7 @@ public class ConfBuild {
 
     public MessageController getMsgController(String userID) {
         MessagePresenter messagePresenter = new MessagePresenter(model);
-        return new MessageController(userID, attendeeManager, organizerManager, speakerManager,
-                messageManager, messagePresenter, updateInfo);
+        return new MessageController(userID, messageManager, messagePresenter, updateInfo);
     }
 
     public ScheduleCreator getScheduleCreator(){

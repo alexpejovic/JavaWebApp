@@ -374,7 +374,15 @@ public class MessageManager {
      * @param userID the unique ID of the user who wishes to delete the message
      */
     public void deleteMessage(String messageID, String userID){
-        for (Message message: messages.get(userID)){
+        String senderID = getSenderIDOfMessage(messageID);
+        String recieverID = getReceiverIDOfMessage(messageID);
+
+        for (Message message: messages.get(senderID)){
+            if(message.getID().equals(messageID)){
+                messages.remove(userID, message);
+            }
+        }
+        for (Message message: messages.get(recieverID)){
             if(message.getID().equals(messageID)){
                 messages.remove(userID, message);
             }

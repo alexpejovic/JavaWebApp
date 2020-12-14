@@ -46,6 +46,14 @@ public class UpdateInfo {
     }
 
     /**
+     * Uses a gateway class to delete a Message from database
+     * @param messageID the ID of the message to delete
+     */
+    public void deleteMessage(String messageID){
+        messageGateway.deleteData(messageID);
+    }
+
+    /**
      * Uses a gateway class to update the information for a Event
      * @param event the event to update
      */
@@ -53,6 +61,14 @@ public class UpdateInfo {
         ArrayList<Event> eventUpdate = new ArrayList();
         eventUpdate.add(event);
         eventGateway.writeData(eventUpdate);
+    }
+
+    /**
+     * Uses a gateway class to delete an Event from database
+     * @param eventID the ID of the event to delete
+     */
+    public void deleteEvent(String eventID){
+        eventGateway.deleteData(eventID);
     }
 
     /**

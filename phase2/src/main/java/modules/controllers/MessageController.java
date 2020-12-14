@@ -19,28 +19,18 @@ public class MessageController {
     private String userID;
     private MessageManager messageManager;
     private MessagePresenter messagePresenter;
-    private AttendeeManager attendeeManager;
-    private OrganizerManager organizerManager;
-    private SpeakerManager speakerManager;
     private UpdateInfo updateInfo;
 
     /**
      * Constructor for MessageController
      * @param userID the userID of the user logged in currently
-     * @param attendeeManager the attendeeManager for this conference
-     * @param organizerManager the organizerManager for this conference
-     * @param speakerManager the speakerManager for this conference
      * @param messageManager the messageManager for this conference
      * @param messagePresenter the messageManager for this conference
      * @param updateInfo a class to update database info
      */
-    public MessageController(String userID, AttendeeManager attendeeManager, OrganizerManager organizerManager,
-                             SpeakerManager speakerManager, MessageManager messageManager, MessagePresenter messagePresenter,
+    public MessageController(String userID, MessageManager messageManager, MessagePresenter messagePresenter,
                              UpdateInfo updateInfo){
         this.userID = userID;
-        this.attendeeManager = attendeeManager;
-        this.organizerManager = organizerManager;
-        this.speakerManager = speakerManager;
         this.messageManager = messageManager;
         this.messagePresenter = messagePresenter;
         this.updateInfo = updateInfo;
@@ -96,12 +86,9 @@ public class MessageController {
      */
     public void markMessageAsDeleted(String messageID){
         try {
+            System.out.println( messageManager.getMessages(userID));
             messageManager.deleteMessage(messageID, userID);
-            ArrayList<User> users = new ArrayList<>(); //  for updating user info in database
-            users.addAll(attendeeManager.getAttendeeList());
-            users.addAll(organizerManager.getListOfOrganizers());
-            users.addAll(speakerManager.getSpeakers());
-            updateInfo.updateUser(users);
+            updateInfo.deleteMessage(messageID);  // updating message info to database
         }
         catch (MessageNotFoundException e){
 //            messagePresenter.messageDoesNotExist();
@@ -145,4 +132,5 @@ public class MessageController {
         messagePresenter.setMessages(conversation);
 
     }
+
 }

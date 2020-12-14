@@ -377,6 +377,8 @@ public class OrganizerController implements Attendable, Messageable {
         users.addAll(organizerManager.getListOfOrganizers());
         users.addAll(speakerManager.getSpeakers());
         updateInfo.updateUser(users);
+        //remove event from database
+        updateInfo.deleteEvent(eventId);
         organizerOptionsPresenter.cancelEvent(true);
     }
 

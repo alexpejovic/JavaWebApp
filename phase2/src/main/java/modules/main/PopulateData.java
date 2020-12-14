@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * ONLY FOR TESTING PURPOSES NOT PART OF PROGRAM
  */
 //please run this once before pushing to make sure the data in res matches the sample data
-// * if you want to test out a empty conference with no data uncomment the block in the main method
+// * if you want to test out a empty conference with no data make conference.db a empty file
 public class PopulateData {
     private static EventGateway eventGateway = new EventGateway();
     private static MessageGateway messageGateway= new MessageGateway();
@@ -27,11 +27,6 @@ public class PopulateData {
         userGateway.writeData(getUsers());
         messageGateway.writeData(getMessages());
 
-//         //to start a new conference with no sample data uncomment this block
-//        eventGateway.writeSerFile(new ArrayList<>());
-//        messageGateway.writeSerFile(new ArrayList<>());
-//        roomGateway.writeSerFile(new ArrayList<>());
-//        userGateway.writeSerFile(new ArrayList<>());
 
     }
 
