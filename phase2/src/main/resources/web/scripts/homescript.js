@@ -8,6 +8,7 @@ var requests = {
     "attendEvent": "../attendevent",
     "cancelEvent": "../cancelevent",
     "archiveMessage": "../archivemessage",
+    "unarchiveMessage": "../unarchivemessage",
     "deleteMessage": "../deletemessage",
     "reschedule": "../reschedule"
 }
@@ -243,7 +244,10 @@ function makeEvent(data, fragment, attending) {
 
 function makeMessage(data, fragment) {
     var messageTable = document.createElement("table");
-    var headings = ["Read?", "Delete?", "Archive?", "From:", "Message:", "Reply?"];
+    var headings = ["Read?", "Delete?", "Archive?", "From:", "Message:"];
+    if (data.isArchived === "false") {
+        headings.push("Reply?");
+    }
     var tableHeadings = [];
     headings.forEach(heading => {
         tableHeadings.push(createPElem(heading));
@@ -297,10 +301,17 @@ function getMessageHeadingsFromData(data) {
     text = data.hasBeenRead === "true" ? "O" : "X";
     headings.push(createPElem(text));
     headings.push(createButtonForm("Delete", requests.deleteMessage, "message", data.messageID));
-    headings.push(createButtonForm("Archive", requests.archiveMessage, "message", data.messageID));
-    headings.push(createPElem(data.senderID));
-    headings.push(createPElem(data.content));
-    headings.push(createMessageForm(data.senderID, "Reply"));
+    if (data.isArchived === "true") {
+        headings.push(createButtonForm("Unarchive", requests.unarchiveMessage, "message", data.messageID));
+        headings.push(createPElem(data.senderID));
+        headings.push(createPElem(data.content));
+    }
+    else {
+        headings.push(createButtonForm("Archive", requests.archiveMessage, "message", data.messageID));
+        headings.push(createPElem(data.senderID));
+        headings.push(createPElem(data.content));
+        headings.push(createMessageForm(data.senderID, "Reply"));
+    }
     return headings;
 }
 

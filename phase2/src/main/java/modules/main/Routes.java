@@ -59,6 +59,7 @@ public class Routes {
         post("/signin", Routes::login);
         post("/sendmessage", Routes::sendMessage);
         post("/archivemessage", Routes::archiveMessage);
+        post("/unarchivemessage", Routes::unarchiveMessage);
         post("/deletemessage", Routes::deleteMessage);
         post("/unattendevent", Routes::unattendEvent);
         post("/attendevent", Routes::attendEvent);
@@ -221,6 +222,14 @@ public class Routes {
     private static String archiveMessage(Request request, Response response) {
         MessageController messageController = confBuild.getMsgController(currentUser);
         messageController.markMessageAsArchived(request.queryParams("message"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String unarchiveMessage(Request request, Response response) {
+        MessageController messageController = confBuild.getMsgController(currentUser);
+        messageController.markMessageAsUnarchived(request.queryParams("message"));
         updateModel(false);
         response.redirect("/home");
         return "";
