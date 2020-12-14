@@ -13,7 +13,7 @@ import java.util.HashMap;
 /**
  * SpeakerController class allows speakers to message attendees and also get a list of the events they are hosting
  */
-public class SpeakerController {
+public class SpeakerController implements Messageable {
     private final String speakerId;
     private final SpeakerManager speakerManager;
     private final EventManager eventManager;
