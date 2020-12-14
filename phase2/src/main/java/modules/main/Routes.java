@@ -23,8 +23,10 @@ public class Routes {
     static String userType;
 
     static OrganizerController orgController;
-    static AttendeeController attController;
-    static SpeakerController spkController;
+//    static AttendeeController attController;
+//    static SpeakerController spkController;
+    static Attendable attendableController;
+    static Messageable messageableController;
 
     public static void main(String[] args) {
 
@@ -46,41 +48,47 @@ public class Routes {
 
         get("/logout", (req, res) -> {
            req.session().removeAttribute("currentUser");
-           model.clear();
+           model.clear(true);
            model.setErrorStatus(true, "logout");
            res.redirect("/home"); return "";
         });
 
-        get("/getmodel", (req, res) -> {
-            return model.toJSON();
-        });
+        get("/getmodel", (req, res) -> model.toJSON());
 
         post("/signin", Routes::handleLogin);
-
-        post("/sendreply", Routes::handleReply);
+        post("/sendmessage", Routes::handleMessage);
+        post("/unattendevent", Routes::unattendEvent);
+        post("/attendevent", Routes::attendEvent);
+        post("/cancelevent", Routes::cancelEvent);
+        post("/archivemessage", (req, res) -> "Archive Message");
+        post("/deletemessage", (req, res) -> "Delete Message");
     }
 
-    private static String render(Map<String, Object> model, String templatePath) {
-        System.out.println("rendering");
-        return new MustacheTemplateEngine().render(new ModelAndView(model, templatePath));
+    private static String attendEvent(Request request, Response response) {
+        attendableController.attendEvent(request.queryParams("event"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
     }
 
-    private static String handleReply(Request request, Response response) {
-        if (userType.equals("organizer")) {
-            orgController = confBuild.getOrgController(currentUser);
-            orgController.sendMessage(request.queryParams("recipient"), request.queryParams("reply"));
-            orgController.updateModel();
-        }
-        else if (userType.equals("attendee")) {
-            attController = confBuild.getAttController(currentUser);
-            attController.sendMessage(request.queryParams("recipient"), request.queryParams("reply"));
-            attController.updateModel();
-        }
-        else if (userType.equals("speaker")) {
-            spkController = confBuild.getSpkController(currentUser);
-            spkController.sendMessage(request.queryParams("recipient"), request.queryParams("reply"));
-            spkController.updateModel();
-        }
+    private static String unattendEvent(Request request, Response response) {
+        attendableController.cancelEnrollment(request.queryParams("event"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String cancelEvent(Request request, Response response) {
+        // The request for this method can only be sent if the user is an organizer so no check is needed
+        orgController.cancelEvent(request.queryParams("event"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String handleMessage(Request request, Response response) {
+        messageableController.sendMessage(request.queryParams("recipient"), request.queryParams("reply"));
+        updateModel(false);
         response.redirect("/home");
         return "";
     }
@@ -93,7 +101,7 @@ public class Routes {
             userType = lc.getUserType();
             request.session().attribute("currentUser", currentUser);
             mdl.put("user", currentUser);
-            updateModel();
+            initController();
             response.redirect("/home");
             return "";
         }
@@ -102,20 +110,31 @@ public class Routes {
         return "";
     }
 
-    private static void updateModel() {
-        System.out.println("fetching");
-        System.out.println(userType);
+    private static void initController() {
         if (userType.equals("organizer")) {
             orgController = confBuild.getOrgController(currentUser);
-            orgController.updateModel();
+            attendableController = orgController;
+            messageableController = orgController;
+            updateModel(false);
         }
         else if (userType.equals("attendee")) {
-            attController = confBuild.getAttController(currentUser);
-            attController.updateModel();
+            AttendeeController attController = confBuild.getAttController(currentUser);
+            attendableController = attController;
+            messageableController = attController;
+            updateModel(false);
         }
         else if (userType.equals("speaker")) {
-            spkController = confBuild.getSpkController(currentUser);
-            spkController.updateModel();
+            messageableController = confBuild.getSpkController(currentUser);
+            updateModel(false);
         }
+    }
+
+    private static void updateModel(boolean all) {
+        model.clear(all);
+        messageableController.updateModel();
+    }
+
+    private static String render(Map<String, Object> model, String templatePath) {
+        return new MustacheTemplateEngine().render(new ModelAndView(model, templatePath));
     }
 }
