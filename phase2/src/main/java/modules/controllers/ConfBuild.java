@@ -5,10 +5,7 @@ import modules.gateways.EventGateway;
 import modules.gateways.MessageGateway;
 import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
-import modules.presenters.AttendeeOptionsPresenter;
-import modules.presenters.Model;
-import modules.presenters.OrganizerOptionsPresenter;
-import modules.presenters.SpeakerOptionsPresenter;
+import modules.presenters.*;
 import modules.usecases.*;
 
 import java.util.ArrayList;
@@ -60,7 +57,7 @@ public class ConfBuild {
     public AttendeeController getAttController(String userID) {
         AttendeeOptionsPresenter attendeeOptionsPresenter = new AttendeeOptionsPresenter(model);
         return new AttendeeController(
-                attendeeManager, eventManager, userID, messageManager, attendeeOptionsPresenter, updateInfo);
+                attendeeManager, organizerManager, speakerManager, eventManager, userID, messageManager, attendeeOptionsPresenter, updateInfo);
     }
 
     public SpeakerController getSpkController(String userID) {
@@ -68,6 +65,12 @@ public class ConfBuild {
         return new SpeakerController(
                 userID, eventManager, speakerManager, attendeeManager,
                 messageManager, speakerOptionsPresenter, updateInfo);
+    }
+
+    public MessageController getMsgController(String userID) {
+        MessagePresenter messagePresenter = new MessagePresenter(model);
+        return new MessageController(userID, attendeeManager, organizerManager, speakerManager,
+                messageManager, messagePresenter, updateInfo);
     }
 
 

@@ -22,12 +22,12 @@ public class SpeakerOptionsPresenter implements IUserModelHandler, IMessageModel
 
     @Override
     public void setAttendingEvents(ArrayList<HashMap<String, String>> attendingEvents) {
-        model.addAttendingEvents(attendingEvents);
+        model.addParticipatingEvents(attendingEvents);
     }
 
     @Override
     public void setNotAttendingEvents(ArrayList<HashMap<String, String>> notAttendingEvents) {
-        model.addNotAttendingEvents(notAttendingEvents);
+        model.addNotParticipatingEvents(notAttendingEvents);
     }
 
     /**

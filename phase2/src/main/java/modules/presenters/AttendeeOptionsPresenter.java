@@ -98,6 +98,10 @@ public class AttendeeOptionsPresenter implements IUserModelHandler, IMessageMode
         model.setErrorStatus(false, "That user does not exist");
     }
 
+    public void setFriends(ArrayList<HashMap<String, String>> friends) {
+        model.addFriends(friends);
+    }
+
     @Override
     public void setMessages(ArrayList<HashMap<String, String>> messages) {
         model.addMessages(messages);
@@ -105,11 +109,11 @@ public class AttendeeOptionsPresenter implements IUserModelHandler, IMessageMode
 
     @Override
     public void setAttendingEvents(ArrayList<HashMap<String, String>> attending) {
-        model.addAttendingEvents(attending);
+        model.addParticipatingEvents(attending);
     }
 
     @Override
     public void setNotAttendingEvents(ArrayList<HashMap<String, String>> notAttending) {
-        model.addNotAttendingEvents(notAttending);
+        model.addNotParticipatingEvents(notAttending);
     }
 }

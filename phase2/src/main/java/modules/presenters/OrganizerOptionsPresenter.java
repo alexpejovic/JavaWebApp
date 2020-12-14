@@ -106,6 +106,10 @@ public class OrganizerOptionsPresenter implements IUserModelHandler, IMessageMod
             model.setErrorStatus(false, "Event cancellation was unsuccessful");
     }
 
+    public void setFriends(ArrayList<HashMap<String, String>> friends) {
+        model.addFriends(friends);
+    }
+
     @Override
     public void setMessages(ArrayList<HashMap<String, String>> messages) {
         model.addMessages(messages);
@@ -113,12 +117,12 @@ public class OrganizerOptionsPresenter implements IUserModelHandler, IMessageMod
 
     @Override
     public void setAttendingEvents(ArrayList<HashMap<String, String>> attending) {
-        model.addAttendingEvents(attending);
+        model.addParticipatingEvents(attending);
     }
 
     @Override
     public void setNotAttendingEvents(ArrayList<HashMap<String, String>> notAttending) {
-        model.addNotAttendingEvents(notAttending);
+        model.addNotParticipatingEvents(notAttending);
     }
 }
 

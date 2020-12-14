@@ -62,7 +62,7 @@ public class PopulateData {
                 "e2",2);
         event2.setName("Therapy dog");
         event2.scheduleSpeaker("s2");
-        event2.addAttendee("oO");
+        event2.addAttendee("o0");
         events.add(event2);
 
         Event event3 = new Event("r1",
@@ -159,7 +159,7 @@ public class PopulateData {
         attendee0.addToFriendList("s0");
         attendee0.addToFriendList("s2");
         attendee0.addToFriendList("a2");
-        attendee0.addToFriendList("oO");
+        attendee0.addToFriendList("o0");
         users.add(attendee0);
 
         Attendee attendee1 = new Attendee("lemon", "chirp", "a1");

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class OrganizerController {
+public class OrganizerController implements Attendable, Messageable {
     private final OrganizerManager organizerManager;
     private final EventManager eventManager;
     private final RoomManager roomManager;
@@ -61,32 +61,46 @@ public class OrganizerController {
      * @param endTime the time when the event ends
      * @param capacity the maximum number of attendees allowed in the event
      */
-    public void scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName, int capacity,
+    public boolean scheduleEvent(String roomNumber, LocalDateTime startTime, LocalDateTime endTime, String eventName, int capacity,
                                  boolean isVIP){
-        //check room is available at this time, doesn't have other event
-        boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
-        //check event not already in another room
-        boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
-        //check that room capacity can handle the capacity of the event
-        boolean canRoomHold = this.isRoomCapacityEnough(roomNumber,capacity);
-        if (isRoomAvailable && canBook && canRoomHold) {
-            //create the Event
-            boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName,capacity, isVIP);
-            if (created){
-                try {
-                    String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
-                    eventManager.renameEvent(eventId, eventName);
-                    roomManager.addEventToRoom(roomNumber, eventId);
-                    organizerManager.addToOrganizedEvents(organizerId, eventId);
-                    updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
+        if (roomExists(roomNumber)) {
+            //check room is available at this time, doesn't have other event
+            boolean isRoomAvailable = roomManager.isRoomAvailable(roomNumber, startTime, endTime, eventManager);
+            //check event not already in another room
+            boolean canBook = eventManager.canBook(roomNumber, startTime, endTime);
+            //check that room capacity can handle the capacity of the event
+            boolean canRoomHold = this.isRoomCapacityEnough(roomNumber, capacity);
+            if (isRoomAvailable && canBook && canRoomHold) {
+                //create the Event
+                boolean created = eventCreator.createEvent(startTime, endTime, roomNumber, eventName, capacity, isVIP);
+                if (created) {
+                    try {
+                        String eventId = eventManager.eventAtTime(roomNumber, startTime, endTime).getID();
+                        eventManager.renameEvent(eventId, eventName);
+                        roomManager.addEventToRoom(roomNumber, eventId);
+                        organizerManager.addToOrganizedEvents(organizerId, eventId);
+                        updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
+                        return true;
 //                    organizerOptionsPresenter.scheduleEventSuccess(true);
-                }
-                catch(EventNotFoundException | ClassNotFoundException e){
+                    } catch (EventNotFoundException e) {
+                        return false;
 //                    organizerOptionsPresenter.scheduleEventSuccess(false);
+                    }
                 }
             }
-        }
 //        organizerOptionsPresenter.scheduleEventSuccess(false);
+        }
+        return false;
+    }
+
+    public void rescheduleEvent(String eventID, LocalDateTime startTime, LocalDateTime endTime) {
+        String roomNum = eventManager.getRoomNumberOfEvent(eventID);
+        String name = eventManager.getName(eventID);
+        int capacity = eventManager.getCapacity(eventID);
+        boolean isVIP = eventManager.getVIPStatus(eventID);
+        if (scheduleEvent(roomNum, startTime, endTime, name, capacity, isVIP)) {
+            cancelEvent(eventID);
+        }
     }
 
     /**
@@ -140,14 +154,12 @@ public class OrganizerController {
      * Schedules speaker to speak at an existing event if speaker, event and room are available
      * and if the speaker is not already speaking at the specified event
      * @param username the id of the Speaker being scheduled for the Event
-     * @param roomNumber the number of the room where the event will be held and where the speaker will present
-     * @param eventName the name of the event taking place in the room
+     * @param eventId the name of the event taking place in the room
      * precondition: the event with eventName is an existing event
      */
-    public void scheduleSpeaker(String username, String roomNumber, String eventName) throws ClassNotFoundException {
+    public void scheduleSpeaker(String username, String eventId) {
         //check if speaker is available
 //        if (!roomExists(roomNumber)) {organizerOptionsPresenter.scheduleSpeaker(false);}
-        String eventId = eventManager.getEventID(eventName);
 //        if (!roomManager.getEventsInRoom(roomNumber).contains(eventId)){
 //            organizerOptionsPresenter.scheduleSpeaker(false);
 //        }
@@ -178,11 +190,10 @@ public class OrganizerController {
     /**
      * Removes the specified speaker from the specified event
      * @param username the username of the Speaker being scheduled for the Event
-     * @param eventName the name of the event in question
-     * precondition: the event with eventName is an existing event
+     * @param eventId the ID of the event in question
+     * precondition: the event with eventID is an existing event
      */
-    public void removeSpeakerFromEvent(String username, String eventName) throws ClassNotFoundException {
-        String eventId = eventManager.getEventID(eventName);
+    public void removeSpeakerFromEvent(String username, String eventId) {
         String speakerId = speakerManager.getUserID(username);
         //checking that the speaker is speaking at the given event
         if (eventManager.isSpeakerSpeakingAtEvent(eventId,speakerId)){
@@ -234,9 +245,10 @@ public class OrganizerController {
      * Sends a singular message to all attendees in the program
      * @param message the content of the message being sent
      */
-    public void messageAllAttendees(String message){
-        for (String attendeeID: attendeeManager.getUserIDOfAllAttendees()){
-            sendMessage(attendeeID, message);
+    public void messageAllAttendees(String message, String eventID){
+        for (String attendeeID: eventManager.getAttendeesOfEvent(eventID)) {
+            String messageID = messageManager.sendMessage(organizerId, attendeeID, message);
+            updateInfo.updateMessage(messageManager.getMessage(messageID));
         }
     }
 
@@ -262,8 +274,29 @@ public class OrganizerController {
     }
 
     public void updateModel() {
+        updateModelFriends();
         updateModelMessages();
         updateModelEvents();
+    }
+
+    private void updateModelFriends() {
+        ArrayList<HashMap<String, String>> friends = new ArrayList<>();
+        ArrayList<String> friendIDs = attendeeManager.getFriendList(organizerId);
+        for (String friendID : friendIDs) {
+            HashMap<String, String> friend = new HashMap<>();
+            friend.put("ID", friendID);
+            if (friendID.startsWith("o")) {
+                friend.put("name", organizerManager.getUsername(friendID));
+            }
+            else if (friendID.startsWith("a")) {
+                friend.put("name", attendeeManager.getUsername(friendID));
+            }
+            else {
+                friend.put("name", speakerManager.getUsername(friendID));
+            }
+            friends.add(friend);
+        }
+        organizerOptionsPresenter.setFriends(friends);
     }
 
     /**
@@ -285,12 +318,12 @@ public class OrganizerController {
 
     /**
      * Checks if the event with given username exists in the system
-     * @param eventName the name of the event being searched
+     * @param eventId the name of the event being searched
      * @return true if the event is in the system, false otherwise
      */
-    public boolean eventExists(String eventName){
+    public boolean eventExists(String eventId){
         try{
-            eventManager.getEventID(eventName);
+            eventManager.getName(eventId);
             return true;
         } catch (EventNotFoundException e) {
             return false;
@@ -299,12 +332,14 @@ public class OrganizerController {
 
     /**
      * Cancels/removes event from the program, the event being cancelled exists in the system
-     * @param eventName the name of the event being cancelled
+     * @param eventId the ID of the event being cancelled
      */
-    public void cancelEvent(String eventName){
+    public void cancelEvent(String eventId){
+        ArrayList<String> attendeeIDs = eventManager.getAttendeesOfEvent(eventId);
+        ArrayList<String> speakerIDs = eventManager.getSpeakersOfEvent(eventId);
         // removes event from system
-        eventManager.removeEvent(eventName);
-        String eventId = eventManager.getEventID(eventName);
+        eventManager.removeEvent(eventId);
+
         ArrayList<String> roomList = roomManager.roomsContainingEvent(eventId);
         // removes event from all rooms contained in
         for (String roomNumber: roomList){
@@ -312,15 +347,31 @@ public class OrganizerController {
             // update room info in database
             updateInfo.updateRoom(roomManager.getRoom(roomNumber));
         }
-        // removes event from the attendance lists of all attendees in the conference
-        attendeeManager.removeEventFromAllAttendees(eventId);
-        // removes event from the organized lists of all organizers in the conference
-        organizerManager.removeFromOrganizedEvents(eventId);
+
+        ArrayList<User> users = new ArrayList<>(); //  for updating user info in database
+
+        // removes event from the attendance lists of all attendees/organizers in the conference
+        // Organizer is a child of Attendee
+        for (String attendeeID: attendeeIDs){
+            if (attendeeID.startsWith("a")) {
+                // remove attendee attendance
+                attendeeManager.removeEvent(eventId, attendeeID);
+                users.add(attendeeManager.getAttendee(attendeeID));
+            }
+            else {
+                // remove organizer attendance
+                organizerManager.removeEvent(eventId,attendeeID);
+                users.add(organizerManager.getOrganizer(organizerId));
+            }
+        }
+
         // removes event from the hosting lists of all speakers in the conference
-        speakerManager.removeEventFromAllSpeakers(eventId);
-        cancelEnrollment(eventName);
-        // update user info in database
-        ArrayList<User> users = new ArrayList<>();
+        for (String speakerID: speakerIDs){
+            speakerManager.removeEventFromSpeaker(eventId, speakerID);
+            users.add(speakerManager.getSpeaker(speakerID));
+        }
+
+        // updating user info in database
         users.addAll(attendeeManager.getAttendeeList());
         users.addAll(organizerManager.getListOfOrganizers());
         users.addAll(speakerManager.getSpeakers());
@@ -357,49 +408,44 @@ public class OrganizerController {
 
     /**
      * Schedules organizer to attend event
-     * @param eventName the name of the event the Organizer will attend, if that event exists or has
-     *                  available seating
-     * @return true if the organizer has been scheduled, false if not
+     * Organizers can attend a event if the event's capacity can hold them but they
+     * are allowed to attend multiple events at the same time
+     * @param eventId the name of the event the Organizer will attend
      */
-    public boolean attendEvent(String eventName){
+    public void attendEvent(String eventId){
         try {
-            String eventId = eventManager.getEventID(eventName);
             if (eventManager.canAttend(eventId)){
                 eventManager.addAttendee(eventId, organizerId);
-                return true;
+                organizerManager.addAttendingEvent(organizerId,eventId);
+                // update user info in database
+                updateInfo.updateUser(organizerManager.getOrganizer(organizerId));
+                // event attended
             }
-            return false;
+            // event cannot be attended
         }
         catch(EventNotFoundException e){
-            return false;
+            // event cannot be attended
         }
     }
 
     /**
      * Organizer cancels their enrollment to attend an event
-     * @param eventName the name of the event the organizer will no longer attend,
+     * @param eventId the name of the event the organizer will no longer attend,
      *                  if event exists and the organizer is already attending the event
-     * @return a string that indicates the status of the organizer, if they were able to cancel their enrollment
-     * this will be displayed on the screen for user to see
      */
-    public String cancelEnrollment(String eventName){
+    public void cancelEnrollment(String eventId){
         try{
-            String eventId = eventManager.getEventID(eventName);
             eventManager.removeAttendee(eventId, organizerId);
+            organizerManager.removeAttendingEvent(eventId, organizerId);
             // update user info in database
-            ArrayList<User> users = new ArrayList<>();
-            users.addAll(attendeeManager.getAttendeeList());
-            users.addAll(organizerManager.getListOfOrganizers());
-            users.addAll(speakerManager.getSpeakers());
-            updateInfo.updateUser(users);
+            updateInfo.updateUser(organizerManager.getOrganizer(organizerId));
 //            organizerOptionsPresenter.cancelEvent(true);
-            return "Your Cancellation was successful";
         }
         catch(UserNotFoundException e){
-            return "You were never signed up for this event. Please select another event.";
+            // organiser was not in event's list of attendees
         }
         catch(EventNotFoundException e){
-            return "This event doesn't exist. Please select a new existing event.";
+            // event was not in organizer's list of attending events
         }
     }
 }

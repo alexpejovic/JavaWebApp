@@ -174,6 +174,16 @@ public class EventManager {
         return eventList;
     }
 
+    public ArrayList<HashMap<String, String>> getSpeakingEvents(String userID, boolean speaking) {
+        ArrayList<HashMap<String, String>> eventList = new ArrayList<>();
+        for (Event event : getEventList()) {
+            if (isSpeakerSpeakingAtEvent(event.getID(), userID) == speaking) {
+                eventList.add(objToMap(event));
+            }
+        }
+        return eventList;
+    }
+
     public ArrayList<HashMap<String, String>> getAttendingEvents(String userID, boolean attending) {
         ArrayList<HashMap<String, String>> eventList = new ArrayList<>();
         for (Event event : getEventList()) {
@@ -290,12 +300,12 @@ public class EventManager {
         return event.getEventType();
     }
     /**
-     * removes event from event from
-     * @param eventName
+     * removes event from eventManager
+     * @param eventID
      */
-    public void removeEvent(String eventName){
-        Event event = getEvent(getEventID(eventName));
-        eventList.remove(eventName);
+    public void removeEvent(String eventID){
+        Event event = getEvent(eventID);
+        eventList.remove(event);
     }
 
     /**
@@ -378,7 +388,7 @@ public class EventManager {
     }
 
     /**
-     * Returns the total capacity for the event specified by eventID
+     * Returns the total capacity for the event specified breateeventy eventID
      * @param eventID the unique id of the event in question
      * @return the maximum number of attendees allowed at this event
      */

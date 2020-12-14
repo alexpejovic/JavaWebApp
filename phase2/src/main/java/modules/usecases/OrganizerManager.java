@@ -156,4 +156,50 @@ public class OrganizerManager extends UserManager {
         }
     }
 
+    /**
+     * Removes the given eventID to the given organizer's list of events that
+     * @param organizerID the userID of the organizer whose events list we want to alter
+     * @param eventID the eventID of the event that we want to remove from the organizer's events list
+     * @throws EventNotFoundException if the attendee is not attending the event with eventID
+     */
+    public void removeEvent(String eventID, String organizerID) {
+        Attendee attendee = getOrganizer(organizerID);
+        attendee.removeEvent(eventID);
+    }
+
+    /**
+     * Returns the specific Organizer's username with user ID
+     *
+     * @param userId the user ID we want to check
+     * @return the username of the specific Organizer entity that has the given user ID
+     * @throws UserNotFoundException if there is no organizer with UserID in this conference
+     */
+    @Override
+    public String getUsername(String userId) {
+        for (Organizer organizer : listOfOrganizers) {
+            if (organizer.getID().equals(userId)) {
+                return organizer.getUsername();
+            }
+        }
+        throw new UserNotFoundException();
+    }
+    /**
+     * Adds the given event's eventID to the given organizer's list of events
+     * @param organizerID the ID of the organizer whose events list we want to alter
+     * @param eventID the ID of the event that we want to add to the organizer's attending events list
+     */
+    public void addAttendingEvent(String organizerID, String eventID){
+        getOrganizer(organizerID).addEvent(eventID);
+    }
+
+    /**
+     * Removes the given eventID to the given organizer's list of events
+     * @param organizerID the userID of the organizer whose events list we want to alter
+     * @param eventID the eventID of the event that we want to remove to the organizer's events list
+     * @throws EventNotFoundException if the organizer is not attending the event with eventID
+     */
+    public void removeAttendingEvent(String eventID, String organizerID){
+        getOrganizer(organizerID).removeEvent(eventID);
+    }
+
 }

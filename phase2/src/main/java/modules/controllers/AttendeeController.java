@@ -3,25 +3,27 @@ package modules.controllers;
 import modules.exceptions.EventNotFoundException;
 import modules.exceptions.UserNotFoundException;
 import modules.presenters.AttendeeOptionsPresenter;
-import modules.usecases.AttendeeManager;
-import modules.usecases.EventManager;
-import modules.usecases.MessageManager;
+import modules.usecases.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AttendeeController {
+public class AttendeeController implements Attendable, Messageable {
     private String attendeeID;
     private AttendeeManager attendeeManager;
+    private OrganizerManager organizerManager;
+    private SpeakerManager speakerManager;
     private EventManager eventManager;
     private MessageManager messageManager;
     private AttendeeOptionsPresenter attendeeOptionsPresenter;
     private UpdateInfo updateInfo;
 
-    public AttendeeController(AttendeeManager attendeeManager, EventManager eventManager,String attendeeID,
-                              MessageManager messageManager, AttendeeOptionsPresenter attendeeOptionsPresenter,
-                              UpdateInfo updateInfo){
+    public AttendeeController(AttendeeManager attendeeManager, OrganizerManager organizerManager, SpeakerManager speakerManager,
+                              EventManager eventManager, String attendeeID, MessageManager messageManager,
+                              AttendeeOptionsPresenter attendeeOptionsPresenter, UpdateInfo updateInfo){
         this.attendeeManager = attendeeManager;
+        this.organizerManager = organizerManager;
+        this.speakerManager = speakerManager;
         this.eventManager = eventManager;
         this.attendeeID = attendeeID;
         this.messageManager = messageManager;
@@ -34,7 +36,7 @@ public class AttendeeController {
      * if the specified event is VIP only, only VIP attendees are allowed to signup
      * @param eventID the ID of the event that attendee wishes to sign up for
      */
-    public void signUp(String eventID){
+    public void attendEvent(String eventID){
         boolean signUpSuccessful = false;
         try{
             if (attendeeManager.timeAvailable(attendeeID, eventManager.startTimeOfEvent(eventID),
@@ -48,7 +50,7 @@ public class AttendeeController {
                 signUpSuccessful = true;
             }
         }
-        catch (EventNotFoundException | ClassNotFoundException e){
+        catch (EventNotFoundException e){
             attendeeOptionsPresenter.eventNotFound();
         }
         finally {
@@ -70,7 +72,7 @@ public class AttendeeController {
                 updateInfo.updateEvent(eventManager.getEvent(eventID)); // updating event info to database
                 updateInfo.updateUser(attendeeManager.getAttendee(attendeeID)); // updating attendee info
                 attendeeOptionsPresenter.cancelAttendanceToEventMessage(true);
-            }catch (UserNotFoundException | ClassNotFoundException e){
+            }catch (UserNotFoundException e){
                 // event did not have attendee in attending list
                 // still send success since removed event from attendee's list of attending events
                 attendeeOptionsPresenter.cancelAttendanceToEventMessage(true);
@@ -140,8 +142,29 @@ public class AttendeeController {
     }
 
     public void updateModel() {
+        updateModelFriends();
         updateModelMessages();
         updateModelEvents();
+    }
+
+    private void updateModelFriends() {
+        ArrayList<HashMap<String, String>> friends = new ArrayList<>();
+        ArrayList<String> friendIDs = attendeeManager.getFriendList(attendeeID);
+        for (String friendID : friendIDs) {
+            HashMap<String, String> friend = new HashMap<>();
+            friend.put("ID", friendID);
+            if (friendID.startsWith("o")) {
+                friend.put("name", organizerManager.getUsername(friendID));
+            }
+            else if (friendID.startsWith("a")) {
+                friend.put("name", attendeeManager.getUsername(friendID));
+            }
+            else {
+                friend.put("name", speakerManager.getUsername(friendID));
+            }
+            friends.add(friend);
+        }
+        attendeeOptionsPresenter.setFriends(friends);
     }
 
     private void updateModelMessages() {

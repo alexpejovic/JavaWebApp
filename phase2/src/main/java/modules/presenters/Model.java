@@ -10,10 +10,10 @@ public class Model {
     private String status;
     private String statusMessage;
     private String userType;
-    private JSONArray attending = new JSONArray();
-    private JSONArray notAttending = new JSONArray();
-    private JSONArray speaking = new JSONArray();
+    private JSONArray participating = new JSONArray();
+    private JSONArray notParticipating = new JSONArray();
     private JSONArray messages = new JSONArray();
+    private JSONArray friends = new JSONArray();
 
     public void setErrorStatus(boolean status, String statusMessage) {
         this.status = status ? "ok" : "error";
@@ -30,19 +30,29 @@ public class Model {
         }
     }
 
-    public void addAttendingEvents(ArrayList<HashMap<String, String>> events) {
+    public void addParticipatingEvents(ArrayList<HashMap<String, String>> events) {
         for (HashMap<String, String> event : events) {
-            attending.add(makeEvent(event));
+            participating.add(makeEvent(event));
         }
     }
 
-    public void addNotAttendingEvents(ArrayList<HashMap<String, String>> events) {
+    public void addNotParticipatingEvents(ArrayList<HashMap<String, String>> events) {
         for (HashMap<String, String> event : events) {
-            notAttending.add(makeEvent(event));
+            notParticipating.add(makeEvent(event));
         }
     }
 
-    /**
+    public void addFriends(ArrayList<HashMap<String, String>> friends) {
+        for (HashMap<String, String> friend : friends) {
+            JSONObject newFriend = new JSONObject();
+//            friends.add(friendID);
+            newFriend.put("ID", friend.get("ID"));
+            newFriend.put("name", friend.get("name"));
+            this.friends.add(newFriend);
+        }
+    }
+
+    /**signin
      * @param message an arraylist containing information about a message formatted like:
      *                messageID, senderID, receiverID, content, time, hasBeenRead, isArchived
      * @return a JSONObject containing the above keys and their corresponding values
@@ -70,14 +80,16 @@ public class Model {
         return newEvent;
     }
 
-    public void clear() {
+    public void clear(boolean all) {
         status = null;
         statusMessage = null;
-        userType = null;
-        attending = new JSONArray();
-        notAttending = new JSONArray();
-        speaking = new JSONArray();
+        participating = new JSONArray();
+        notParticipating = new JSONArray();
         messages = new JSONArray();
+        friends = new JSONArray();
+        if (all) {
+            userType = null;
+        }
     }
 
     public JSONObject toJSON() {
@@ -85,10 +97,10 @@ public class Model {
         json.put("status", status);
         json.put("statusMessage", statusMessage);
         json.put("userType", userType);
-        json.put("attending", attending);
-        json.put("notAttending", notAttending);
-        json.put("speaking", speaking);
+        json.put("participating", participating);
+        json.put("notParticipating", notParticipating);
         json.put("messages", messages);
+        json.put("friends", friends);
         return json;
     }
 }
