@@ -25,7 +25,7 @@ public class Routes {
 
     static OrganizerController orgController;
     static AttendeeController attController;
-//    static SpeakerController spkController;
+    static SpeakerController spkController;
     static Attendable attendableController;
     static Messageable messageableController;
 
@@ -175,7 +175,12 @@ public class Routes {
     }
 
     private static String handleMessage(Request request, Response response) {
-        messageableController.sendMessage(request.queryParams("recipient"), request.queryParams("reply"));
+        String recipient = request.queryParams("recipient");
+        String message = request.queryParams("message");
+        if (recipient.equals("all")) {
+            spkController.messageAll(message, request.queryParams("event"));
+        }
+        messageableController.sendMessage(recipient, message);
         updateModel(false);
         response.redirect("/home");
         return "";
@@ -212,7 +217,8 @@ public class Routes {
             updateModel(false);
         }
         else if (userType.equals("speaker")) {
-            messageableController = confBuild.getSpkController(currentUser);
+            spkController = confBuild.getSpkController(currentUser);
+            messageableController = spkController;
             updateModel(false);
         }
     }

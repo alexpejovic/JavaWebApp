@@ -47,12 +47,12 @@ public class SpeakerController implements Messageable {
      * Sends a message to all Attendees coming to an event this speaker is hosting
      * @param message the message to be sent
      */
-    public void messageAll(String message){
+    public void messageAll(String message, String eventID){
         if(getAttendees().isEmpty()){
             speakerOptionsPresenter.sendMessageAllSuccess(false);
         } else{
-            for(Attendee attendee: this.getAttendees()){
-                String messageID = messageManager.sendMessage(speakerId, attendee.getID(), message);
+            for(String attendee: eventManager.getAttendeesOfEvent(eventID)){
+                String messageID = messageManager.sendMessage(speakerId, attendee, message);
                 updateInfo.updateMessage(messageManager.getMessage(messageID));   // updating message info in database
             }
             speakerOptionsPresenter.sendMessageAllSuccess(true);

@@ -21,7 +21,7 @@
             <button class="tablinks orgtab" onclick="openTab(event, 'create', 1)" hidden>Create Event</button>
         </div>
         <div class="tab">
-            <button class="tablinks orgtab" onclick="openTab(event, 'manage', 1)" hidden>Manage My Events</button>
+            <button class="tablinks orgtab speakertab" onclick="openTab(event, 'manage', 1)" hidden>Manage My Events</button>
         </div>
         <div class="tab">
             <button class="tablinks orgtab" onclick="openTab(event, 'account', 1)" hidden>Create Account</button>
@@ -57,34 +57,7 @@
 
     </div>
     <div id="manage" class="tabcontent">
-        <h3>Manage My Events:</h3>
-        <table>
-            <tr>
-                <th>Title:</th>
-                <th>Description:</th>
-                <th>Current Date:</th>
-                <th>Send All:</th>
-                <th>Reschedule To?</th>
-            </tr>
-            <tr>
-                <th>Some Random Event!</th>
-                <th>Attend a completely random and unnecessary event that doesn't even exist!</th>
-                <th>January, 25, 2036</th>
-                <th>
-                    <form>
-                        <input type="text" placeholder="Message">
-                        <button>Send All</button>
-                    </form>
-                </th>
-                <th>
-                    <form>
-                        <input type="datetime-local">
-                        <button>Reschedule</button>
-                    </form>
-                </th>
-            </tr>
-        </table>
-
+<!--        Template Space-->
     </div>
     <div id="account" class="tabcontent">
         <h3>Create a New Account:</h3>

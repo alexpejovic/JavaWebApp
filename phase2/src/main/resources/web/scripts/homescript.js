@@ -8,7 +8,8 @@ var requests = {
     "attendEvent": "../attendevent",
     "cancelEvent": "../cancelevent",
     "archiveMessage": "../archivemessage",
-    "deleteMessage": "../deletemessage"
+    "deleteMessage": "../deletemessage",
+    "reschedule": "../reschedule"
 }
 
 const http = new XMLHttpRequest();
@@ -32,6 +33,7 @@ function populateData(httpResponse) {
     addMessages(response);
     addAttendingEvents(response);
     addMoreEvents(response);
+    addEventsToTab(response);
 }
 
 function setTabs(userType) {
@@ -40,6 +42,10 @@ function setTabs(userType) {
         orgtabs.forEach(orgtab => {
             orgtab.removeAttribute("hidden");
         });
+    }
+    else if (userType === "speaker") {
+        var speakertab = document.querySelector(".speakertab");
+        speakertab.removeAttribute("hidden");
     }
 }
 
@@ -66,6 +72,32 @@ function addFriends(response) {
     }
 
     friends.insertBefore(fragment, friends.firstChild);
+}
+
+function addEventsToTab(response) {
+    var participating = document.querySelector("#manage");
+    var fragment = document.createDocumentFragment();
+    var title = document.createElement("h3");
+    title.innerText = "Manage My Events:";
+    fragment.appendChild(title);
+
+    var events;
+    if (userType == "speaker") {
+        events = response.participating;
+    }
+    else {
+        events = response.participating;
+        events.push(...response.notParticipating);
+    }
+    if (events.length == 0) {
+        var nothing = document.createElement("h4");
+        nothing.innerText = "No events yet.";
+        participating.appendChild(nothing);
+    }
+    for (var i=0; i<events.length; i++) {
+        var newTable = makeTabEvent(events[i], fragment);
+        participating.appendChild(newTable);
+    }
 }
 
 function makeFriend(data, fragment) {
@@ -97,13 +129,13 @@ function makeFriend(data, fragment) {
 function addAttendingEvents(response) {
     var attending = document.querySelector("#myEvents");
     var fragment = document.createDocumentFragment();
-    if (response.attending.length == 0) {
+    if (response.participating.length == 0) {
         var nothing = document.createElement("h1");
         nothing.innerText = "Nothing yet.";
         attending.appendChild(nothing);
     }
-    for (var i=0; i<response.attending.length; i++) {
-        var newTable = makeEvent(response.attending[i], fragment, true);
+    for (var i=0; i<response.participating.length; i++) {
+        var newTable = makeEvent(response.participating[i], fragment, true);
         attending.appendChild(newTable);
     }
 }
@@ -111,13 +143,13 @@ function addAttendingEvents(response) {
 function addMoreEvents(response) {
     var events = document.querySelector("#moreEvents");
     var fragment = document.createDocumentFragment();
-    if (response.notAttending.length == 0) {
+    if (response.notParticipating.length == 0) {
         var nothing = document.createElement("h1");
         nothing.innerText = "Nothing yet.";
         events.appendChild(nothing);
     }
-    for (var i=0; i<response.notAttending.length; i++) {
-        var newTable = makeEvent(response.notAttending[i], fragment, false);
+    for (var i=0; i<response.notParticipating.length; i++) {
+        var newTable = makeEvent(response.notParticipating[i], fragment, false);
         events.appendChild(newTable);
     }
 }
@@ -135,6 +167,44 @@ function addMessages(response) {
         messages.appendChild(newTable);
     }
 }
+
+function makeTabEvent(data, fragment) {
+    var eventTable = document.createElement("table");
+    var headings = ["Title:", "Send All:"];
+    if (userType == "organizer") {
+        headings.push("Reschedule To?");
+    }
+    var tableHeadings = [];
+    headings.forEach(heading => {
+        tableHeadings.push(createPElem(heading));
+    });
+    var firstRow = document.createElement("tr");
+    tableHeadings = makeTableHeadings(tableHeadings);
+    tableHeadings.forEach(tableHeading => {
+        firstRow.appendChild(tableHeading);
+    });
+    var secondRow = document.createElement("tr");
+    var tableElements = makeTableHeadings(getTabHeadingsFromData(data));
+    tableElements.forEach(tableElement => {
+        secondRow.appendChild(tableElement);
+    })
+
+    eventTable.appendChild(firstRow);
+    eventTable.appendChild(secondRow);
+    fragment.appendChild(eventTable);
+    return fragment;
+}
+
+function getTabHeadingsFromData(data) {
+    var headings = [];
+    headings.push(createPElem(data.name));
+    headings.push(createMessageForm("all", "Message", data.eventID));
+    if (userType === "organizer") {
+        headings.push(createScheduleForm(data.eventID));
+    }
+    return headings;
+}
+
 
 function makeEvent(data, fragment, attending) {
     var eventTable = document.createElement("table");
@@ -234,20 +304,46 @@ function getMessageHeadingsFromData(data) {
     return headings;
 }
 
-function createMessageForm(recipient, placeholder) {
+function createMessageForm(recipient, placeholder, event) {
     var form = document.createElement("form");
     form.setAttribute("method", "post");
     form.setAttribute("action", requests.sendMessage);
     var input = document.createElement("input");
     input.setAttribute("type", "text");
-    input.setAttribute("name", "reply");
+    input.setAttribute("name", "message");
     input.setAttribute("placeholder", placeholder);
     var hiddenInput = document.createElement("input");
     hiddenInput.setAttribute("type", "hidden");
     hiddenInput.setAttribute("name", "recipient");
     hiddenInput.setAttribute("value", recipient);
+    if (recipient === "all") {
+        var hidden2 = document.createElement("input");
+        hidden2.setAttribute("type", "hidden");
+        hidden2.setAttribute("name", "event");
+        hidden2.setAttribute("value", event);
+        form.appendChild(hidden2);
+    }
     var btn = document.createElement("button");
     btn.innerText = "Send";
+    form.appendChild(input);
+    form.appendChild(hiddenInput);
+    form.appendChild(btn);
+    return form;
+}
+
+function createScheduleForm(eventID) {
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", requests.reschedule);
+    var input = document.createElement("input");
+    input.setAttribute("type", "datetime-local");
+    input.setAttribute("placeholder", "day/month/year hour:minute");
+    var hiddenInput = document.createElement("input");
+    hiddenInput.setAttribute("type", "hidden");
+    hiddenInput.setAttribute("name", "event");
+    hiddenInput.setAttribute("value", eventID);
+    var btn = document.createElement("button");
+    btn.innerText = "Reschedule";
     form.appendChild(input);
     form.appendChild(hiddenInput);
     form.appendChild(btn);
@@ -290,23 +386,23 @@ function makeTableHeadings(headings) {
 /*
     Opens tab to access organizer-specific functions. NOTE: Still requires code to check if user is an organizer.
 */
-function openTab(event, tabName, isOrg) {
-    if (isOrg == 0 || (isOrg == 1 && userType == "organizer")) {
-        var i;
-        var content = document.getElementsByClassName("tabcontent");
-        var userLinks = document.getElementsByClassName("tablinks");
+function openTab(event, tabName) {
+//    if (isOrg == 0 || (isOrg == 1 && (userType == "organizer" || userType == "speaker"))) {
+    var i;
+    var content = document.getElementsByClassName("tabcontent");
+    var userLinks = document.getElementsByClassName("tablinks");
 
-        for (i = 0; i < content.length; i++) {
-            content[i].style.display = "none";
-        }
-
-        for (i = 0; i < userLinks.length; i++) {
-            userLinks[i].className = userLinks[i].className.replace(" active", "");
-        }
-
-        document.getElementById(tabName).style.display = "block";
-        event.currentTarget.className += " active";
+    for (i = 0; i < content.length; i++) {
+        content[i].style.display = "none";
     }
+
+    for (i = 0; i < userLinks.length; i++) {
+        userLinks[i].className = userLinks[i].className.replace(" active", "");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    event.currentTarget.className += " active";
+//    }
 }
 
 /* Resize the top navigation bar when the user scrolls down the page */

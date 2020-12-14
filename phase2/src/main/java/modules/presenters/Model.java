@@ -10,9 +10,8 @@ public class Model {
     private String status;
     private String statusMessage;
     private String userType;
-    private JSONArray attending = new JSONArray();
-    private JSONArray notAttending = new JSONArray();
-    private JSONArray speaking = new JSONArray();
+    private JSONArray participating = new JSONArray();
+    private JSONArray notParticipating = new JSONArray();
     private JSONArray messages = new JSONArray();
     private JSONArray friends = new JSONArray();
 
@@ -31,15 +30,15 @@ public class Model {
         }
     }
 
-    public void addAttendingEvents(ArrayList<HashMap<String, String>> events) {
+    public void addParticipatingEvents(ArrayList<HashMap<String, String>> events) {
         for (HashMap<String, String> event : events) {
-            attending.add(makeEvent(event));
+            participating.add(makeEvent(event));
         }
     }
 
-    public void addNotAttendingEvents(ArrayList<HashMap<String, String>> events) {
+    public void addNotParticipatingEvents(ArrayList<HashMap<String, String>> events) {
         for (HashMap<String, String> event : events) {
-            notAttending.add(makeEvent(event));
+            notParticipating.add(makeEvent(event));
         }
     }
 
@@ -84,9 +83,8 @@ public class Model {
     public void clear(boolean all) {
         status = null;
         statusMessage = null;
-        attending = new JSONArray();
-        notAttending = new JSONArray();
-        speaking = new JSONArray();
+        participating = new JSONArray();
+        notParticipating = new JSONArray();
         messages = new JSONArray();
         friends = new JSONArray();
         if (all) {
@@ -99,9 +97,8 @@ public class Model {
         json.put("status", status);
         json.put("statusMessage", statusMessage);
         json.put("userType", userType);
-        json.put("attending", attending);
-        json.put("notAttending", notAttending);
-        json.put("speaking", speaking);
+        json.put("participating", participating);
+        json.put("notParticipating", notParticipating);
         json.put("messages", messages);
         json.put("friends", friends);
         return json;

@@ -117,12 +117,12 @@ public class OrganizerOptionsPresenter implements IUserModelHandler, IMessageMod
 
     @Override
     public void setAttendingEvents(ArrayList<HashMap<String, String>> attending) {
-        model.addAttendingEvents(attending);
+        model.addParticipatingEvents(attending);
     }
 
     @Override
     public void setNotAttendingEvents(ArrayList<HashMap<String, String>> notAttending) {
-        model.addNotAttendingEvents(notAttending);
+        model.addNotParticipatingEvents(notAttending);
     }
 }
 
