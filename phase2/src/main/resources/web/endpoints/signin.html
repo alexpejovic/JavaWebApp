@@ -46,12 +46,12 @@
     </div>
     <div id="create" class="tabcontent">
         <h3>Create an Event:</h3>
-        <form>
-            Room Number: <input type="text" placeholder="###">
-            Date: <input type="datetime-local">
-            Event Name: <input type="text" placeholder="Name">
-            Capacity: <input type="number">
-            VIP-Exclusive: <input type="checkbox">
+        <form method="post" action="../createevent">
+            Room Number: <input type="text" name="roomNum" placeholder="###">
+            Date: <input type="datetime-local" name="date" placeholder="day/month/year hour:minute">
+            Event Name: <input type="text" name="name" placeholder="Name">
+            Capacity: <input type="number" name="capacity">
+            VIP-Exclusive: <input type="checkbox" name="vip">
             <button>Create!</button>
         </form>
 

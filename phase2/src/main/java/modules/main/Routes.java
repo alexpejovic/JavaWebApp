@@ -8,6 +8,7 @@ import spark.Request;
 import spark.Response;
 import spark.template.mustache.MustacheTemplateEngine;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +62,7 @@ public class Routes {
         post("/attendevent", Routes::attendEvent);
         post("/cancelevent", Routes::cancelEvent);
         post("/addfriend", Routes::addFriend);
+        post("/createevent", Routes::createEvent);
         post("/archivemessage", (req, res) -> "Archive Message");
         post("/deletemessage", (req, res) -> "Delete Message");
     }
@@ -82,6 +84,27 @@ public class Routes {
     private static String cancelEvent(Request request, Response response) {
         // The request for this method can only be sent if the user is an organizer so no check is needed
         orgController.cancelEvent(request.queryParams("event"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String createEvent(Request request, Response response) {
+        String[] dateTime = request.queryParams("date").split(" ");
+        String[] date = dateTime[0].split("/");
+        String[] time = dateTime[1].split(":");
+        int day = Integer.parseInt(date[0]);
+        int month = Integer.parseInt(date[1]);
+        int year = Integer.parseInt(date[2]);
+        int hour = Integer.parseInt(time[0]);
+        int minute = Integer.parseInt(time[1]);
+        LocalDateTime startTime = LocalDateTime.of(year, month, day, hour, minute);
+        LocalDateTime endTime = startTime.plusHours(1);
+        int capacity = Integer.parseInt(request.queryParams("capacity"));
+        boolean isVIP = request.queryParams("vip").equals("on");
+        orgController.scheduleEvent(request.queryParams("roomNum"), startTime, endTime,
+                request.queryParams("name"), capacity, isVIP);
+
         updateModel(false);
         response.redirect("/home");
         return "";
