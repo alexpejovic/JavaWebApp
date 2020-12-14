@@ -141,13 +141,12 @@ public class OrganizerController {
      * and if the speaker is not already speaking at the specified event
      * @param username the id of the Speaker being scheduled for the Event
      * @param roomNumber the number of the room where the event will be held and where the speaker will present
-     * @param eventName the name of the event taking place in the room
+     * @param eventId the ID of the event taking place in the room
      * precondition: the event with eventName is an existing event
      */
-    public void scheduleSpeaker(String username, String roomNumber, String eventName) throws ClassNotFoundException {
+    public void scheduleSpeaker(String username, String roomNumber, String eventId) throws ClassNotFoundException {
         //check if speaker is available
 //        if (!roomExists(roomNumber)) {organizerOptionsPresenter.scheduleSpeaker(false);}
-        String eventId = eventManager.getEventID(eventName);
 //        if (!roomManager.getEventsInRoom(roomNumber).contains(eventId)){
 //            organizerOptionsPresenter.scheduleSpeaker(false);
 //        }
@@ -178,11 +177,10 @@ public class OrganizerController {
     /**
      * Removes the specified speaker from the specified event
      * @param username the username of the Speaker being scheduled for the Event
-     * @param eventName the name of the event in question
-     * precondition: the event with eventName is an existing event
+     * @param eventId the ID of the event in question
+     * precondition: the event with eventID is an existing event
      */
-    public void removeSpeakerFromEvent(String username, String eventName) throws ClassNotFoundException {
-        String eventId = eventManager.getEventID(eventName);
+    public void removeSpeakerFromEvent(String username, String eventId) throws ClassNotFoundException {
         String speakerId = speakerManager.getUserID(username);
         //checking that the speaker is speaking at the given event
         if (eventManager.isSpeakerSpeakingAtEvent(eventId,speakerId)){
@@ -285,12 +283,12 @@ public class OrganizerController {
 
     /**
      * Checks if the event with given username exists in the system
-     * @param eventName the name of the event being searched
+     * @param eventId the name of the event being searched
      * @return true if the event is in the system, false otherwise
      */
-    public boolean eventExists(String eventName){
+    public boolean eventExists(String eventId){
         try{
-            eventManager.getEventID(eventName);
+            eventManager.getName(eventId);
             return true;
         } catch (EventNotFoundException e) {
             return false;
@@ -375,13 +373,12 @@ public class OrganizerController {
 
     /**
      * Schedules organizer to attend event
-     * @param eventName the name of the event the Organizer will attend, if that event exists or has
+     * @param eventId the name of the event the Organizer will attend, if that event exists or has
      *                  available seating
      * @return true if the organizer has been scheduled, false if not
      */
-    public boolean attendEvent(String eventName){
+    public boolean attendEvent(String eventId){
         try {
-            String eventId = eventManager.getEventID(eventName);
             if (eventManager.canAttend(eventId)){
                 eventManager.addAttendee(eventId, organizerId);
                 return true;
@@ -395,14 +392,13 @@ public class OrganizerController {
 
     /**
      * Organizer cancels their enrollment to attend an event
-     * @param eventName the name of the event the organizer will no longer attend,
+     * @param eventId the name of the event the organizer will no longer attend,
      *                  if event exists and the organizer is already attending the event
      * @return a string that indicates the status of the organizer, if they were able to cancel their enrollment
      * this will be displayed on the screen for user to see
      */
-    public String cancelEnrollment(String eventName){
+    public String cancelEnrollment(String eventId){
         try{
-            String eventId = eventManager.getEventID(eventName);
             eventManager.removeAttendee(eventId, organizerId);
             // update user info in database
             ArrayList<User> users = new ArrayList<>();
