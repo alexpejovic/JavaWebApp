@@ -61,4 +61,9 @@ public class EventGatewaySer implements EventStrategy{
     public void setFilename(String newFilename) {
         filename = newFilename;
     }
+
+    @Override
+    public void deleteData(String eventID) {
+
+    }
 }

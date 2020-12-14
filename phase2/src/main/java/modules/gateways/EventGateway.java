@@ -18,6 +18,9 @@ public class EventGateway {
     public void writeData(ArrayList<Event> writeEvents) {
         this.strategy.writeData(writeEvents);
     }
+    public void deleteData(String eventID) {
+        this.strategy.deleteData(eventID);
+    }
 
     public void setStrategy(EventStrategy newStrat) {
         this.strategy = newStrat;
