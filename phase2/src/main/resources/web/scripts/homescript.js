@@ -28,12 +28,18 @@ http.onreadystatechange = function() {
 function populateData(httpResponse) {
     var response = JSON.parse(httpResponse);
     userType = response.userType;
+    status = response.status;
     setTabs(userType);
     addFriends(response);
     addMessages(response);
     addAttendingEvents(response);
     addMoreEvents(response);
     addEventsToTab(response);
+
+    if (status === 'error') {
+        alert(response.statusMessage);
+    }
+
 }
 
 function setTabs(userType) {
