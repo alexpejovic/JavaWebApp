@@ -1,0 +1,248 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+body {
+    background: #FFFFFF; /* fallback for old browsers */
+    background: -webkit-linear-gradient(right, #FFFFFF, #FFFFFF);
+    background: -moz-linear-gradient(right, #FFFFFF, #FFFFFF);
+    background: -o-linear-gradient(right, #FFFFFF, #FFFFFF);
+    background: linear-gradient(to left, #FFFFFF, #FFFFFF);
+    font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-top: 30px;
+}
+
+.main {
+    margin-top: 250px;
+    text-align: center;
+    align-items: center;
+    background: #FFFFFF; /* fallback for old browsers */
+    background: -webkit-linear-gradient(right, #FFFFFF, #FFFFFF);
+    background: -moz-linear-gradient(right, #FFFFFF, #FFFFFF);
+    background: -o-linear-gradient(right, #FFFFFF, #FFFFFF);
+    background: linear-gradient(to left, #FFFFFF, #FFFFFF);
+}
+
+
+/* The static navigation bar at the top of page */
+.nav {
+    overflow: auto;
+    white-space: nowrap;
+    background-color: #C2C8CD;
+    height: 60px;
+    padding: 90px 10px;
+    transition: 0.4s;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.nav p {
+    float: left;
+    color: #838D93;
+    text-align: center;
+    padding: 15px;
+    font-size: 20px;
+}
+
+.nav a {
+    float: left;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    font-size: 18px;
+    width: 15%;
+    display: inline-block;
+    opacity: 0.5;
+}
+
+.nav-right a {
+    color: #1a1a1a;
+    padding: 5px;
+    float right;
+    font-size: 20px;
+    opacity: 0.5;
+    display: inline-block;
+}
+
+#nav-text {
+    float: left;
+    font-size: 35px;
+    font-weight: bold;
+    transition: 0.4s;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    font-size: 18px;
+    width: 15%;
+    display: block;
+}
+
+.nav a:hover {
+    color: white;
+    font-weight: bold;
+    background-color: #4B4C4D;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+.extratabs {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+/* Tabs for Organizers */
+.tab {
+    overflow: hidden;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.tab button {
+    background-color: #FFFFCE;
+    float: center;
+    transition: 0.7s;
+    padding: 14px 16px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+    background-color: #ddd;
+}
+
+.tabcontent {
+  display: none;
+  background-color: #f1f1f1;
+  padding: 6px 12px;
+  border: 5px solid #ccc;
+  border-top: none;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.maintable {
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+    width: 80%;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    align-items: center;
+}
+
+.maintable form {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.maintable input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.maintable button {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%;
+    border: 0;
+    padding: 10px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: 0.5s;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.maintable button.delete {
+    background: #FF7C7C;
+}
+
+.maintable button.archive {
+    background: #6EB9C8;
+}
+
+.maintable button:hover {
+    background-color: #ccc;
+}
+
+.maintable table {
+    border-radius: 5px;
+    border: solid black;
+}
+
+.subtable table {
+    border-radius: 5px;
+    border: solid black;
+}
+
+.subtable th, tr {
+    border: none;
+}
+
+.subtable input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.subtable form {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.subtable button {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%;
+    border: 0;
+    padding: 10px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: 0.5s;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.subtable button:hover {
+    background-color: #ccc;
+}
+
+h1 {
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    text-shadow: 1px 1px 1px #ccc;
+    font-size: 100px;
+}
+
+h2, h3 {
+    text-align: center;
+    text-shadow: 1px 1px 1px #ccc;
+}

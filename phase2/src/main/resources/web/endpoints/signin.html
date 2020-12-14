@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Menu</title>
+    <link href="../css/mainStyle.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div class="main" id="top">
+    <h1>Welcome to our scheduling service!</h1>
+    <h3>Scroll down to view your messages or upcoming events, or click on one of the tabs to view more actions!</h3>
+    <div class="extratabs">
+        <!-- Tabs for all Users -->
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'friends')">My Friends</button>
+        </div>
+
+        <!-- Tabs for Organizers -->
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'create')">Create Event</button>
+        </div>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'manage')">Manage My Events</button>
+        </div>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'account')">Create Account</button>
+        </div>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'bookSpeaker')">Book Speaker</button>
+        </div>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'createRoom')">Create Room</button>
+        </div>
+    </div>
+
+
+    <div id="friends" class="tabcontent">
+        <h3>My Friends:</h3>
+        <div class="subtable">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Send Message?</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>
+                        <form>
+                            <input type="text" placeholder="Message">
+                            <button>Send</button>
+                        </form>
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <h3>Add Friend:</h3>
+        <form>
+            <p>Type the ID of the attendee of whom which you'd like to add as a friend</p>
+            <input name="friendId" type="text" placeholder="Friend ID"/>
+            <button>Add Friend</button>
+        </form>
+    </div>
+    <div id="create" class="tabcontent">
+        <h3>Create an Event:</h3>
+        <form>
+            Room Number: <input type="text" placeholder="###">
+            Date: <input type="datetime-local">
+            Event Name: <input type="text" placeholder="Name">
+            Capacity: <input type="number">
+            VIP-Exclusive: <input type="checkbox">
+            <button>Create!</button>
+        </form>
+
+    </div>
+    <div id="manage" class="tabcontent">
+        <h3>Manage My Events:</h3>
+        <table>
+            <tr>
+                <th>Title:</th>
+                <th>Description:</th>
+                <th>Current Date:</th>
+                <th>Send All:</th>
+                <th>Reschedule To?</th>
+            </tr>
+            <tr>
+                <th>Some Random Event!</th>
+                <th>Attend a completely random and unnecessary event that doesn't even exist!</th>
+                <th>January, 25, 2036</th>
+                <th>
+                    <form>
+                        <input type="text" placeholder="Message">
+                        <button>Send All</button>
+                    </form>
+                </th>
+                <th>
+                    <form>
+                        <input type="datetime-local">
+                        <button>Reschedule</button>
+                    </form>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+    <div id="account" class="tabcontent">
+        <h3>Create a New Account:</h3>
+        <form class="register-form" method="post">
+            <input name="type" type="radio">Attendee
+            <input name="type" type="radio">Speaker
+            <input name="type" type="radio">Organizer
+            <input name="type" type="radio">VIP Attendee
+            <input name="name" type="text" placeholder="name"/>
+            <input name="pass" type="password" placeholder="password"/>
+            <button>Create Account</button>
+        </form>
+    </div>
+    <div id="bookSpeaker" class="tabcontent">
+        <h3>Book Speaker:</h3>
+        <form class="register-form" method="post">
+            Speaker Name: <input name="name" type="text" placeholder="name"/>
+            Event Name: <input name="evt" type="text" placeholder="event"/>
+            <button>Book!</button>
+        </form>
+        <h3>Cancel Speaker</h3>
+        <form class="register-form" method="post">
+            Speaker Name: <input name="name" type="text" placeholder="name"/>
+            Event Name: <input name="evt" type="text" placeholder="event"/>
+            <button class="delete">Cancel!</button>
+        </form>
+
+    </div>
+    <div id="createRoom" class="tabcontent">
+        <h3>Create a New Room:</h3>
+        <form class="register-form" method="post">
+            Room Number: <input name="room" type="text" placeholder="room"/>
+            Capacity: <input name="capacity" type="number"/>
+            <button>Create!</button>
+        </form>
+
+    </div>
+
+    <!-- Navigation bar stuck to the top of the screen -->
+    <div class="nav" id="nav">
+        <p class="nav-text">Welcome, {{user}}</p>
+        <div class="nav-right">
+            <a class="nav-text" href="#top">More Actions</a>
+            <a class="nav-text" href="#messages">My Messages</a>
+            <a class="nav-text" href="#myEvents">My Schedule</a>
+            <a class="nav-text" href="#moreEvents">Upcoming Events</a>
+            <a class="nav-text" href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- Information to the User -->
+    <h2>My Messages:</h2>
+    <div class="maintable" id="messages">
+<!--       Template Space -->
+    </div>
+
+    <h2>My Schedule:</h2>
+    <div class="maintable" id="myEvents">
+<!--       Template Space-->
+    </div>
+
+    <h2>Upcoming Events:</h2>
+    <div class="maintable" id="moreEvents">
+<!--       Template Space-->
+    </div>
+</div>
+<script src="../scripts/homescript.js"></script>
+</body>
+</html>

@@ -2,7 +2,9 @@
 ## Phase 1
 
 #### Running the program
-Run the main method in the *Routes* class.
+Run the main method in the *Routes* class.  
+Then, go to a browser and in the url bar enter: localhost:8000/home
+Login with one of the sample accounts found in the *PopulateData* class.
 
 #### Initializing Sample Data
 The outline of our sample data is specified in the following google sheets document:
