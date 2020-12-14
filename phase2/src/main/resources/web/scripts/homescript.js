@@ -40,6 +40,7 @@ function setTabs(userType) {
     var notspeakertab = document.querySelector(".notspeakertab");
     if (userType === "organizer") {
         var orgtabs = document.querySelectorAll(".orgtab");
+        notspeakertab.removeAttribute("hidden");
         orgtabs.forEach(orgtab => {
             orgtab.removeAttribute("hidden");
         });
