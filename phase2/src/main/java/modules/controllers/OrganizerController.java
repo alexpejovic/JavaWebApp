@@ -299,12 +299,14 @@ public class OrganizerController {
 
     /**
      * Cancels/removes event from the program, the event being cancelled exists in the system
-     * @param eventName the name of the event being cancelled
+     * @param eventId the ID of the event being cancelled
      */
-    public void cancelEvent(String eventName){
+    public void cancelEvent(String eventId){
+        ArrayList<String> attendeeIDs = eventManager.getAttendeesOfEvent(eventId);
+        ArrayList<String> speakerIDs = eventManager.getSpeakersOfEvent(eventId);
         // removes event from system
-        eventManager.removeEvent(eventName);
-        String eventId = eventManager.getEventID(eventName);
+        eventManager.removeEvent(eventId);
+
         ArrayList<String> roomList = roomManager.roomsContainingEvent(eventId);
         // removes event from all rooms contained in
         for (String roomNumber: roomList){
@@ -312,15 +314,31 @@ public class OrganizerController {
             // update room info in database
             updateInfo.updateRoom(roomManager.getRoom(roomNumber));
         }
-        // removes event from the attendance lists of all attendees in the conference
-        attendeeManager.removeEventFromAllAttendees(eventId);
-        // removes event from the organized lists of all organizers in the conference
-        organizerManager.removeFromOrganizedEvents(eventId);
+
+        ArrayList<User> users = new ArrayList<>(); //  for updating user info in database
+
+        // removes event from the attendance lists of all attendees/organizers in the conference
+        // Organizer is a child of Attendee
+        for (String attendeeID: attendeeIDs){
+            if (attendeeID.startsWith("a")) {
+                // remove attendee attendance
+                attendeeManager.removeEvent(eventId, attendeeID);
+                users.add(attendeeManager.getAttendee(attendeeID));
+            }
+            else {
+                // remove organizer attendance
+                organizerManager.removeEvent(eventId,attendeeID);
+                users.add(organizerManager.getOrganizer(organizerId));
+            }
+        }
+
         // removes event from the hosting lists of all speakers in the conference
-        speakerManager.removeEventFromAllSpeakers(eventId);
-        cancelEnrollment(eventName);
-        // update user info in database
-        ArrayList<User> users = new ArrayList<>();
+        for (String speakerID: speakerIDs){
+            speakerManager.removeEventFromSpeaker(eventId, speakerID);
+            users.add(speakerManager.getSpeaker(speakerID));
+        }
+
+        // updating user info in database
         users.addAll(attendeeManager.getAttendeeList());
         users.addAll(organizerManager.getListOfOrganizers());
         users.addAll(speakerManager.getSpeakers());

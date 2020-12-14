@@ -290,12 +290,12 @@ public class EventManager {
         return event.getEventType();
     }
     /**
-     * removes event from event from
-     * @param eventName
+     * removes event from eventManager
+     * @param eventID
      */
-    public void removeEvent(String eventName){
-        Event event = getEvent(getEventID(eventName));
-        eventList.remove(eventName);
+    public void removeEvent(String eventID){
+        Event event = getEvent(eventID);
+        eventList.remove(event);
     }
 
     /**
