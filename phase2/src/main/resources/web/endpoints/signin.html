@@ -88,13 +88,13 @@
     </div>
     <div id="account" class="tabcontent">
         <h3>Create a New Account:</h3>
-        <form class="register-form" method="post">
-            <input name="type" type="radio">Attendee
-            <input name="type" type="radio">Speaker
-            <input name="type" type="radio">Organizer
-            <input name="type" type="radio">VIP Attendee
-            <input name="name" type="text" placeholder="name"/>
-            <input name="pass" type="password" placeholder="password"/>
+        <form class="register-form" method="post" action="../createaccount">
+            <input name="account" type="radio" value="attendee">Attendee
+            <input name="account" type="radio" value="speaker">Speaker
+            <input name="account" type="radio" value="organizer">Organizer
+            <input name="account" type="radio" value="vip">VIP Attendee
+            <input name="name" type="text" placeholder="Name"/>
+            <input name="pass" type="password" placeholder="Password"/>
             <button>Create Account</button>
         </form>
     </div>

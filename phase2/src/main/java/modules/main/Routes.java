@@ -58,13 +58,14 @@ public class Routes {
 
         post("/signin", Routes::handleLogin);
         post("/sendmessage", Routes::handleMessage);
+        post("/archivemessage", (req, res) -> "Archive Message");
+        post("/deletemessage", (req, res) -> "Delete Message");
         post("/unattendevent", Routes::unattendEvent);
         post("/attendevent", Routes::attendEvent);
         post("/cancelevent", Routes::cancelEvent);
         post("/addfriend", Routes::addFriend);
         post("/createevent", Routes::createEvent);
-        post("/archivemessage", (req, res) -> "Archive Message");
-        post("/deletemessage", (req, res) -> "Delete Message");
+        post("/createaccount", Routes::createAccount);
     }
 
     private static String attendEvent(Request request, Response response) {
@@ -112,6 +113,28 @@ public class Routes {
 
     private static String addFriend(Request request, Response response) {
         attController.addUserToFriendList(request.queryParams("friendId"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String createAccount(Request request, Response response) {
+        String accountType = request.queryParams("account");
+        String username = request.queryParams("name");
+        String password = request.queryParams("pass");
+        if (accountType.equals("attendee")) {
+            orgController.createAttendeeAccount(username, password);
+        }
+        else if (accountType.equals("organizer")) {
+            orgController.createOrganizerAccount(username, password);
+        }
+        else if (accountType.equals("speaker")) {
+            orgController.createSpeakerAccount(username, password);
+        }
+        else if (accountType.equals("vip")) {
+            orgController.createVIPAttendeeAccount(username, password);
+        }
+
         updateModel(false);
         response.redirect("/home");
         return "";
