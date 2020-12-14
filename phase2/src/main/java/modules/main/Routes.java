@@ -56,10 +56,10 @@ public class Routes {
 
         get("/getmodel", (req, res) -> model.toJSON());
 
-        post("/signin", Routes::handleLogin);
-        post("/sendmessage", Routes::handleMessage);
-        post("/archivemessage", (req, res) -> "Archive Message");
-        post("/deletemessage", (req, res) -> "Delete Message");
+        post("/signin", Routes::login);
+        post("/sendmessage", Routes::sendMessage);
+        post("/archivemessage", Routes::archiveMessage);
+        post("/deletemessage", Routes::deleteMessage);
         post("/unattendevent", Routes::unattendEvent);
         post("/attendevent", Routes::attendEvent);
         post("/cancelevent", Routes::cancelEvent);
@@ -193,7 +193,7 @@ public class Routes {
         return "";
     }
 
-    private static String handleMessage(Request request, Response response) {
+    private static String sendMessage(Request request, Response response) {
         String recipient = request.queryParams("recipient");
         String message = request.queryParams("message");
         if (recipient.equals("all")) {
@@ -210,7 +210,23 @@ public class Routes {
         return "";
     }
 
-    private static String handleLogin(Request request, Response response) {
+    private static String deleteMessage(Request request, Response response) {
+        MessageController messageController = confBuild.getMsgController(currentUser);
+        messageController.markMessageAsDeleted(request.queryParams("message"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String archiveMessage(Request request, Response response) {
+        MessageController messageController = confBuild.getMsgController(currentUser);
+        messageController.markMessageAsArchived(request.queryParams("message"));
+        updateModel(false);
+        response.redirect("/home");
+        return "";
+    }
+
+    private static String login(Request request, Response response) {
         LoginController lc = confBuild.getLoginController();
         boolean login = lc.logIn(request.queryParams("user"), request.queryParams("pass"));
         if (login) {

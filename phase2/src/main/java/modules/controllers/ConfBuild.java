@@ -5,10 +5,7 @@ import modules.gateways.EventGateway;
 import modules.gateways.MessageGateway;
 import modules.gateways.RoomGateway;
 import modules.gateways.UserGateway;
-import modules.presenters.AttendeeOptionsPresenter;
-import modules.presenters.Model;
-import modules.presenters.OrganizerOptionsPresenter;
-import modules.presenters.SpeakerOptionsPresenter;
+import modules.presenters.*;
 import modules.usecases.*;
 
 import java.util.ArrayList;
@@ -68,6 +65,12 @@ public class ConfBuild {
         return new SpeakerController(
                 userID, eventManager, speakerManager, attendeeManager,
                 messageManager, speakerOptionsPresenter, updateInfo);
+    }
+
+    public MessageController getMsgController(String userID) {
+        MessagePresenter messagePresenter = new MessagePresenter(model);
+        return new MessageController(userID, attendeeManager, organizerManager, speakerManager,
+                messageManager, messagePresenter, updateInfo);
     }
 
 
