@@ -373,20 +373,23 @@ public class OrganizerController {
 
     /**
      * Schedules organizer to attend event
-     * @param eventId the name of the event the Organizer will attend, if that event exists or has
-     *                  available seating
-     * @return true if the organizer has been scheduled, false if not
+     * Organizers can attend a event if the event's capacity can hold them but they
+     * are allowed to attend multiple events at the same time
+     * @param eventId the name of the event the Organizer will attend
      */
-    public boolean attendEvent(String eventId){
+    public void attendEvent(String eventId){
         try {
             if (eventManager.canAttend(eventId)){
                 eventManager.addAttendee(eventId, organizerId);
-                return true;
+                organizerManager.addAttendingEvent(organizerId,eventId);
+                // update user info in database
+                updateInfo.updateUser(organizerManager.getOrganizer(organizerId));
+                // event attended
             }
-            return false;
+            // event cannot be attended
         }
         catch(EventNotFoundException e){
-            return false;
+            // event cannot be attended
         }
     }
 
@@ -394,26 +397,20 @@ public class OrganizerController {
      * Organizer cancels their enrollment to attend an event
      * @param eventId the name of the event the organizer will no longer attend,
      *                  if event exists and the organizer is already attending the event
-     * @return a string that indicates the status of the organizer, if they were able to cancel their enrollment
-     * this will be displayed on the screen for user to see
      */
-    public String cancelEnrollment(String eventId){
+    public void cancelEnrollment(String eventId){
         try{
             eventManager.removeAttendee(eventId, organizerId);
+            organizerManager.removeAttendingEvent(eventId, organizerId);
             // update user info in database
-            ArrayList<User> users = new ArrayList<>();
-            users.addAll(attendeeManager.getAttendeeList());
-            users.addAll(organizerManager.getListOfOrganizers());
-            users.addAll(speakerManager.getSpeakers());
-            updateInfo.updateUser(users);
+            updateInfo.updateUser(organizerManager.getOrganizer(organizerId));
 //            organizerOptionsPresenter.cancelEvent(true);
-            return "Your Cancellation was successful";
         }
         catch(UserNotFoundException e){
-            return "You were never signed up for this event. Please select another event.";
+            // organiser was not in event's list of attendees
         }
         catch(EventNotFoundException e){
-            return "This event doesn't exist. Please select a new existing event.";
+            // event was not in organizer's list of attending events
         }
     }
 }

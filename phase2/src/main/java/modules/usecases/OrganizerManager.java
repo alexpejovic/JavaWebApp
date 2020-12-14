@@ -167,5 +167,23 @@ public class OrganizerManager extends UserManager {
         attendee.removeEvent(eventID);
     }
 
+    /**
+     * Adds the given event's eventID to the given organizer's list of events
+     * @param organizerID the ID of the organizer whose events list we want to alter
+     * @param eventID the ID of the event that we want to add to the organizer's attending events list
+     */
+    public void addAttendingEvent(String organizerID, String eventID){
+        getOrganizer(organizerID).addEvent(eventID);
+    }
+
+    /**
+     * Removes the given eventID to the given organizer's list of events
+     * @param organizerID the userID of the organizer whose events list we want to alter
+     * @param eventID the eventID of the event that we want to remove to the organizer's events list
+     * @throws EventNotFoundException if the organizer is not attending the event with eventID
+     */
+    public void removeAttendingEvent(String eventID, String organizerID){
+        getOrganizer(organizerID).removeEvent(eventID);
+    }
 
 }

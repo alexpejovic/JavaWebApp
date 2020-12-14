@@ -90,10 +90,9 @@ public class AttendeeManager extends UserManager{
     }
 
     /**
-     * Adds the given eventID to the given attendee's list of events that
-     * they are attending if they don't already have a event at the same time
+     * Removes the given eventID to the given attendee's list of events
      * @param attendeeID the userID of the attendee whose events list we want to alter
-     * @param eventID the eventID of the event that we want to add to the attendee's events list
+     * @param eventID the eventID of the event that we want to remove to the attendee's events list
      * @throws EventNotFoundException if the attendee is not attending the event with eventID
      */
     public void removeEvent(String eventID, String attendeeID) {
