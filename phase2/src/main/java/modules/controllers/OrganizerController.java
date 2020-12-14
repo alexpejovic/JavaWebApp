@@ -80,15 +80,15 @@ public class OrganizerController implements Attendable, Messageable {
                         roomManager.addEventToRoom(roomNumber, eventId);
                         organizerManager.addToOrganizedEvents(organizerId, eventId);
                         updateInfo.updateEvent(eventManager.getEvent(eventId)); // updating event info to database
+                        organizerOptionsPresenter.scheduleEventSuccess(true);
                         return true;
-//                    organizerOptionsPresenter.scheduleEventSuccess(true);
                     } catch (EventNotFoundException e) {
+                        organizerOptionsPresenter.scheduleEventSuccess(false);
                         return false;
-//                    organizerOptionsPresenter.scheduleEventSuccess(false);
                     }
                 }
             }
-//        organizerOptionsPresenter.scheduleEventSuccess(false);
+            organizerOptionsPresenter.scheduleEventSuccess(false);
         }
         return false;
     }
@@ -122,7 +122,7 @@ public class OrganizerController implements Attendable, Messageable {
     public void createSpeakerAccount(String userName, String password){
         ArrayList<String> listOfEvents = eventManager.getAllEventIDs();
         accountCreator.createSpeakerAccount(userName, password, listOfEvents);
-//        organizerOptionsPresenter.createSpeakerAccount();
+        organizerOptionsPresenter.createSpeakerAccount();
     }
 
     /**
@@ -181,10 +181,10 @@ public class OrganizerController implements Attendable, Messageable {
             speakerManager.addEventToSpeaker(eventId,speakerId);
             // update event info in database
             updateInfo.updateEvent(eventManager.getEvent(eventId));
-//            organizerOptionsPresenter.scheduleSpeaker(true);
+            organizerOptionsPresenter.scheduleSpeaker(true);
         }
         //return if speaker was not scheduled
-//        organizerOptionsPresenter.scheduleSpeaker(false);
+        organizerOptionsPresenter.scheduleSpeaker(false);
     }
 
     /**
@@ -205,10 +205,10 @@ public class OrganizerController implements Attendable, Messageable {
             speakerManager.removeEventFromSpeaker(eventId, speakerId);
             // update event info in database
             updateInfo.updateEvent(eventManager.getEvent(eventId));
-//            organizerOptionsPresenter.removeSpeakerFromEvent(true);
+            organizerOptionsPresenter.removeSpeakerFromEvent(true);
         }
         //speaker was not speaking at event
-//        organizerOptionsPresenter.removeSpeakerFromEvent(false);
+        organizerOptionsPresenter.removeSpeakerFromEvent(false);
     }
 
 
@@ -250,6 +250,7 @@ public class OrganizerController implements Attendable, Messageable {
             String messageID = messageManager.sendMessage(organizerId, attendeeID, message);
             updateInfo.updateMessage(messageManager.getMessage(messageID));
         }
+        organizerOptionsPresenter.sendMessage(true);
     }
 
     /**
@@ -270,7 +271,7 @@ public class OrganizerController implements Attendable, Messageable {
     public void sendMessage(String receiverID, String message){
         String messageID = messageManager.sendMessage(organizerId, receiverID, message);
         updateInfo.updateMessage(messageManager.getMessage(messageID));   // updating message info in database
-//        organizerOptionsPresenter.sendMessage(true);
+        organizerOptionsPresenter.sendMessage(true);
     }
 
     public void updateModel() {
@@ -376,7 +377,7 @@ public class OrganizerController implements Attendable, Messageable {
         users.addAll(organizerManager.getListOfOrganizers());
         users.addAll(speakerManager.getSpeakers());
         updateInfo.updateUser(users);
-//        organizerOptionsPresenter.cancelEvent(true);
+        organizerOptionsPresenter.cancelEvent(true);
     }
 
     /**
@@ -440,12 +441,15 @@ public class OrganizerController implements Attendable, Messageable {
             // update user info in database
             updateInfo.updateUser(organizerManager.getOrganizer(organizerId));
 //            organizerOptionsPresenter.cancelEvent(true);
+            organizerOptionsPresenter.cancelEnrollment(true);
         }
         catch(UserNotFoundException e){
             // organiser was not in event's list of attendees
+            organizerOptionsPresenter.cancelEnrollment(false);
         }
         catch(EventNotFoundException e){
             // event was not in organizer's list of attending events
+            organizerOptionsPresenter.cancelEnrollment(false);
         }
     }
 }
