@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class OrganizerController implements Attendable {
+public class OrganizerController implements Attendable, Messageable {
     private final OrganizerManager organizerManager;
     private final EventManager eventManager;
     private final RoomManager roomManager;
