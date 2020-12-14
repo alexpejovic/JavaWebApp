@@ -103,7 +103,7 @@ function addEventsToTab(response) {
 
 function makeFriend(data, fragment) {
     var friendTable = document.createElement("table");
-    var headings = ["Name", "Send Message?"];
+    var headings = ["UserID", "Name", "Send Message?"];
     var tableHeadings = [];
     headings.forEach(heading => {
         tableHeadings.push(createPElem(heading));
@@ -271,6 +271,8 @@ function makeMessage(data, fragment) {
 
 function getFriendHeadingsFromData(data) {
     var headings = [];
+    headings.push(createPElem(data.ID));
+    //headings.push(createPElem(data.name));
     headings.push(createPElem(data.name));
     headings.push(createMessageForm(data.ID, "Message"));
     return headings;

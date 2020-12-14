@@ -54,6 +54,11 @@ public class Routes {
            res.redirect("/home"); return "";
         });
 
+        get("/schedule", (req, res) -> {
+            confBuild.getScheduleCreator().createSchedule(); // generates schedule
+            return render(mdl,templatePath + "schedule.html");
+        });
+
         get("/getmodel", (req, res) -> model.toJSON());
 
         post("/signin", Routes::login);

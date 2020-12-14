@@ -73,6 +73,10 @@ public class ConfBuild {
                 messageManager, messagePresenter, updateInfo);
     }
 
+    public ScheduleCreator getScheduleCreator(){
+        return new ScheduleCreator(eventManager);
+    }
+
 
     /**
      * @return an arraylist of Event entities
