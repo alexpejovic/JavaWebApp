@@ -34,7 +34,7 @@ public class AttendeeController {
      * if the specified event is VIP only, only VIP attendees are allowed to signup
      * @param eventID the ID of the event that attendee wishes to sign up for
      */
-    public void signUp(String eventID){
+    public void attendEvent(String eventID){
         boolean signUpSuccessful = false;
         try{
             if (attendeeManager.timeAvailable(attendeeID, eventManager.startTimeOfEvent(eventID),

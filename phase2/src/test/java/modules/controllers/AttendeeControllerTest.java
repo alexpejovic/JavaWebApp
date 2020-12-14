@@ -62,9 +62,9 @@ public class AttendeeControllerTest {
         LocalDateTime time2 = LocalDateTime.of(2020, 1, 1, 2, 0);
         eventManager.createEvent("1", time1, time2, "e1234",2);
         eventManager.renameEvent("e1234", "name");
-        attendeeController.signUp("e1234");
+        attendeeController.attendEvent("e1234");
         assertEquals("e1234", attendeeManager.getAttendee("a1234").getEventsList().get(0));
-        attendeeController.signUp("e1234");
+        attendeeController.attendEvent("e1234");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AttendeeControllerTest {
         eventManager.createEvent("1", time1, time2, "e1234",2);
         eventManager.renameEvent("e1234", "name");
         eventManager.addAttendee("e1234", "a1234");
-        attendeeController.signUp("e1234");
+        attendeeController.attendEvent("e1234");
         attendeeController.cancelEnrollment("e1234");
         assertEquals(true, attendeeManager.getAttendee("a1234").hasNoEvents());
         attendeeController.cancelEnrollment("e1234");
