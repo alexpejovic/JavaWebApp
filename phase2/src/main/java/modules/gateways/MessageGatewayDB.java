@@ -93,23 +93,43 @@ public class MessageGatewayDB implements MessageStrategy {
      */
     @Override
     public void writeData(ArrayList<Message> writeMessage) {
-        //Create messages table if it hasn't already been
-        createMessages();
-        for(Message message: writeMessage){
-            //Query for writing the message to the database
-            int archived = message.getIsArchived() ? 1 : 0;
-            int read = message.getHasBeenRead() ? 1 : 0;
-            String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead, isArchived)" +
-                    " Values('"+message.getID()+"', '"+message.getContent()+"', '"+message.getSenderID()+"', '"
-                    +message.getReceiverID()+"', '"+message.getDateTime().format(DateTimeFormatter.ISO_DATE_TIME)+
-                    "', '"+read+"', '"+archived+"')";
-            try (Connection iConn = DBConnect.connect(this.filename);
-                 Statement stmt = iConn.createStatement()) {
-                stmt.execute(sql);
-                iConn.close();
-            } catch (SQLException | ClassNotFoundException e2) {
+        try (Connection dbConn = DBConnect.connect(this.filename)){
+            //Create messages table if it hasn't already been
+            createMessages();
+            for (Message message : writeMessage) {
+                //Query for writing the message to the database
+                int archived = message.getIsArchived() ? 1 : 0;
+                int read = message.getHasBeenRead() ? 1 : 0;
+                String sql = "REPLACE INTO messages (messageId, content, senderId, receiverId, dateTime, hasBeenRead, isArchived)" +
+                        " Values('" + message.getID() + "', '" + message.getContent() + "', '" + message.getSenderID() + "', '"
+                        + message.getReceiverID() + "', '" + message.getDateTime().format(DateTimeFormatter.ISO_DATE_TIME) +
+                        "', '" + read + "', '" + archived + "')";
+                try (Statement stmt = dbConn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (SQLException e2) {
+                    System.out.println(e2.getMessage());
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deletes a message with a given id
+     * @param messageId the given Id
+     */
+    public void deleteData(String messageId){
+        try (Connection dbConn = DBConnect.connect(this.filename)) {
+            String deleteQuery = "DELETE FROM messages WHERE messageId == '" + messageId + "'";
+            try (Statement stmt = dbConn.createStatement()) {
+                // delete message
+                stmt.execute(deleteQuery);
+            } catch (SQLException e2) {
                 System.out.println(e2.getMessage());
             }
+        } catch (ClassNotFoundException | SQLException e) {
+        e.printStackTrace();
         }
     }
 

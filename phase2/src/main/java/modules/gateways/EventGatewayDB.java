@@ -232,6 +232,24 @@ public class EventGatewayDB implements EventStrategy{
     }
 
     /**
+     * Deletes an event with a given Id
+     * @param eventId the given Id
+     */
+    public void deleteData(String eventId){
+        try (Connection dbConn = DBConnect.connect(this.filename)) {
+            String deleteQuery = "DELETE FROM events WHERE eventId == '" + eventId + "'";
+            try (Statement stmt = dbConn.createStatement()) {
+                // delete event
+                stmt.execute(deleteQuery);
+            } catch (SQLException e2) {
+                System.out.println(e2.getMessage());
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * @param newFilename The new filepath for the database
      */
     @Override

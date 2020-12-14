@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Month;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 import java.time.LocalDateTime;
@@ -117,5 +118,10 @@ public class EventGatewayDBTest {
         ArrayList<Event> eventList = eventDB.readData();
         assertEquals(eventList.get(3).getAttendees().size(), 0);
         assertTrue(eventList.get(3).getVIPStatus());
+    }
+    @Test
+    public void testDeleteData(){
+        EventGatewayDB EGDB = new EventGatewayDB();
+        EGDB.deleteData("event1");
     }
 }

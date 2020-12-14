@@ -78,4 +78,10 @@ public class MessageGatewayDBTest {
         assertEquals(true, messageList.get(1).getHasBeenRead());
         assertEquals(true, messageList.get(1).getIsArchived());
     }
+
+    @Test
+    public void testDeleteData(){
+        MessageGatewayDB MGDB = new MessageGatewayDB();
+        MGDB.deleteData("m8888");
+    }
 }
