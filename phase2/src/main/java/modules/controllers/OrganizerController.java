@@ -433,11 +433,15 @@ public class OrganizerController implements Attendable, Messageable {
                 // update user info in database
                 updateInfo.updateUser(organizerManager.getOrganizer(organizerId));
                 // event attended
+                organizerOptionsPresenter.signUpToEventMessage(true);
+            } else {
+                organizerOptionsPresenter.signUpToEventMessage(false);
             }
             // event cannot be attended
         }
         catch(EventNotFoundException e){
             // event cannot be attended
+            organizerOptionsPresenter.signUpToEventMessage(false);
         }
     }
 
