@@ -100,17 +100,29 @@ public class OrganizerOptionsPresenter implements IUserModelHandler, IMessageMod
      * @param isSuccessful True if event cancellation was successful, false otherwise
      */
     public void cancelEvent(boolean isSuccessful){
-        if(isSuccessful)
+        if(isSuccessful) {
             model.setErrorStatus(true, "Event cancelled");
-        else
+        }else{
             model.setErrorStatus(false, "Event cancellation was unsuccessful");
+        }
     }
 
     public void cancelEnrollment(boolean isSuccessful) {
-        if (isSuccessful)
+        if (isSuccessful) {
             model.setErrorStatus(true, "Removed attendance from event");
-        else
+        }
+        else {
             model.setErrorStatus(false, "Unable to remove attendance from event");
+        }
+    }
+
+    public void signUpToEventMessage(boolean isSuccessful){
+        if (isSuccessful){
+            model.setErrorStatus(true, "Successfully signed up for event");
+        }
+        else{
+            model.setErrorStatus(false, "Sorry you cannot signup to that event");
+        }
     }
 
     public void setFriends(ArrayList<HashMap<String, String>> friends) {

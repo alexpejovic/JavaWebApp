@@ -36,9 +36,10 @@ function populateData(httpResponse) {
     addAttendingEvents(response);
     addMoreEvents(response);
     addEventsToTab(response);
-
     if (status === 'error') {
-        alert(response.statusMessage);
+        if (response.statusMessage !== 'Invalid username or password') {
+            alert(response.statusMessage);
+        }
     }
 
 }
