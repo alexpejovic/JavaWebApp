@@ -222,7 +222,7 @@ function getTabHeadingsFromData(data) {
 
 function makeEvent(data, fragment, attending) {
     var eventTable = document.createElement("table");
-    var headings = ["ID:", "Title:", "Start:", "End:"];
+    var headings = ["ID:", "Title:", "Start:", "End:", "Remaining Seats:"];
     if (userType === "attendee" || userType === "organizer") {
         if (attending == true) {
             headings.push("Remove?");
@@ -297,6 +297,7 @@ function getEventHeadingsFromData(data, attending) {
     headings.push(createPElem(data.name));
     headings.push(createPElem(data.startTime));
     headings.push(createPElem(data.endTime));
+    headings.push(createPElem(data.remainingSeats));
     if (userType === "attendee" || userType === "organizer") {
         if (attending == true) {
             headings.push(createButtonForm("Remove", requests.unattendEvent, "event", data.eventID));
