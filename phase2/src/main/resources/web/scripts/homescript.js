@@ -56,7 +56,7 @@ function setTabs(userType) {
     else if (userType === "speaker") {
         var speakertab = document.querySelector(".speakertab");
         speakertab.removeAttribute("hidden");
-        notspeakertab.setAttribute("hidden");
+        notspeakertab.setAttribute("hidden", true);
     }
     else {
         notspeakertab.removeAttribute("hidden");
