@@ -91,7 +91,7 @@ public class MessageController {
             updateInfo.deleteMessage(messageID);  // updating message info to database
         }
         catch (MessageNotFoundException e){
-//            messagePresenter.messageDoesNotExist();
+            messagePresenter.messageDoesNotExist();
         }
 
     }

@@ -37,7 +37,9 @@ public class MessagePresenter implements IMessageModelHandler {
     /**
      * Displays a message that a specified message was not in the system
      */
-//    public void messageDoesNotExist(){ iMessageView.displayMessage("Sorry, that message does not exist");}
+    public void messageDoesNotExist(){
+        model.setErrorStatus(false,"Sorry, that message does not exist");
+    }
 
     @Override
     public void setMessages(ArrayList<HashMap<String, String>> messages) {

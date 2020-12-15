@@ -377,15 +377,10 @@ public class MessageManager {
         String senderID = getSenderIDOfMessage(messageID);
         String receiverID = getReceiverIDOfMessage(messageID);
 
-        for (Message message: messages.get(senderID)){
-            if(message.getID().equals(messageID)){
-                messages.remove(userID, message);
-            }
-        }
-        for (Message message: messages.get(receiverID)){
-            if(message.getID().equals(messageID)){
-                messages.remove(userID, message);
-            }
-        }
+        Message message = getMessage(messageID);
+
+        messages.get(senderID).remove(message);
+        messages.get(receiverID).remove(message);
+
     }
 }
