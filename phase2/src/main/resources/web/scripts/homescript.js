@@ -8,6 +8,7 @@ var requests = {
     "attendEvent": "../attendevent",
     "cancelEvent": "../cancelevent",
     "archiveMessage": "../archivemessage",
+    "unarchiveMessage": "../unarchivemessage",
     "deleteMessage": "../deletemessage",
     "reschedule": "../reschedule"
 }
