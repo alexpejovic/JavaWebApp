@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
- * class to populate sample data into the .ser files in res
+ * class to populate sample data into database file conference.db under resources/web/database
  * ONLY FOR TESTING PURPOSES NOT PART OF PROGRAM
  */
 //please run this once before pushing to make sure the data in res matches the sample data
@@ -20,14 +20,11 @@ public class PopulateData {
     private static RoomGateway roomGateway = new RoomGateway();
     private static UserGateway userGateway = new UserGateway();
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-
+    public static void main(String[] args) {
         eventGateway.writeData(getEvents());
         roomGateway.writeData(getRooms());
         userGateway.writeData(getUsers());
         messageGateway.writeData(getMessages());
-
-
     }
 
     private static ArrayList<Event> getEvents(){
@@ -86,6 +83,13 @@ public class PopulateData {
         event5.setName("top 10 reasons why vets should be illegal");
         event5.scheduleSpeaker("s1");
         event5.addAttendee("o0");
+        events.add(event5);
+
+        Event event6 = new Event("r2",
+                LocalDateTime.of(2020,11,21,16,0), //start time
+                LocalDateTime.of(2020,11,21,17,0), // end time
+                "e6",2);
+        event5.setName("Afterparty");
         events.add(event5);
 
         return events;
@@ -169,6 +173,10 @@ public class PopulateData {
         Attendee attendee2 = new Attendee("kiki", "meow", "a2");
         attendee2.addToFriendList("s1");
         users.add(attendee2);
+
+        Attendee attendee3 = new Attendee("vip", "pass", "a3");
+        attendee2.setAsVIP();
+        users.add(attendee3);
 
 
         return users;
