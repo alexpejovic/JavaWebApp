@@ -92,6 +92,13 @@ public class PopulateData {
         event6.setName("Afterparty");
         events.add(event6);
 
+        Event event7 = new Event("r3",
+                LocalDateTime.of(2020,11,19,2,0), //start time
+                LocalDateTime.of(2020,11,21,17,0), // end time
+                "e7",10);
+        event7.setName("Very long event");
+        events.add(event7);
+
         return events;
 
     }
@@ -112,7 +119,12 @@ public class PopulateData {
 
         Room room2 = new Room("r2",2);
         room2.addEvent("e5");
+        room2.addEvent("e6");
         rooms.add(room2);
+
+        Room room3 = new Room("r3",20);
+        room3.addEvent("e7");
+        rooms.add(room3);
 
         return rooms;
     }
