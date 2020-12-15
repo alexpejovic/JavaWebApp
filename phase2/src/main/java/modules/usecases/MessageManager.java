@@ -375,14 +375,14 @@ public class MessageManager {
      */
     public void deleteMessage(String messageID, String userID){
         String senderID = getSenderIDOfMessage(messageID);
-        String recieverID = getReceiverIDOfMessage(messageID);
+        String receiverID = getReceiverIDOfMessage(messageID);
 
         for (Message message: messages.get(senderID)){
             if(message.getID().equals(messageID)){
                 messages.remove(userID, message);
             }
         }
-        for (Message message: messages.get(recieverID)){
+        for (Message message: messages.get(receiverID)){
             if(message.getID().equals(messageID)){
                 messages.remove(userID, message);
             }

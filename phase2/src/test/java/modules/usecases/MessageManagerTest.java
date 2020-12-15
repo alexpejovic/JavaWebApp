@@ -130,5 +130,6 @@ public class MessageManagerTest {
         assertEquals("bro what are you talking about?", allMessages.get(len - 1).getContent());
         assertEquals("user3", allMessages.get(len - 2).getReceiverID());
     }
+    
 
 }
