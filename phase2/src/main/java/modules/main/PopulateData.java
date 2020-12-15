@@ -89,8 +89,8 @@ public class PopulateData {
                 LocalDateTime.of(2020,11,21,16,0), //start time
                 LocalDateTime.of(2020,11,21,17,0), // end time
                 "e6",2);
-        event5.setName("Afterparty");
-        events.add(event5);
+        event6.setName("Afterparty");
+        events.add(event6);
 
         return events;
 
