@@ -37,7 +37,10 @@ function populateData(httpResponse) {
     addMoreEvents(response);
     addEventsToTab(response);
     if (status === 'error') {
-        if (response.statusMessage !== 'Invalid username or password') {
+        if (response.statusMessage === 'Sorry, that message did not go through.' && userType === 'speaker') {
+            alert("Warning: Message was not successfully sent to all individual(s)");
+        }
+        else if (response.statusMessage !== 'Invalid username or password') {
             alert(response.statusMessage);
         }
     }
