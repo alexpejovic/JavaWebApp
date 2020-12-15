@@ -65,14 +65,19 @@ public class SpeakerController implements Messageable {
      * @param message the message that is being sent
      */
     public void sendMessage(String recipientId, String message){
+        boolean sent = false;
         for(Attendee attendee: this.getAttendees()){
             if(attendee.getID().equals(recipientId)){
                 String messageID = messageManager.sendMessage(speakerId, recipientId, message);
                 updateInfo.updateMessage(messageManager.getMessage(messageID));   // updating message info in database
                 speakerOptionsPresenter.sendMessageSuccess(true);
+                sent = true;
             }
         }
-        speakerOptionsPresenter.sendMessageSuccess(false);
+        if (!sent){
+            speakerOptionsPresenter.sendMessageSuccess(false);
+        }
+
     }
 
     /**
